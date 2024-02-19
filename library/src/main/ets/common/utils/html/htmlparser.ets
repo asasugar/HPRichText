@@ -1,38 +1,9 @@
 /**
- *
  * htmlParser改造自: https://github.com/blowsie/Pure-JavaScript-HTML5-Parser
- *
  */
-// Regular Expressions for parsing tags and attributes
+import { attr, block, closeSelf, empty, endTag, fillAttrs, inline, startTag } from './index';
 
-const startTag = /^<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z0-9_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/;
-const endTag = /^<\/([-A-Za-z0-9_]+)[^>]*>/;
-const attr = /([a-zA-Z0-9_:][-a-zA-Z0-9_:.]*)(?:\s*=\s*(?:(?:"((?:\\.|[^"])*)")|(?:'((?:\\.|[^'])*)')|([^>\s]+)))?/g;
-
-function makeMap (str) {
-  const obj = {};
-  const items = str.split(',');
-  for (let i = 0; i < items.length; i += 1) obj[items[i]] = true;
-  return obj;
-}
-
-// Empty Elements - HTML 5
-const empty = makeMap('area,base,basefont,br,col,frame,hr,img,input,link,meta,param,embed,command,keygen,source,track,wbr');
-
-// Block Elements - HTML 5
-const block = makeMap('address,code,article,applet,aside,audio,blockquote,button,canvas,center,dd,del,dir,div,dl,dt,fieldset,figcaption,figure,footer,form,frameset,h1,h2,h3,h4,h5,h6,header,hgroup,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,object,ol,output,p,pre,section,script,table,tbody,td,tfoot,th,thead,tr,ul,video');
-
-// Inline Elements - HTML 5
-const inline = makeMap('a,abbr,acronym,applet,b,basefont,bdo,big,br,button,cite,del,dfn,em,font,i,iframe,img,input,ins,kbd,label,map,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,textarea,tt,u,var');
-
-// Elements that you can, intentionally, leave open
-// (and which close themselves)
-const closeSelf = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr');
-
-// Attributes that have their values filled in disabled="disabled"
-const fillAttrs = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected');
-
-function HTMLParser (html, handler) {
+function HTMLParser(html, handler) {
   let index;
   let chars;
   let match;
@@ -41,7 +12,7 @@ function HTMLParser (html, handler) {
   // @ts-ignore
   stack.last = () => stack[stack.length - 1];
 
-  function parseEndTag (tag, tagName) {
+  function parseEndTag(tag, tagName) {
     // If no tag name is provided, clean shop
     let pos;
     if (!tagName) {
@@ -64,7 +35,7 @@ function HTMLParser (html, handler) {
     }
   }
 
-  function parseStartTag (tag, tagName, rest, unary) {
+  function parseStartTag(tag, tagName, rest, unary) {
     tagName = tagName.toLowerCase();
 
     if (block[tagName]) {
@@ -81,12 +52,18 @@ function HTMLParser (html, handler) {
 
     unary = empty[tagName] || !!unary;
 
-    if (!unary) stack.push(tagName);
+
+    if (!unary) {
+      console.log('1', JSON.stringify(tagName))
+
+      stack.push(tagName);
+    }
+    console.log('2', JSON.stringify(stack))
 
     if (handler.start) {
       const attrs = [];
 
-      rest.replace(attr, function genAttr (matches, name) {
+      rest.replace(attr, function genAttr(matches, name) {
         const value = arguments[2] || arguments[3] || arguments[4] || (fillAttrs[name] ? name : '');
 
         attrs.push({
@@ -97,6 +74,8 @@ function HTMLParser (html, handler) {
       });
 
       if (handler.start) {
+        console.log('123456', tagName, JSON.stringify(handler), unary)
+
         handler.start(tagName, attrs, unary);
       }
     }
@@ -148,4 +127,5 @@ function HTMLParser (html, handler) {
   parseEndTag();
 }
 
-export default HTMLParser;
+
+export default HTMLParser

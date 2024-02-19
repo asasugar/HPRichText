@@ -5,7 +5,7 @@ import { HPRichText } from '@ohos/HPRichText'
 struct Index {
   @State content: string = `<h1 style="text-align: center;text-decoration: underline #0000FF">2211<u>h1下划线</u></h1>
   <a style="font-size: 60px;border: 10px dashed #0000FF;width: 600px" href="www.baidu.com">百11111111111111111111111111111111111111111111111111111111111111111111111111度链接</a>
-  <button disabled>h1标题</button>
+  <button disabled>h1标题1</button>
   <h1 style="text-align: center;text-decoration: underline #0000FF"><u>h1下划线</u></h1>
   <img src="https://img04.luckincoffeecdn.com/group2/M00/C0/86/CtwiPGWOeu2ABX__AAKqV4dfcn4041.png_.webp" />
   <h3 style="text-align: center;text-decoration: underline #0000FF">h3标题3</h3>
@@ -19,11 +19,6 @@ struct Index {
 
   build() {
     Row() {
-      Text('测试一下') {
-        Span('111')
-        Span('222')
-      }
-
       HPRichText({ content: this.content })
     }
   }

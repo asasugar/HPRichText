@@ -27,11 +27,12 @@ export struct HPRichText {
           src: $$.node.attr?.src,
           previewUri: $$.node.attr?.poster,
         })
-          .width($$.node.attr?.width)
-          .height($$.node.attr?.height)
+          .width($$.node.attr?.width || '100%')
+          .height($$.node.attr?.height || '100%')
+          .objectFit(ImageFit.Contain)
           .muted($$.node.attr?.muted)
           .autoPlay($$.node.attr?.autoplay)
-          .controls($$.node.attr?.controls)
+          .controls(true) // 默认为非自定义控制器
           .loop($$.node.attr?.loop);
       } else if ($$.node.tag === 'img') {
         // img
@@ -94,7 +95,7 @@ export struct HPRichText {
 
   aboutToAppear() {
     this.htmlJson = new RichTextDataSource(html2json(this.content).nodes);
-    console.log('1111222', JSON.stringify(this.htmlJson));
+    console.log('1111222', JSON.stringify(html2json(this.content)));
   }
 
   build() {
