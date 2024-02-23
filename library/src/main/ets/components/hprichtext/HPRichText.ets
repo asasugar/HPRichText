@@ -1,6 +1,6 @@
 import type { HtmlJson } from '../../common/types/HPRichText';
 import { formatComposeCss } from '../../common/utils/css';
-import html2json from '../../common/utils/html/html2json';
+import HTMLParser from '../../common/utils/html/html-parser';
 import RichTextDataSource from '../../viewModel/RichTextDataSource';
 
 @Component
@@ -94,8 +94,10 @@ export struct HPRichText {
   }
 
   aboutToAppear() {
-    this.htmlJson = new RichTextDataSource(html2json(this.content).nodes);
-    console.log('1111222', JSON.stringify(html2json(this.content)));
+    const htmlParser = new HTMLParser()
+    this.htmlJson = new RichTextDataSource(htmlParser.html2json(this.content).nodes);
+
+    console.log('1111222', JSON.stringify(htmlParser.html2json(this.content)));
   }
 
   build() {

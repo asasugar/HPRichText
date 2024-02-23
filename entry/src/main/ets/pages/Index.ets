@@ -3,7 +3,7 @@ import { HPRichText } from '@ohos/HPRichText'
 @Entry
 @Component
 struct Index {
-  @State content: string = `<h1 style="text-align: center;text-decoration: underline #0000FF">2211<u>h1下划线</u></h1>
+  @State content: string = `<h1 class="test" style="text-align: center;text-decoration: underline #0000FF">2211<u>h1下划线</u></h1>
   <a style="font-size: 60px;border: 10px dashed #0000FF;width: 600px" href="www.baidu.com">百11111111111111111111111111111111111111111111111111111111111111111111111111度链接</a>
   <button disabled>h1标题1</button>
   <h1 style="text-align: center;text-decoration: underline #0000FF"><u>h1下划线</u></h1>

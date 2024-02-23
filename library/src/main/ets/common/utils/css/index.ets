@@ -5,7 +5,7 @@ import { attrsMap } from './constants';
  * @param {string} str: auok
  * @returns {*} Auok
  */
-export function firstLetterToLowerCase (str: string): string {
+export function firstLetterToLowerCase(str: string): string {
   if (!str) return '';
   return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
 }
@@ -15,7 +15,7 @@ export function firstLetterToLowerCase (str: string): string {
  * @param {*} composeCss: Web端css样式
  * @returns {*} 鸿蒙样式
  */
-export function formatComposeCss (composeCss: HtmlJson['styleObj']): TextAttribute {
+export function formatComposeCss(composeCss: HtmlJson['styleObj']): TextAttribute {
 
   let obj = {} as TextAttribute;
 
@@ -46,7 +46,7 @@ export function formatComposeCss (composeCss: HtmlJson['styleObj']): TextAttribu
  * @param {Array<string>} map: ['width', 'style', 'color']
  * @returns {*} {width: '10px', style: TextDecorationType.Dashed, color: '#0000FF'}
  */
-export function transformObject (originalValue: string, map: string[]) {
+export function transformObject(originalValue: string, map: string[]) {
   const transformedObject = {};
   for (const harmonyKey in map) {
     if (map.hasOwnProperty(harmonyKey)) {
@@ -65,7 +65,7 @@ export function transformObject (originalValue: string, map: string[]) {
   return transformedObject;
 }
 
-export function specialAttributes (harmonyKey: string, childKey: string, value: string = '') {
+export function specialAttributes(harmonyKey: string, childKey: string, value: string = '') {
   // decoration-type属性特殊转化
   if (harmonyKey === 'decoration' && childKey === 'type') {
     value = TextDecorationType[firstLetterToLowerCase(value)];
@@ -75,4 +75,14 @@ export function specialAttributes (harmonyKey: string, childKey: string, value: 
     value = BorderStyle[firstLetterToLowerCase(value)];
   }
   return value;
+}
+
+export function parseStyle(styleStr) {
+  return styleStr.split(';').reduce((styleObj, styleItem) => {
+    const [key, value] = styleItem.trim().split(':');
+    if (key && value) {
+      styleObj[key] = value.trim();
+    }
+    return styleObj;
+  }, {});
 }

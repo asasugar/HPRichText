@@ -5,6 +5,20 @@ export function makeMap(str: string): { [x: string]: boolean } {
   return obj;
 }
 
+export function removeDOCTYPE(html) {
+  const isDocument = /<body.*>([^]*)<\/body>/.test(html);
+  return isDocument ? RegExp.$1 : html;
+}
+
+export function trimHtml(html) {
+  return html
+    .replace(/<!--.*?-->/gi, '')
+    .replace(/\/\*.*?\*\//gi, '')
+    .replace(/[ ]+</gi, '<')
+    .replace(/<script[^]*<\/script>/gi, '')
+    .replace(/<style[^]*<\/style>/gi, '');
+}
+
 export const startTag = /^<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z0-9_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/;
 
 export const endTag = /^<\/([-A-Za-z0-9_]+)[^>]*>/;
