@@ -1,3 +1,9 @@
+export interface Attribute {
+  name: string;
+  value: string;
+  escaped: string;
+}
+
 export interface TextNode {
   node: 'text';
   text?: string;
@@ -16,16 +22,4 @@ export interface NodeInfo {
   classStr?: string;
   text?: string;
   nodes?: NodeInfo[];
-}
-
-export interface Handler {
-  start?(tagName: string, attrs: {
-    name: string;
-    value: string;
-    escaped: string
-  }[], unary: boolean): void;
-
-  end?(tagName: string): void;
-
-  chars?(text: string): void;
 }

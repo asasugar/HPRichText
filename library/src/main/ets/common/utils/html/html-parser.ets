@@ -2,7 +2,7 @@
  * htmlParser改造自: https://github.com/blowsie/Pure-JavaScript-HTML5-Parser
  */
 import { startTag, endTag, attr, empty, block, inline, closeSelf, fillAttrs } from './index';
-import type { TextNode, NodeInfo, Handler } from '../../types/HtmlParser';
+import type { TextNode, NodeInfo, Attribute } from '../../types/HtmlParser';
 import { urlToHttpUrl, strDiscode } from './discode';
 import { removeDOCTYPE, trimHtml } from './index';
 import Node from './node';
@@ -10,11 +10,11 @@ import { parseStyle } from '../css/index';
 import Stack from './stack';
 
 class HTMLParser {
-  last: string;
-  stack = new Stack();
-  bufArray: NodeInfo[] = [];
+  private last: string = '';
+  private stack: Stack<string> = new Stack();
+  private bufArray: NodeInfo[] = [];
   public results: {
-    nodes: NodeInfo['nodes'];
+    nodes: NodeInfo[];
     imageUrls: string[];
     source?: string
   } = {
@@ -22,39 +22,45 @@ class HTMLParser {
     imageUrls: [],
   }
 
-  parseEndTag(tagName?: string) {
+  private parseEndTag(tagName?: string) {
     // If no tag name is provided, clean shop
-    let pos;
-    if (!tagName) {
-      pos = 0;
-    } else {
-      // Find the closest opened tag of the same type
-      tagName = tagName.toLowerCase();
-      for (pos = this.stack.length - 1; pos >= 0; pos -= 1) {
-        if (this.stack[pos] === tagName) break;
-      }
-    }
+    let pos = tagName ? this.stack.lastIndexOf(tagName.toLowerCase()) : 0;
     if (pos >= 0) {
       // Close all the open elements, up the stack
-      for (let i = this.stack.length - 1; i >= pos; i -= 1) {
-        this.end(this.stack[i]);
+      while (this.stack.length > pos) {
+        this.end(this.stack.pop());
       }
-
-      // Remove the open elements from the stack
-      this.stack.length = pos;
     }
+    // let pos;
+    // if (!tagName) {
+    //   pos = 0;
+    // } else {
+    //   // Find the closest opened tag of the same type
+    //   tagName = tagName.toLowerCase();
+    //   for (pos = this.stack.length - 1; pos >= 0; pos -= 1) {
+    //     if (this.stack[pos] === tagName) break;
+    //   }
+    // }
+    // if (pos >= 0) {
+    //   // Close all the open elements, up the stack
+    //   for (let i = this.stack.length - 1; i >= pos; i -= 1) {
+    //     this.end(this.stack[i]);
+    //   }
+    //
+    //   // Remove the open elements from the stack
+    //   this.stack.length = pos;
+    // }
   }
 
-  parseStartTag(tag, tagName, rest, unary) {
+  private parseStartTag(tag: any, tagName: string, rest: string, unary: boolean) {
     tagName = tagName.toLowerCase();
-
+    // 处理块级标签内的内联元素
     if (block[tagName]) {
       while (this.stack.last() && inline[this.stack.last()]) {
-        // @ts-ignore
         this.parseEndTag(this.stack.last());
       }
     }
-    // @ts-ignore
+    // 处理自闭合标签
     if (closeSelf[tagName] && this.stack.last() === tagName) {
       this.parseEndTag(tagName);
     }
@@ -63,30 +69,31 @@ class HTMLParser {
 
     if (!unary) this.stack.push(tagName);
 
-    const attrs = [];
+    const attrs: Attribute[] = [];
 
+    // 使用正则表达式匹配属性并生成属性对象
+    // @ts-ignore
     rest.replace(attr, function genAttr(matches, name) {
       const value = arguments[2] || arguments[3] || arguments[4] || (fillAttrs[name] ? name : '');
-
+      // 对属性值进行转义
+      const escapedValue = value.replace(/(^|[^\\])"/g, '$1\\"');
       attrs.push({
         name,
-        value,
-        escaped: value.replace(/(^|[^\\])"/g, '$1\\"'), // "
+        value: escapedValue,
+        escaped: escapedValue,
       });
     });
 
     this.start(tagName, attrs, unary);
   }
 
-  start(tag, attrs, unary) {
+  start(tag: string, attrs: Attribute[], unary: boolean) {
     // node for this element
     const node: NodeInfo = new Node(tag);
 
     if (this.bufArray.length !== 0) {
       const parent = this.bufArray[0];
-      // @ts-ignore
       if (parent.nodes === undefined) {
-        // @ts-ignore
         parent.nodes = [];
       }
     }
@@ -99,18 +106,17 @@ class HTMLParser {
       node.tagType = 'closeSelf';
     }
     node.attr = attrs?.reduce((pre, attr) => {
-      const { name } = attr;
-      let { value } = attr;
+      const { name ,value} = attr;
       if (name === 'class') {
         node.classStr = value;
       }
       // make it array of attribute
       if (name !== 'style' && value.match(/ /)) {
-        value = value.split(' ');
+        pre[name] = value.split(' ');
       }
       // if attr already exists
       // merge it
-      if (pre[name]) {
+      else if (pre[name]) {
         if (Array.isArray(pre[name])) {
           // already array, push to last
           pre[name].push(value);
@@ -195,12 +201,11 @@ class HTMLParser {
       }
       parent.nodes.push(node);
     } else {
-      // @ts-ignore
       this.bufArray.unshift(node);
     }
   }
 
-  end(tag) {
+  private end(tag: string) {
     // merge into parent tag
     const node = this.bufArray.shift();
     if (node.tag !== tag) {
@@ -209,8 +214,6 @@ class HTMLParser {
 
     // 当有缓存source资源时于于video补上src资源
     if (node.tag === 'video' && this.results.source) {
-
-      // @ts-ignore
       node.attr.src = this.results.source;
       delete this.results.source;
     }
@@ -219,17 +222,14 @@ class HTMLParser {
       this.results.nodes.push(node);
     } else {
       const parent = this.bufArray[0];
-      // @ts-ignore
       if (!parent.nodes) {
-        // @ts-ignore
         parent.nodes = [];
       }
-      // @ts-ignore
       parent.nodes.push(node);
     }
   }
 
-  chars(text) {
+  private chars(text: string) {
     if (!text.trim()) return;
 
     const node: TextNode = {
@@ -241,27 +241,28 @@ class HTMLParser {
       this.results.nodes.push(node);
     } else {
       const parent = this.bufArray[0];
-      // @ts-ignore
       if (parent.nodes === undefined) {
-        // @ts-ignore
         parent.nodes = [];
       }
-      // @ts-ignore
       parent.nodes.push(node);
     }
   }
 
-  html2json(html) {
+  html2json(html: string): {
+    nodes: NodeInfo[];
+    imageUrls: string[];
+    source?: string
+  } {
+    // 在 HTML 解析过程中，通常我们会先处理结束标签（end tag）再处理开始标签（start tag）。这是因为在解析HTML的过程中，我们需要确保标签的嵌套是正确的，即开始标签和结束标签的配对应该是正确的
     // 处理字符串
     html = removeDOCTYPE(html);
     html = trimHtml(html);
     html = strDiscode(html);
     let chars, index, match;
-
     while (html) {
       chars = true;
 
-      if (html.indexOf('</') === 0) {
+      if (html.startsWith('</')) {
         match = html.match(endTag);
 
         if (match) {
@@ -270,18 +271,17 @@ class HTMLParser {
           match[0].replace(endTag, this.parseEndTag.bind(this));
           chars = false;
         }
-
         // start tag
-      } else if (html.indexOf('<') === 0) {
+      } else if (html.startsWith('<')) {
         match = html.match(startTag);
 
         if (match) {
           html = html.substring(match[0].length);
-
           match[0].replace(startTag, this.parseStartTag.bind(this));
           chars = false;
         }
       }
+
       if (chars) {
         index = html.indexOf('<');
         let text = '';
@@ -300,7 +300,6 @@ class HTMLParser {
       this.last = html;
     }
 
-    // Clean up any remaining tags
     this.parseEndTag();
     return this.results;
   }

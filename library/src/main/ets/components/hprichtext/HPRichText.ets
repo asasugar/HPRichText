@@ -95,6 +95,7 @@ export struct HPRichText {
 
   aboutToAppear() {
     const htmlParser = new HTMLParser()
+    // @ts-ignore
     this.htmlJson = new RichTextDataSource(htmlParser.html2json(this.content).nodes);
 
     console.log('1111222', JSON.stringify(htmlParser.html2json(this.content)));
