@@ -37,10 +37,8 @@ export struct HPRichText {
       } else if ($$.node.tag === 'img') {
         // img
         Image($$.node.attr?.src)
-          // @ts-ignore
-          .width($$.node?.attr?.style?.width)
-            // @ts-ignore
-          .height($$.node?.attr?.style?.height)
+          .width($$.node?.artUIStyleObject?.width)
+          .height($$.node?.artUIStyleObject?.height)
           .alt($$.node.attr?.alt);
       } else {
         // Row() {
@@ -52,7 +50,11 @@ export struct HPRichText {
       }
     } else {
       // 纯文本
-      this.textBuilder({ text: $$.node?.text, tag: $$.paramsNodes?.tag, style: $$.paramsNodes.attr.style });
+      this.textBuilder({
+        text: $$.node?.text,
+        tag: $$.paramsNodes?.tag,
+        artUIStyleObject: $$.paramsNodes.artUIStyleObject
+      });
     }
   }
 
@@ -78,30 +80,23 @@ export struct HPRichText {
   @Builder textBuilder($$: {
     text: string,
     tag: string,
-    style: NodeInfo['attr']['style']
+    artUIStyleObject: NodeInfo['artUIStyleObject']
   }) {
     // a标签默认: 蓝色+下划线+点击事件
     if ($$.tag === 'a') {
       Text($$.text)
-        // @ts-ignore
-        .fancyText($$.style as TextAttribute)
+        .fancyText($$.artUIStyleObject)
         .decoration({ type: TextDecorationType.Underline, color: Color.Blue })
     } else {
-      Text($$.tag)
-        .flexBasis(0)
-        .width(100)
       Text($$.text)
-        // @ts-ignore
-        .fancyText(parseToArtUI($$.style));
+        .fancyText($$.artUIStyleObject);
     }
   }
 
   aboutToAppear() {
     const htmlParser = new HTMLParser()
-    // @ts-ignore
     this.htmlJson = new RichTextDataSource(htmlParser.html2json(this.content).nodes);
-
-    console.log('1111222', JSON.stringify(htmlParser.html2json(this.content)));
+    console.log('1111222', JSON.stringify(this.htmlJson));
   }
 
   build() {
@@ -110,7 +105,7 @@ export struct HPRichText {
 }
 
 
-@Extend(Text) function fancyText({ flexBasis,flexGrow,flexShrink,alignSelf,clip,width,height,margin,padding,linearGradient,zIndex,border, opacity,backgroundColor,backgroundImage,backgroundRepeat,backgroundImageSize,backgroundImagePosition,rotate,scale,translate,transform,visibility,offset,decoration,lineHeight,letterSpacing,fontColor,fontSize,fontStyle,fontWeight,fontFamily,textOverflow,textAlign }) {
+@Extend(Text) function fancyText({ flexBasis,flexGrow,flexShrink,alignSelf,clip,width,height,margin,padding,linearGradient,zIndex,border, opacity,backgroundColor,backgroundImage,backgroundRepeat,backgroundImageSize,backgroundImagePosition,rotate,scale,translate,transform,visibility,offset,decoration,lineHeight,letterSpacing,fontColor,fontSize,fontStyle,fontWeight,fontFamily,textOverflow,textAlign }: Record<string, any>) {
   // TODO: 增加textOverflow属性就会报错，暂时先不加
   // .maxLines(styleObj?.['text-overflow'] === 'ellipsis' ? 1 : styleObj?.['-webkit-line-clamp'] ?? 999999)
   // .textOverflow({

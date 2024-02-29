@@ -1,14 +1,15 @@
 import display from '@ohos.display';
-import type { ScreenInfo } from '../../types/HtmlParser';
+import type { ScreenInfo, Attr } from '../../types/HtmlParser';
+
 
 export default class Node {
   node: 'element' | 'text' = 'element';
   tag: string;
-  attr: any;
-  classStr: string;
-  styleObj: any;
+  attr?: Attr;
+  classStr?: string;
   $screen: ScreenInfo | null = null;
-  tagType: 'block' | 'inline' | 'closeSelf';
+  tagType?: 'block' | 'inline' | 'closeSelf';
+  artUIStyleObject?: Record<string, any>;
 
   constructor(tag: string) {
     this.tag = tag;

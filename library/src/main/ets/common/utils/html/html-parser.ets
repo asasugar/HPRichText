@@ -133,10 +133,8 @@ class HTMLParser {
     // 优化样式相关属性
     if ('style' in node.attr) {
       const styleObj = parseStyle(node.attr.style as string); // parse to object
-      node.attr.style = parseToArtUI(styleObj) as TextAttribute as any; // parse to ArtUI
+      node.artUIStyleObject = parseToArtUI(styleObj) as TextAttribute
     }
-    // @ts-ignore
-    console.log('111111', JSON.stringify(node.styleObj))
     if (node.classStr) {
       node.classStr += ` ${node.tag}`;
     } else {

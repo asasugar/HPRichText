@@ -23,6 +23,7 @@ export interface NodeInfo {
   };
   tagType?: 'block' | 'inline' | 'closeSelf';
   attr?: Attr;
+  artUIStyleObject?: Record<string, any>;
   classStr?: string;
   text?: string;
   nodes?: NodeInfo[];
@@ -31,7 +32,6 @@ export interface NodeInfo {
 interface Attr extends Record<string, any> {
   src?: string;
   alt?: string;
-  // @ts-ignore
   style?: string | StyleObject;
   poster?: string;
   width?: string | number;

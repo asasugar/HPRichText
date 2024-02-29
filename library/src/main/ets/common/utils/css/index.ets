@@ -33,7 +33,6 @@ export function parseToArtUI(composeCss: StyleObject): TextAttribute {
     }
 
   }
-  console.log('999', obj)
   return obj;
 }
 
