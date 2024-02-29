@@ -1,12 +1,12 @@
 /**
  * htmlParser改造自: https://github.com/blowsie/Pure-JavaScript-HTML5-Parser
  */
-import { startTag, endTag, attr, empty, block, inline, closeSelf, fillAttrs } from './index';
-import type { TextNode, NodeInfo, Attribute } from '../../types/HtmlParser';
-import { urlToHttpUrl, strDiscode } from './discode';
-import { removeDOCTYPE, trimHtml } from './index';
+import type { Attribute, NodeInfo, TextNode } from '../../types/HtmlParser';
+
+import { parseStyle, parseToArtUI } from '../css/index';
+import { strDiscode, urlToHttpUrl } from './discode';
+import { attr, block, closeSelf, empty, endTag, fillAttrs, inline, removeDOCTYPE, startTag, trimHtml } from './index';
 import Node from './node';
-import { parseStyle } from '../css/index';
 import Stack from './stack';
 
 class HTMLParser {
@@ -72,18 +72,17 @@ class HTMLParser {
     const attrs: Attribute[] = [];
 
     // 使用正则表达式匹配属性并生成属性对象
-    // @ts-ignore
-    rest.replace(attr, function genAttr(matches, name) {
-      const value = arguments[2] || arguments[3] || arguments[4] || (fillAttrs[name] ? name : '');
+    rest.replace(attr, function genAttr(match, attributeName, attributeValueSingleQuote = '', attributeValueDoubleQuote = '', attributeValueNoQuote = '') {
+      const value = attributeValueSingleQuote || attributeValueDoubleQuote || attributeValueNoQuote || (fillAttrs[attributeName] ? attributeName : '');
       // 对属性值进行转义
       const escapedValue = value.replace(/(^|[^\\])"/g, '$1\\"');
       attrs.push({
-        name,
+        name: attributeName,
         value: escapedValue,
         escaped: escapedValue,
       });
+      return `${attributeName}="${escapedValue}"`;
     });
-
     this.start(tagName, attrs, unary);
   }
 
@@ -133,8 +132,11 @@ class HTMLParser {
     }, {});
     // 优化样式相关属性
     if ('style' in node.attr) {
-      node.styleObj = parseStyle(node.attr.style);
+      const styleObj = parseStyle(node.attr.style as string); // parse to object
+      node.attr.style = parseToArtUI(styleObj) as TextAttribute as any; // parse to ArtUI
     }
+    // @ts-ignore
+    console.log('111111', JSON.stringify(node.styleObj))
     if (node.classStr) {
       node.classStr += ` ${node.tag}`;
     } else {
@@ -177,11 +179,11 @@ class HTMLParser {
         face: 'font-family',
         size: 'font-size',
       };
-      if (!node.styleObj) node.styleObj = {};
+      if (!node.attr.style) node.attr.style = {};
       Object.keys(styleAttrs).forEach((key) => {
         if (node.attr[key]) {
           const value = key === 'size' ? fontSize[node.attr[key] - 1] : node.attr[key];
-          node.styleObj[styleAttrs[key]] = value;
+          node.attr.style[styleAttrs[key]] = value;
         }
       });
     }

@@ -1,5 +1,5 @@
 import display from '@ohos.display';
-import type { ScreenInfo } from '../../types/Node';
+import type { ScreenInfo } from '../../types/HtmlParser';
 
 export default class Node {
   node: 'element' | 'text' = 'element';

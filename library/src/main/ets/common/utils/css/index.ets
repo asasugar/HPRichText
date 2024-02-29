@@ -1,4 +1,4 @@
-import type { HtmlJson } from '../../types/HPRichText';
+import type { StyleObject } from '../../types/HtmlParser';
 import { attrsMap } from './constants';
 /**
  * @description: 将首字母转化为大写
@@ -15,14 +15,13 @@ export function firstLetterToLowerCase(str: string): string {
  * @param {*} composeCss: Web端css样式
  * @returns {*} 鸿蒙样式
  */
-export function formatComposeCss(composeCss: HtmlJson['styleObj']): TextAttribute {
+export function parseToArtUI(composeCss: StyleObject): TextAttribute {
 
   let obj = {} as TextAttribute;
-
   if (!composeCss) return obj;
   for (const attr in composeCss) {
 
-    const harmonyKey = attrsMap[attr];
+    const harmonyKey: string | Record<string, string[]> = attrsMap[attr];
 
     if (harmonyKey) {
       if (harmonyKey instanceof Object) {
@@ -34,19 +33,17 @@ export function formatComposeCss(composeCss: HtmlJson['styleObj']): TextAttribut
     }
 
   }
-
-  console.log('2222222', JSON.stringify(obj));
-
+  console.log('999', obj)
   return obj;
 }
 
 /**
  * @description: 转化单个鸿蒙样式的辅助方法
  * @param {string} originalValue: '10px dashed #0000FF'
- * @param {Array<string>} map: ['width', 'style', 'color']
+ * @param {Record<string,string[]>} map: {"border": ['width', 'style', 'color']}
  * @returns {*} {width: '10px', style: TextDecorationType.Dashed, color: '#0000FF'}
  */
-export function transformObject(originalValue: string, map: string[]) {
+export function transformObject(originalValue: string, map: Record<string, string[]>) {
   const transformedObject = {};
   for (const harmonyKey in map) {
     if (map.hasOwnProperty(harmonyKey)) {
@@ -77,7 +74,7 @@ export function specialAttributes(harmonyKey: string, childKey: string, value: s
   return value;
 }
 
-export function parseStyle(styleStr) {
+export function parseStyle(styleStr: string): StyleObject {
   return styleStr.split(';').reduce((styleObj, styleItem) => {
     const [key, value] = styleItem.trim().split(':');
     if (key && value) {

@@ -1,16 +1,16 @@
-import type { HtmlJson } from '../../common/types/HPRichText';
-import { formatComposeCss } from '../../common/utils/css';
+import type { NodeInfo } from '../../common/types/HtmlParser';
+import { parseToArtUI } from '../../common/utils/css';
 import HTMLParser from '../../common/utils/html/html-parser';
 import RichTextDataSource from '../../viewModel/RichTextDataSource';
 
 @Component
 export struct HPRichText {
   @Prop content: string;
-  private htmlJson: RichTextDataSource<HtmlJson> = new RichTextDataSource([]);
+  private htmlJson: RichTextDataSource<NodeInfo> = new RichTextDataSource([]);
   // node子节点构造器内容
   @Builder nodeBuilder($$: {
-    node: HtmlJson,
-    paramsNodes?: HtmlJson
+    node: NodeInfo,
+    paramsNodes?: NodeInfo
   }) {
     // 标签
     if ($$.node.node === 'element') {
@@ -18,7 +18,7 @@ export struct HPRichText {
       if ($$.node.tag === 'a') {
         Row() {
           if ($$.node.nodes.length) {
-            this.nodesBuilder({ nodes: new RichTextDataSource<HtmlJson>($$.node.nodes), paramsNodes: $$.node });
+            this.nodesBuilder({ nodes: new RichTextDataSource<NodeInfo>($$.node.nodes), paramsNodes: $$.node });
           }
         }
       } else if ($$.node.tag === 'video') {
@@ -37,27 +37,29 @@ export struct HPRichText {
       } else if ($$.node.tag === 'img') {
         // img
         Image($$.node.attr?.src)
-          .width($$.node?.styleObj?.width)
-          .height($$.node?.styleObj?.height)
+          // @ts-ignore
+          .width($$.node?.attr?.style?.width)
+            // @ts-ignore
+          .height($$.node?.attr?.style?.height)
           .alt($$.node.attr?.alt);
       } else {
         // Row() {
         // 其他
         if ($$.node.nodes.length) {
-          this.nodesBuilder({ nodes: new RichTextDataSource<HtmlJson>($$.node.nodes), paramsNodes: $$.node });
+          this.nodesBuilder({ nodes: new RichTextDataSource<NodeInfo>($$.node.nodes), paramsNodes: $$.node });
         }
         // }
       }
     } else {
       // 纯文本
-      this.textBuilder({ text: $$.node?.text, tag: $$.paramsNodes?.tag, styleObj: $$.paramsNodes.styleObj });
+      this.textBuilder({ text: $$.node?.text, tag: $$.paramsNodes?.tag, style: $$.paramsNodes.attr.style });
     }
   }
 
   // node列表节点构造器内容
   @Builder nodesBuilder($$: {
-    nodes: RichTextDataSource<HtmlJson>,
-    paramsNodes?: HtmlJson
+    nodes: RichTextDataSource<NodeInfo>,
+    paramsNodes?: NodeInfo
   }) {
     List({ space: 0 }) {
       // List、Grid、Swiper以及WaterFlow
@@ -76,20 +78,21 @@ export struct HPRichText {
   @Builder textBuilder($$: {
     text: string,
     tag: string,
-    styleObj: HtmlJson['styleObj']
+    style: NodeInfo['attr']['style']
   }) {
     // a标签默认: 蓝色+下划线+点击事件
     if ($$.tag === 'a') {
       Text($$.text)
         // @ts-ignore
-        .fancyText(formatComposeCss($$.styleObj))
+        .fancyText($$.style as TextAttribute)
         .decoration({ type: TextDecorationType.Underline, color: Color.Blue })
     } else {
       Text($$.tag)
+        .flexBasis(0)
         .width(100)
       Text($$.text)
         // @ts-ignore
-        .fancyText(formatComposeCss($$.styleObj));
+        .fancyText(parseToArtUI($$.style));
     }
   }
 
