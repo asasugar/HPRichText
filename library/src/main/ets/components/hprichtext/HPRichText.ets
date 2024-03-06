@@ -81,13 +81,6 @@ export struct HPRichText {
     }
   }
 
-  @Builder richTextBuilder($$: {
-    nodes: NodeInfo[],
-    webviewUrl: string
-  }) {
-    this.nodesBuilder({ nodes: $$.nodes });
-  }
-
   aboutToAppear() {
     const htmlParser = new HTMLParser()
     this.htmlJson = htmlParser.html2json(this.content).nodes;
@@ -95,7 +88,7 @@ export struct HPRichText {
   }
 
   build() {
-    this.richTextBuilder({ nodes: this.htmlJson, webviewUrl: this.webviewUrl })
+    this.nodesBuilder({ nodes: this.htmlJson });
   }
 }
 
