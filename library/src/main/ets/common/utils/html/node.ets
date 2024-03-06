@@ -26,8 +26,6 @@ export default class Node {
       const displayClass = display.getDefaultDisplaySync();
       // 方便previewer调试
       if (displayClass?.name?.includes('PC Preview')) {
-        console.log('123', JSON.stringify(PREVIEW_DISPLAY))
-
         return PREVIEW_DISPLAY;
       } else {
         return {
