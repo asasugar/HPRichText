@@ -6,7 +6,6 @@ export default class Node {
   node: 'element' | 'text' = 'element';
   tag: string;
   attr?: Attr;
-  classStr?: string;
   $screen: ScreenInfo | null = null;
   tagType?: 'block' | 'inline' | 'closeSelf';
   artUIStyleObject?: Record<string, any>;

@@ -41,4 +41,8 @@ export const closeSelf = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,
 // Attributes that have their values filled in disabled="disabled"
 export const fillAttrs = makeMap('checked,compact,declare,defer,disabled,ismap,multiple,nohref,noresize,noshade,nowrap,readonly,selected');
 
+// node转化之后需要过滤的属性
+export const filterAttrs = makeMap('style,class');
+
+
 

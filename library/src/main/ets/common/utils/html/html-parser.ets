@@ -5,19 +5,33 @@ import type { Attribute, NodeInfo, TextNode } from '../../types/HtmlParser';
 
 import { parseStyle, parseToArtUI } from '../css/index';
 import { strDiscode, urlToHttpUrl } from './discode';
-import { attr, block, closeSelf, empty, endTag, fillAttrs, inline, removeDOCTYPE, startTag, trimHtml } from './index';
+import {
+  attr,
+  block,
+  closeSelf,
+  empty,
+  endTag,
+  fillAttrs,
+  filterAttrs,
+  inline,
+  removeDOCTYPE,
+  startTag,
+  trimHtml
+} from './index';
 import Node from './node';
 import Stack from './stack';
+
+interface R extends NodeInfo {
+  imageUrls: string[];
+  text?: string;
+  source?: string
+}
 
 class HTMLParser {
   private last: string = '';
   private stack: Stack<string> = new Stack();
   private bufArray: NodeInfo[] = [];
-  public results: {
-    nodes: NodeInfo[];
-    imageUrls: string[];
-    source?: string
-  } = {
+  public results: R = {
     nodes: [],
     imageUrls: [],
   }
@@ -106,11 +120,13 @@ class HTMLParser {
     }
     node.attr = attrs?.reduce((pre, attr) => {
       const { name ,value} = attr;
-      if (name === 'class') {
-        node.classStr = value;
-      }
-      // make it array of attribute
-      if (name !== 'style' && value.match(/ /)) {
+
+      // 优化样式相关属性
+      if (name === 'style') {
+        const styleObj = parseStyle(value as string); // parse to object
+        node.artUIStyleObject = parseToArtUI(styleObj) as TextAttribute
+      } else if (value.match(/ /)) {
+        // make it array of attribute
         pre[name] = value.split(' ');
       }
       // if attr already exists
@@ -124,25 +140,14 @@ class HTMLParser {
           pre[name] = [pre[name], value];
         }
       } else {
-        // not exist, put it
-        pre[name] = value;
+        // 过滤属性
+        if (!filterAttrs[name]) {
+          pre[name] = value;
+        }
       }
 
       return pre;
     }, {});
-    // 优化样式相关属性
-    if ('style' in node.attr) {
-      const styleObj = parseStyle(node.attr.style as string); // parse to object
-      node.artUIStyleObject = parseToArtUI(styleObj) as TextAttribute
-    }
-    if (node.classStr) {
-      node.classStr += ` ${node.tag}`;
-    } else {
-      node.classStr = node.tag;
-    }
-    if (node.tagType === 'inline') {
-      node.classStr += ' inline';
-    }
 
     // 对img添加额外数据
     if (node.tag === 'img') {
@@ -245,21 +250,23 @@ class HTMLParser {
     };
 
     if (this.bufArray.length === 0) {
-      this.results.nodes.push(node);
+      // this.results.nodes.push(node);
+      this.results.node = 'text';
+      this.results.text = text;
     } else {
       const parent = this.bufArray[0];
       if (parent.nodes === undefined) {
         parent.nodes = [];
       }
-      parent.nodes.push(node);
+      // parent.nodes.push(node);
+      parent.node = 'text';
+      parent.text = text;
+
+
     }
   }
 
-  html2json(html: string): {
-    nodes: NodeInfo[];
-    imageUrls: string[];
-    source?: string
-  } {
+  html2json(html: string): R {
     // 在 HTML 解析过程中，通常我们会先处理结束标签（end tag）再处理开始标签（start tag）。这是因为在解析HTML的过程中，我们需要确保标签的嵌套是正确的，即开始标签和结束标签的配对应该是正确的
     // 处理字符串
     html = removeDOCTYPE(html);

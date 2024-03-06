@@ -15,7 +15,7 @@ export interface TextNode {
 }
 
 export interface NodeInfo {
-  node: 'element' | 'text';
+  node?: 'element' | 'text';
   tag?: string;
   $screen?: {
     width: number;
@@ -24,7 +24,6 @@ export interface NodeInfo {
   tagType?: 'block' | 'inline' | 'closeSelf';
   attr?: Attr;
   artUIStyleObject?: Record<string, any>;
-  classStr?: string;
   text?: string;
   nodes?: NodeInfo[];
 }
