@@ -154,36 +154,43 @@ class HTMLParser {
       if (imgUrl) {
         this.results.imageUrls.push(imgUrl);
       }
+      this.assignArtUIStyleObject(node, {
+        width: node?.artUIStyleObject?.width || node.attr.width,
+        height: node?.artUIStyleObject?.height || node.attr.height
+      })
+    }
+
+    // 处理video标签样式属性
+    if (node.tag === 'video') {
+      this.assignArtUIStyleObject(node, {
+        width: node?.artUIStyleObject?.width || node.attr.width || '100%',
+        height: node?.artUIStyleObject?.height || node.attr.height || '100%'
+      })
     }
 
     // 处理a标签属性
     if (node.tag === 'a') {
       node.attr.href = node.attr.href || '';
+      this.assignArtUIStyleObject(node, {
+        fontColor: Color.Blue,
+        decoration: { type: TextDecorationType.Underline, color: Color.Blue }
+      })
     }
 
     // 处理font标签样式属性
     if (node.tag === 'font') {
-      const fontSize = [
-        'x-small',
-        'small',
-        'medium',
-        'large',
-        'x-large',
-        'xx-large',
-        '-webkit-xxx-large',
-      ];
       const styleAttrs = {
-        color: 'color',
-        face: 'font-family',
-        size: 'font-size',
+        color: 'fontColor',
+        face: 'fontFamily',
+        size: 'fontSize',
       };
-      if (!node.attr.style) node.attr.style = {};
-      Object.keys(styleAttrs).forEach((key) => {
-        if (node.attr[key]) {
-          const value = key === 'size' ? fontSize[node.attr[key] - 1] : node.attr[key];
-          node.attr.style[styleAttrs[key]] = value;
+      if (!node.artUIStyleObject) node.artUIStyleObject = {};
+      for (let [k, v] of Object.entries(styleAttrs)) {
+        const value = node.attr[k];
+        if (value) {
+          node.artUIStyleObject[v] = value;
         }
-      });
+      }
     }
 
     // 临时记录source资源
@@ -302,6 +309,11 @@ class HTMLParser {
 
     this.parseEndTag();
     return this.results;
+  }
+
+  private assignArtUIStyleObject(node: NodeInfo, artUIStyleObject: Record<string, any>) {
+    if (!node.artUIStyleObject) node.artUIStyleObject = {};
+    Object.assign(node.artUIStyleObject, artUIStyleObject)
   }
 }
 

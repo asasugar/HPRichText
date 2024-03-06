@@ -1,12 +1,12 @@
 import type { NodeInfo } from '../../common/types/HtmlParser';
-import { parseToArtUI } from '../../common/utils/css';
 import HTMLParser from '../../common/utils/html/html-parser';
 import RichTextDataSource from '../../viewModel/RichTextDataSource';
 
 @Component
 export struct HPRichText {
   @Prop content: string;
-  private htmlJson: RichTextDataSource<NodeInfo> = new RichTextDataSource([]);
+  private htmlJson: NodeInfo[] = [];
+  private webviewUrl: string;
   // node子节点构造器内容
   @Builder nodeBuilder($$: {
     node: NodeInfo,
@@ -14,58 +14,43 @@ export struct HPRichText {
   }) {
     // 标签
     if ($$.node.node === 'element') {
-      // a
-      if ($$.node.tag === 'a') {
-        Row() {
-          if ($$.node.nodes.length) {
-            this.nodesBuilder({ nodes: new RichTextDataSource<NodeInfo>($$.node.nodes), paramsNodes: $$.node });
-          }
-        }
-      } else if ($$.node.tag === 'video') {
-        // video
+      // video
+      if ($$.node.tag === 'video') {
         Video({
           src: $$.node.attr?.src,
           previewUri: $$.node.attr?.poster,
         })
-          .width($$.node.attr?.width || '100%')
-          .height($$.node.attr?.height || '100%')
-          .objectFit(ImageFit.Contain)
-          .muted($$.node.attr?.muted)
-          .autoPlay($$.node.attr?.autoplay)
-          .controls(true) // 默认为非自定义控制器
-          .loop($$.node.attr?.loop);
+          .fancyVideo($$.node?.artUIStyleObject, $$.node?.attr)
       } else if ($$.node.tag === 'img') {
         // img
         Image($$.node.attr?.src)
-          .width($$.node?.artUIStyleObject?.width)
-          .height($$.node?.artUIStyleObject?.height)
-          .alt($$.node.attr?.alt);
+          .fancyImage($$.node?.artUIStyleObject, $$.node?.attr)
+        ;
       } else {
-        // Row() {
-        // 其他
+        // 其他嵌套递归
         if ($$.node.nodes.length) {
-          this.nodesBuilder({ nodes: new RichTextDataSource<NodeInfo>($$.node.nodes), paramsNodes: $$.node });
+          this.nodesBuilder({ nodes: $$.node.nodes, paramsNodes: $$.node });
         }
-        // }
       }
     } else {
       // 纯文本
       this.textBuilder({
         text: $$.node?.text,
         tag: $$.paramsNodes?.tag,
-        artUIStyleObject: $$.paramsNodes.artUIStyleObject
+        artUIStyleObject: $$.paramsNodes.artUIStyleObject,
+        attr: $$.paramsNodes.attr
       });
     }
   }
 
   // node列表节点构造器内容
   @Builder nodesBuilder($$: {
-    nodes: RichTextDataSource<NodeInfo>,
+    nodes: NodeInfo[],
     paramsNodes?: NodeInfo
   }) {
     List({ space: 0 }) {
       // List、Grid、Swiper以及WaterFlow
-      LazyForEach($$.nodes, (item) => {
+      LazyForEach(new RichTextDataSource($$.nodes), (item) => {
         ListItem() {
           this.nodeBuilder({ node: item, paramsNodes: $$.paramsNodes });
         }
@@ -77,35 +62,46 @@ export struct HPRichText {
   }
 
   // 文本样式构造器
-  @Builder textBuilder($$: {
-    text: string,
-    tag: string,
-    artUIStyleObject: NodeInfo['artUIStyleObject']
-  }) {
-    // a标签默认: 蓝色+下划线+点击事件
+  @Builder textBuilder($$: Pick<NodeInfo, 'text' | 'tag' | 'artUIStyleObject' | 'attr'>) {
+    // a标签增加点击事件
     if ($$.tag === 'a') {
       Text($$.text)
         .fancyText($$.artUIStyleObject)
-        .decoration({ type: TextDecorationType.Underline, color: Color.Blue })
+        .onClick(() => {
+          try {
+            // 等待真机验证
+            this.webviewUrl = $$.attr?.href;
+          } catch (error) {
+            console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
+          }
+        })
     } else {
       Text($$.text)
         .fancyText($$.artUIStyleObject);
     }
   }
 
+  @Builder richTextBuilder($$: {
+    nodes: NodeInfo[],
+    webviewUrl: string
+  }) {
+    this.nodesBuilder({ nodes: $$.nodes });
+  }
+
   aboutToAppear() {
     const htmlParser = new HTMLParser()
-    this.htmlJson = new RichTextDataSource(htmlParser.html2json(this.content).nodes);
-    console.log('1111222', JSON.stringify(this.htmlJson));
+    this.htmlJson = htmlParser.html2json(this.content).nodes;
+    console.log('转化之后的html', JSON.stringify(this.htmlJson));
   }
 
   build() {
-    this.nodesBuilder({ nodes: this.htmlJson });
+    this.richTextBuilder({ nodes: this.htmlJson, webviewUrl: this.webviewUrl })
   }
 }
 
 
-@Extend(Text) function fancyText({ flexBasis,flexGrow,flexShrink,alignSelf,clip,width,height,margin,padding,linearGradient,zIndex,border, opacity,backgroundColor,backgroundImage,backgroundRepeat,backgroundImageSize,backgroundImagePosition,rotate,scale,translate,transform,visibility,offset,decoration,lineHeight,letterSpacing,fontColor,fontSize,fontStyle,fontWeight,fontFamily,textOverflow,textAlign }: Record<string, any>) {
+@Extend(Text) function fancyText({ flexBasis, flexGrow, flexShrink, alignSelf, clip, width, height, margin, padding, linearGradient, zIndex, border, opacity, backgroundColor, backgroundImage, backgroundRepeat, backgroundImageSize, backgroundImagePosition, rotate, scale, translate, transform, visibility, offset, decoration, lineHeight, letterSpacing, fontColor, fontSize, fontStyle, fontWeight, fontFamily, textOverflow, textAlign }: Record<string, any>={
+}) {
   // TODO: 增加textOverflow属性就会报错，暂时先不加
   // .maxLines(styleObj?.['text-overflow'] === 'ellipsis' ? 1 : styleObj?.['-webkit-line-clamp'] ?? 999999)
   // .textOverflow({
@@ -142,4 +138,25 @@ export struct HPRichText {
   .fontWeight(fontWeight)
   .fontFamily(fontFamily)
   .textAlign(textAlign)
+}
+
+@Extend(Image) function fancyImage({ width, height, margin, padding, opacity }: Record<string, any>={
+}, { alt }: Record<string, any>={}) {
+  .width(width)
+  .height(height)
+  .margin(margin)
+  .padding(padding)
+  .alt(alt)
+  .opacity(opacity)
+}
+
+@Extend(Video) function fancyVideo({ width,height }: Record<string, any>={
+}, {muted,autoplay,loop}: Record<string, any>={}) {
+  .width(width)
+  .height(height)
+  .muted(muted)
+  .autoPlay(autoplay)
+  .loop(loop)
+  .controls(true) // 默认为非自定义控制器
+  .objectFit(ImageFit.Contain)
 }
