@@ -1,7 +1,7 @@
 /**
  * htmlParser改造自: https://github.com/blowsie/Pure-JavaScript-HTML5-Parser
  */
-import type { Attribute, NodeInfo, TextNode } from '../../types/HtmlParser';
+import type { Attribute, NodeInfo, TextNode, HtmlParserResult } from '../../types/HtmlParser';
 
 import { parseStyle, parseToArtUI } from '../css/index';
 import { strDiscode, urlToHttpUrl } from './discode';
@@ -21,17 +21,11 @@ import {
 import Node from './node';
 import Stack from './stack';
 
-interface R extends NodeInfo {
-  imageUrls: string[];
-  text?: string;
-  source?: string
-}
-
 class HTMLParser {
   private last: string = '';
   private stack: Stack<string> = new Stack();
   private bufArray: NodeInfo[] = [];
-  public results: R = {
+  public results: HtmlParserResult = {
     nodes: [],
     imageUrls: [],
   }
@@ -266,7 +260,7 @@ class HTMLParser {
     }
   }
 
-  html2json(html: string): R {
+  html2json(html: string): HtmlParserResult {
     // 在 HTML 解析过程中，通常我们会先处理结束标签（end tag）再处理开始标签（start tag）。这是因为在解析HTML的过程中，我们需要确保标签的嵌套是正确的，即开始标签和结束标签的配对应该是正确的
     // 处理字符串
     html = removeDOCTYPE(html);

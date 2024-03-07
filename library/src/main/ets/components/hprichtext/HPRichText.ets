@@ -1,11 +1,11 @@
-import type { NodeInfo } from '../../common/types/HtmlParser';
+import type { NodeInfo, HtmlParserResult } from '../../common/types/HtmlParser';
 import HTMLParser from '../../common/utils/html/html-parser';
 import RichTextDataSource from '../../viewModel/RichTextDataSource';
 
 @Component
 export struct HPRichText {
   @Prop content: string;
-  private htmlJson: NodeInfo[] = [];
+  private htmlJson: HtmlParserResult = {};
   private webviewUrl: string;
   // node子节点构造器内容
   @Builder nodeBuilder($$: {
@@ -13,16 +13,22 @@ export struct HPRichText {
     paramsNodes?: NodeInfo
   }) {
     if ($$.node.node === 'text') {
-
-      this.nodesBuilder({ nodes: $$.node.nodes, paramsNodes: $$.node });
-    } else {
-      // this.textBuilder({
-      //   text: $$.node?.text,
-      //   tag: $$.paramsNodes?.tag,
-      //   artUIStyleObject: $$.paramsNodes.artUIStyleObject,
-      //   attr: $$.paramsNodes.attr
-      // });
+      this.textBuilder({
+        text: $$.node?.text,
+        tag: $$.paramsNodes?.tag,
+        artUIStyleObject: $$.paramsNodes?.artUIStyleObject,
+        attr: $$.paramsNodes?.attr
+      });
     }
+    this.nodesBuilder({ nodes: $$.node.nodes, paramsNodes: $$.node });
+    // } else {
+    // this.textBuilder({
+    //   text: $$.node?.text,
+    //   tag: $$.paramsNodes?.tag,
+    //   artUIStyleObject: $$.paramsNodes.artUIStyleObject,
+    //   attr: $$.paramsNodes.attr
+    // });
+    // }
 
 
     // // 标签
@@ -66,41 +72,32 @@ export struct HPRichText {
     paramsNodes?: NodeInfo
   }) {
     // 父级元素类型是block
-    if ($$.paramsNodes?.text) {
-      Row() {
-        this.textBuilder({
-          text: $$.paramsNodes?.text,
-          tag: $$.paramsNodes?.tag,
-          artUIStyleObject: $$.paramsNodes?.artUIStyleObject,
-          attr: $$.paramsNodes?.attr
-        });
-        if ($$.nodes.length) {
-          List({ space: 0 }) {
-            // List、Grid、Swiper以及WaterFlow
-            LazyForEach(new RichTextDataSource($$.nodes), (item) => {
-              ListItem() {
-                this.nodesBuilder({ nodes: item.nodes, paramsNodes: item });
-              }
-            }, (item, index) => index + item.node);
+    // if ($$.nodes.length) {
+    List({ space: 0 }) {
+      // List、Grid、Swiper以及WaterFlow
+      LazyForEach(new RichTextDataSource($$.nodes), (item) => {
+        ListItem() {
+          if ($$.paramsNodes?.text && item.tagType === 'inline') {
+            Row() {
+              this.textBuilder({
+                text: $$.paramsNodes?.text,
+                tag: $$.paramsNodes?.tag,
+                artUIStyleObject: $$.paramsNodes?.artUIStyleObject,
+                attr: $$.paramsNodes?.attr
+              });
+              this.nodeBuilder({ node: item, paramsNodes: $$.paramsNodes });
+            }
+          } else {
+            this.nodeBuilder({ node: item, paramsNodes: $$.paramsNodes });
+            // this.nodesBuilder({ nodes: item.nodes, paramsNodes: item });
           }
-          .listDirection(Axis.Vertical) // 排列方向
-          .edgeEffect(EdgeEffect.Spring) // 滑动到边缘无效果
-          .width('100%');
         }
-      }
-    } else if ($$.nodes.length) {
-      List({ space: 0 }) {
-        // List、Grid、Swiper以及WaterFlow
-        LazyForEach(new RichTextDataSource($$.nodes), (item) => {
-          ListItem() {
-            this.nodesBuilder({ nodes: item.nodes, paramsNodes: item });
-          }
-        }, (item, index) => index + item.node);
-      }
-      .listDirection(Axis.Vertical) // 排列方向
-      .edgeEffect(EdgeEffect.Spring) // 滑动到边缘无效果
-      .width('100%');
+      }, (item, index) => index + item.node);
     }
+    .listDirection(Axis.Vertical) // 排列方向
+    .edgeEffect(EdgeEffect.Spring) // 滑动到边缘无效果
+    .width('100%');
+    // }
   }
 
   // 内联标签节点构造器内容
@@ -110,7 +107,7 @@ export struct HPRichText {
   }) {
     // 父级元素类型是block
     Row() {
-      Text('h1下划线')
+      // Text('h1下划线')
       List({ space: 0 }) {
         // List、Grid、Swiper以及WaterFlow
         LazyForEach(new RichTextDataSource($$.nodes), (item) => {
@@ -148,13 +145,12 @@ export struct HPRichText {
 
   aboutToAppear() {
     const htmlParser = new HTMLParser()
-    this.htmlJson = htmlParser.html2json(this.content).nodes;
+    this.htmlJson = htmlParser.html2json(this.content);
     console.log('转化之后的html', JSON.stringify(this.htmlJson));
   }
 
   build() {
-    // @ts-ignore
-    this.nodesBuilder({ nodes: this.htmlJson });
+    this.nodesBuilder({ nodes: this.htmlJson.nodes });
   }
 }
 

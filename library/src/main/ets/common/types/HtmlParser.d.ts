@@ -28,6 +28,12 @@ export interface NodeInfo {
   nodes?: NodeInfo[];
 }
 
+export interface HtmlParserResult extends NodeInfo {
+  imageUrls?: string[];
+  text?: string;
+  source?: string
+}
+
 interface Attr extends Record<string, any> {
   src?: string;
   alt?: string;
