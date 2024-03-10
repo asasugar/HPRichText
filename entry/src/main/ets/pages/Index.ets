@@ -4,7 +4,7 @@ import { HPRichText } from '@ohos/HPRichText'
 @Component
 struct Index {
   @State content: string = `
-  <h1 class=test style="text-align: center;text-decoration: underline #0000FF">h1下划线<u>我是下划线标签内容</u></h1>
+  <h1 class=test style="text-align: center;text-decoration: underline #0000FF">h1下划线1<u>我是下划线标签内容</u></h1>
 <button disabled>我是button按钮</button>
 `
   // <h3 style="text-align: center;text-decoration: underline #0000FF">h3标题3</h3>

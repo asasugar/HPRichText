@@ -1,12 +1,11 @@
 import type { NodeInfo, HtmlParserResult } from '../../common/types/HtmlParser';
 import HTMLParser from '../../common/utils/html/html-parser';
 import RichTextDataSource from '../../viewModel/RichTextDataSource';
-
+import parseHtml from '../../common/utils/html/html-parser1';
 @Component
 export struct HPRichText {
   @Prop content: string;
   private htmlJson: HtmlParserResult = {};
-  private webviewUrl: string;
   // node子节点构造器内容
   @Builder nodeBuilder($$: {
     node: NodeInfo,
@@ -85,6 +84,8 @@ export struct HPRichText {
                 artUIStyleObject: $$.paramsNodes?.artUIStyleObject,
                 attr: $$.paramsNodes?.attr
               });
+
+
               this.nodeBuilder({ node: item, paramsNodes: $$.paramsNodes });
             }
           } else {
@@ -100,29 +101,6 @@ export struct HPRichText {
     // }
   }
 
-  // 内联标签节点构造器内容
-  @Builder inlineNodesBuilder($$: {
-    nodes: NodeInfo[],
-    paramsNodes?: NodeInfo
-  }) {
-    // 父级元素类型是block
-    Row() {
-      // Text('h1下划线')
-      List({ space: 0 }) {
-        // List、Grid、Swiper以及WaterFlow
-        LazyForEach(new RichTextDataSource($$.nodes), (item) => {
-          ListItem() {
-            this.nodeBuilder({ node: item, paramsNodes: $$.paramsNodes });
-          }
-        }, (item, index) => index + item.node);
-      }
-      .listDirection(Axis.Vertical) // 排列方向
-      .edgeEffect(EdgeEffect.Spring) // 滑动到边缘无效果
-      .width('100%');
-    }
-
-  }
-
   // 文本样式构造器
   @Builder textBuilder($$: Pick<NodeInfo, 'text' | 'tag' | 'artUIStyleObject' | 'attr'>) {
     // a标签增加点击事件
@@ -132,7 +110,6 @@ export struct HPRichText {
         .onClick(() => {
           try {
             // 等待真机验证
-            this.webviewUrl = $$.attr?.href;
           } catch (error) {
             console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
           }
@@ -146,11 +123,13 @@ export struct HPRichText {
   aboutToAppear() {
     const htmlParser = new HTMLParser()
     this.htmlJson = htmlParser.html2json(this.content);
-    console.log('转化之后的html', JSON.stringify(this.htmlJson));
+
+
+    console.log('转化之后的html', JSON.stringify(parseHtml(this.content)));
   }
 
   build() {
-    this.nodesBuilder({ nodes: this.htmlJson.nodes });
+    // this.nodesBuilder({ nodes: this.htmlJson.nodes });
   }
 }
 

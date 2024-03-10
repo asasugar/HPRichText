@@ -26,6 +26,7 @@ export interface NodeInfo {
   artUIStyleObject?: Record<string, any>;
   text?: string;
   nodes?: NodeInfo[];
+  children?: NodeInfo[];
 }
 
 export interface HtmlParserResult extends NodeInfo {
