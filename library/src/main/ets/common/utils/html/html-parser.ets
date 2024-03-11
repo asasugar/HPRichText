@@ -29,8 +29,38 @@ class HTMLParser {
     nodes: [],
     imageUrls: [],
   }
+  private customHandler: {
+    start: Function,
+    end: Function,
+    chars: Function
+  };
+  private imageProp: {
+    mode: string,
+    padding: number,
+    lazyLoad: boolean,
+    domain: string,
+  }
 
-  private parseEndTag(tagName?: string) {
+  constructor(customHandler = {
+    start() {
+      return (node) => {
+        node.attr.class = null;
+        node.attr.style = null;
+      };
+    },
+    end: null,
+    chars: null
+  }, imageProp = {
+    mode: 'aspectFit',
+    padding: 0,
+    lazyLoad: false,
+    domain: '',
+  }) {
+    this.customHandler = customHandler;
+    this.imageProp = imageProp;
+  }
+
+  private parseEndTag(tag, tagName?: string) {
     // If no tag name is provided, clean shop
     let pos = tagName ? this.stack.lastIndexOf(tagName.toLowerCase()) : 0;
     if (pos >= 0) {
@@ -39,25 +69,6 @@ class HTMLParser {
         this.end(this.stack.pop());
       }
     }
-    // let pos;
-    // if (!tagName) {
-    //   pos = 0;
-    // } else {
-    //   // Find the closest opened tag of the same type
-    //   tagName = tagName.toLowerCase();
-    //   for (pos = this.stack.length - 1; pos >= 0; pos -= 1) {
-    //     if (this.stack[pos] === tagName) break;
-    //   }
-    // }
-    // if (pos >= 0) {
-    //   // Close all the open elements, up the stack
-    //   for (let i = this.stack.length - 1; i >= pos; i -= 1) {
-    //     this.end(this.stack[i]);
-    //   }
-    //
-    //   // Remove the open elements from the stack
-    //   this.stack.length = pos;
-    // }
   }
 
   private parseStartTag(tag: any, tagName: string, rest: string, unary: boolean) {
@@ -65,12 +76,12 @@ class HTMLParser {
     // 处理块级标签内的内联元素
     if (block[tagName]) {
       while (this.stack.last() && inline[this.stack.last()]) {
-        this.parseEndTag(this.stack.last());
+        this.parseEndTag('', this.stack.last());
       }
     }
     // 处理自闭合标签
     if (closeSelf[tagName] && this.stack.last() === tagName) {
-      this.parseEndTag(tagName);
+      this.parseEndTag('', tagName);
     }
 
     unary = empty[tagName] || !!unary;
@@ -146,8 +157,8 @@ class HTMLParser {
     // 对img添加额外数据
     if (node.tag === 'img') {
       let imgUrl = node.attr.src;
-      imgUrl = urlToHttpUrl(imgUrl);
-      Object.assign(node.attr, {
+      imgUrl = urlToHttpUrl(imgUrl, this.imageProp.domain);
+      Object.assign(node.attr, this.imageProp, {
         src: imgUrl || '',
       });
       if (imgUrl) {
@@ -197,6 +208,8 @@ class HTMLParser {
       this.results.source = node.attr.src;
     }
 
+    this.customHandler?.start?.(node, this.results);
+
     if (unary) {
       // if this tag doesn't have end tag
       // like <img src="hoge.png"/>
@@ -224,6 +237,8 @@ class HTMLParser {
       delete this.results.source;
     }
 
+    this.customHandler?.end?.(node, this.results);
+
     if (this.bufArray.length === 0) {
       this.results.nodes.push(node);
     } else {
@@ -243,20 +258,16 @@ class HTMLParser {
       text,
     };
 
+    this.customHandler?.chars?.(node, this.results);
+
     if (this.bufArray.length === 0) {
-      // this.results.nodes.push(node);
-      this.results.node = 'text';
-      this.results.text = text;
+      this.results.nodes.push(node);
     } else {
       const parent = this.bufArray[0];
       if (parent.nodes === undefined) {
         parent.nodes = [];
       }
-      // parent.nodes.push(node);
-      parent.node = 'text';
-      parent.text = text;
-
-
+      parent.nodes.push(node);
     }
   }
 
@@ -308,7 +319,7 @@ class HTMLParser {
       this.last = html;
     }
 
-    this.parseEndTag();
+    this.parseEndTag(undefined, undefined);
     return this.results;
   }
 

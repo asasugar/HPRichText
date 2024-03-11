@@ -1,7 +1,7 @@
 import type { NodeInfo, HtmlParserResult } from '../../common/types/HtmlParser';
 import HTMLParser from '../../common/utils/html/html-parser';
 import RichTextDataSource from '../../viewModel/RichTextDataSource';
-import parseHtml from '../../common/utils/html/html-parser1';
+
 @Component
 export struct HPRichText {
   @Prop content: string;
@@ -123,9 +123,17 @@ export struct HPRichText {
   aboutToAppear() {
     const htmlParser = new HTMLParser()
     this.htmlJson = htmlParser.html2json(this.content);
+    console.log('转化之后的html11', JSON.stringify(this.htmlJson));
 
 
-    console.log('转化之后的html', JSON.stringify(parseHtml(this.content)));
+    // @ts-ignore
+    // console.log('转化之后的html1', JSON.stringify(parseHtml(this.content, customHandler,
+    //   {
+    //     mode: 'aspectFit',
+    //     padding: 0,
+    //     lazyLoad: false,
+    //     domain: ''
+    //   })));
   }
 
   build() {

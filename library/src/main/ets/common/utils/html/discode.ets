@@ -1,5 +1,5 @@
 // HTML 支持的数学符号
-function strNumDiscode (str) {
+function strNumDiscode(str) {
   str = str.replace(/&forall;/g, '∀');
   str = str.replace(/&part;/g, '∂');
   str = str.replace(/&exist;/g, '∃');
@@ -41,7 +41,7 @@ function strNumDiscode (str) {
 }
 
 // HTML 支持的希腊字母
-function strGreeceDiscode (str) {
+function strGreeceDiscode(str) {
   str = str.replace(/&Alpha;/g, 'Α');
   str = str.replace(/&Beta;/g, 'Β');
   str = str.replace(/&Gamma;/g, 'Γ');
@@ -99,7 +99,7 @@ function strGreeceDiscode (str) {
   return str;
 }
 
-function strcharacterDiscode (str) {
+function strcharacterDiscode(str) {
   // 加入常用解析
   str = str.replace(/&nbsp;/g, ' ');
   str = str.replace(/&ensp;/g, ' ');
@@ -114,7 +114,7 @@ function strcharacterDiscode (str) {
 }
 
 // HTML 支持的其他实体
-function strOtherDiscode (str) {
+function strOtherDiscode(str) {
   str = str.replace(/&OElig;/g, 'Œ');
   str = str.replace(/&oelig;/g, 'œ');
   str = str.replace(/&Scaron;/g, 'Š');
@@ -172,7 +172,7 @@ function strOtherDiscode (str) {
   return str;
 }
 
-function strDiscode (str) {
+function strDiscode(str) {
   str = strNumDiscode(str);
   str = strGreeceDiscode(str);
   str = strcharacterDiscode(str);
@@ -180,16 +180,15 @@ function strDiscode (str) {
   return str;
 }
 
-function urlToHttpUrl (url) {
+function urlToHttpUrl(url, domain) {
   if (/^\/\//.test(url)) {
     return `https:${url}`;
   } else if (/^\//.test(url)) {
-    return `https://${url}`;
+    return `https://${domain}${url}`;
   }
   return url;
 }
 
 export {
-  strDiscode,
-  urlToHttpUrl
+  strDiscode, urlToHttpUrl
 };
