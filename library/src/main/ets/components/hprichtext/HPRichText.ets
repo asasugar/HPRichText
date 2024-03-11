@@ -6,99 +6,66 @@ import RichTextDataSource from '../../viewModel/RichTextDataSource';
 export struct HPRichText {
   @Prop content: string;
   private htmlJson: HtmlParserResult = {};
-  // node子节点构造器内容
-  @Builder nodeBuilder($$: {
-    node: NodeInfo,
-    paramsNodes?: NodeInfo
-  }) {
-    if ($$.node.node === 'text') {
-      this.textBuilder({
-        text: $$.node?.text,
-        tag: $$.paramsNodes?.tag,
-        artUIStyleObject: $$.paramsNodes?.artUIStyleObject,
-        attr: $$.paramsNodes?.attr
-      });
-    }
-    this.nodesBuilder({ nodes: $$.node.nodes, paramsNodes: $$.node });
-    // } else {
-    // this.textBuilder({
-    //   text: $$.node?.text,
-    //   tag: $$.paramsNodes?.tag,
-    //   artUIStyleObject: $$.paramsNodes.artUIStyleObject,
-    //   attr: $$.paramsNodes.attr
-    // });
-    // }
-
-
-    // // 标签
-    // if ($$.node.node === 'element') {
-    //   // video
-    //   if ($$.node.tag === 'video') {
-    //     Video({
-    //       src: $$.node.attr?.src,
-    //       previewUri: $$.node.attr?.poster,
-    //     })
-    //       .fancyVideo($$.node?.artUIStyleObject, $$.node?.attr)
-    //   } else if ($$.node.tag === 'img') {
-    //     // img
-    //     Image($$.node.attr?.src)
-    //       .fancyImage($$.node?.artUIStyleObject, $$.node?.attr)
-    //     ;
-    //   } else if ($$.node.tagType === 'block') {
-    //     // console.log()
-    //     // 其他块级标签
-    //     if ($$.node.nodes.length) {
-    //       this.nodesBuilder({ nodes: $$.node.nodes, paramsNodes: $$.node });
-    //     }
-    //   } else {
-    //     // 内联标签
-    //     this.nodesBuilder({ nodes: $$.node.nodes, paramsNodes: $$.node });
-    //   }
-    // } else {
-    //   // 纯文本
-    //   this.textBuilder({
-    //     text: $$.node?.text,
-    //     tag: $$.paramsNodes?.tag,
-    //     artUIStyleObject: $$.paramsNodes.artUIStyleObject,
-    //     attr: $$.paramsNodes.attr
-    //   });
-    // }
-  }
 
   // element类型的节点构造器内容
   @Builder nodesBuilder($$: {
     nodes: NodeInfo[],
     paramsNodes?: NodeInfo
   }) {
-    // 父级元素类型是block
-    // if ($$.nodes.length) {
+    // 遍历
     List({ space: 0 }) {
       // List、Grid、Swiper以及WaterFlow
-      LazyForEach(new RichTextDataSource($$.nodes), (item) => {
-        ListItem() {
-          if ($$.paramsNodes?.text && item.tagType === 'inline') {
-            Row() {
-              this.textBuilder({
-                text: $$.paramsNodes?.text,
-                tag: $$.paramsNodes?.tag,
-                artUIStyleObject: $$.paramsNodes?.artUIStyleObject,
-                attr: $$.paramsNodes?.attr
-              });
+      LazyForEach(new RichTextDataSource($$.nodes), (item, index) => {
+        // 标签
+        if (item.node === 'element') {
+          ListItem() {
+            // video
+            if (item.tag === 'video') {
+              Video({
+                src: item.attr?.src,
+                previewUri: item.attr?.poster,
+              })
+                .fancyVideo(item?.artUIStyleObject, item?.attr)
+            } else if (item.tag === 'img') {
+              // img
+              Image(item.attr?.src)
+                .fancyImage(item?.artUIStyleObject, item?.attr);
+            } else if (item.nodes.length) {
+              // 如果nodes列表中下一个节点是inline类型，则需要处理为同层级使用Row包裹
+              if (item.nodes[index] && item.nodes?.[index + 1]?.tagType === 'inline') {
+                Row() {
+                  // 纯文本
+                  if (item.nodes[index].node === 'text') {
+                    this.textBuilder({
+                      text: item.nodes[index]?.text,
+                      tag: item?.tag,
+                      artUIStyleObject: item.artUIStyleObject,
+                      attr: item.attr
+                    });
+                  }
 
+                  this.nodesBuilder({ nodes: item.nodes.slice(1), paramsNodes: item });
+                }
+              } else {
 
-              this.nodeBuilder({ node: item, paramsNodes: $$.paramsNodes });
+                this.nodesBuilder({ nodes: item.nodes, paramsNodes: item });
+              }
             }
-          } else {
-            this.nodeBuilder({ node: item, paramsNodes: $$.paramsNodes });
-            // this.nodesBuilder({ nodes: item.nodes, paramsNodes: item });
           }
+        } else if (item.node === 'text') {
+          // 纯文本
+          this.textBuilder({
+            text: item?.text,
+            tag: $$.paramsNodes?.tag,
+            artUIStyleObject: $$.paramsNodes.artUIStyleObject,
+            attr: $$.paramsNodes.attr
+          });
         }
       }, (item, index) => index + item.node);
     }
     .listDirection(Axis.Vertical) // 排列方向
     .edgeEffect(EdgeEffect.Spring) // 滑动到边缘无效果
     .width('100%');
-    // }
   }
 
   // 文本样式构造器
@@ -121,23 +88,13 @@ export struct HPRichText {
   }
 
   aboutToAppear() {
-    const htmlParser = new HTMLParser()
+    const htmlParser = new HTMLParser();
     this.htmlJson = htmlParser.html2json(this.content);
     console.log('转化之后的html11', JSON.stringify(this.htmlJson));
-
-
-    // @ts-ignore
-    // console.log('转化之后的html1', JSON.stringify(parseHtml(this.content, customHandler,
-    //   {
-    //     mode: 'aspectFit',
-    //     padding: 0,
-    //     lazyLoad: false,
-    //     domain: ''
-    //   })));
   }
 
   build() {
-    // this.nodesBuilder({ nodes: this.htmlJson.nodes });
+    this.nodesBuilder({ nodes: this.htmlJson.nodes });
   }
 }
 

@@ -44,5 +44,4 @@ export const fillAttrs = makeMap('checked,compact,declare,defer,disabled,ismap,m
 // node转化之后需要过滤的属性
 export const filterAttrs = makeMap('style,class');
 
-
-
+export const special = makeMap('script,style');

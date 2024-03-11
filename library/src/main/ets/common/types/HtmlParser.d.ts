@@ -9,13 +9,12 @@ export interface ScreenInfo {
   height: number;
 }
 
-export interface TextNode {
-  node: 'text';
+export interface SimpleNode {
+  node?: 'element' | 'text' | 'comment';
   text?: string;
 }
 
-export interface NodeInfo {
-  node?: 'element' | 'text';
+export interface NodeInfo extends SimpleNode {
   tag?: string;
   $screen?: {
     width: number;
@@ -24,14 +23,24 @@ export interface NodeInfo {
   tagType?: 'block' | 'inline' | 'closeSelf';
   attr?: Attr;
   artUIStyleObject?: Record<string, any>;
-  text?: string;
   nodes?: NodeInfo[];
   children?: NodeInfo[];
 }
 
+export interface CustomHandler {
+  start: Function,
+  end: Function,
+  chars: Function
+}
+
+export interface ImageProp {
+  mode: string,
+  padding: number,
+  lazyLoad: boolean,
+  domain: string,
+}
+
 export interface HtmlParserResult extends NodeInfo {
-  imageUrls?: string[];
-  text?: string;
   source?: string
 }
 

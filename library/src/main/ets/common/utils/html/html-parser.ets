@@ -1,8 +1,14 @@
 /**
  * htmlParser改造自: https://github.com/blowsie/Pure-JavaScript-HTML5-Parser
  */
-import type { Attribute, NodeInfo, TextNode, HtmlParserResult } from '../../types/HtmlParser';
-
+import type {
+  Attribute,
+  NodeInfo,
+  SimpleNode,
+  CustomHandler,
+  ImageProp,
+  HtmlParserResult
+} from '../../types/HtmlParser';
 import { parseStyle, parseToArtUI } from '../css/index';
 import { strDiscode, urlToHttpUrl } from './discode';
 import {
@@ -11,6 +17,7 @@ import {
   closeSelf,
   empty,
   endTag,
+  special,
   fillAttrs,
   filterAttrs,
   inline,
@@ -27,21 +34,8 @@ class HTMLParser {
   private bufArray: NodeInfo[] = [];
   public results: HtmlParserResult = {
     nodes: [],
-    imageUrls: [],
   }
-  private customHandler: {
-    start: Function,
-    end: Function,
-    chars: Function
-  };
-  private imageProp: {
-    mode: string,
-    padding: number,
-    lazyLoad: boolean,
-    domain: string,
-  }
-
-  constructor(customHandler = {
+  private customHandler: CustomHandler = {
     start() {
       return (node) => {
         node.attr.class = null;
@@ -50,12 +44,15 @@ class HTMLParser {
     },
     end: null,
     chars: null
-  }, imageProp = {
+  };
+  private imageProp: ImageProp = {
     mode: 'aspectFit',
     padding: 0,
     lazyLoad: false,
     domain: '',
-  }) {
+  }
+
+  constructor(customHandler?: CustomHandler, imageProp?: ImageProp) {
     this.customHandler = customHandler;
     this.imageProp = imageProp;
   }
@@ -111,7 +108,7 @@ class HTMLParser {
 
     if (this.bufArray.length !== 0) {
       const parent = this.bufArray[0];
-      if (parent.nodes === undefined) {
+      if (!parent.nodes) {
         parent.nodes = [];
       }
     }
@@ -161,9 +158,6 @@ class HTMLParser {
       Object.assign(node.attr, this.imageProp, {
         src: imgUrl || '',
       });
-      if (imgUrl) {
-        this.results.imageUrls.push(imgUrl);
-      }
       this.assignArtUIStyleObject(node, {
         width: node?.artUIStyleObject?.width || node.attr.width,
         height: node?.artUIStyleObject?.height || node.attr.height
@@ -210,16 +204,26 @@ class HTMLParser {
 
     this.customHandler?.start?.(node, this.results);
 
+
+    // 处理行内数据
+    // console.log('123', JSON.stringify(node))
+    // if (node.tagType === 'inline') {
+    //   // @ts-ignore
+    //   node.index = 1;
+    // }
+
     if (unary) {
       // if this tag doesn't have end tag
       // like <img src="hoge.png"/>
       // add to parents
       const parent = this.bufArray[0] || this.results;
-      if (parent.nodes === undefined) {
+      if (!parent.nodes) {
         parent.nodes = [];
       }
+
       parent.nodes.push(node);
     } else {
+
       this.bufArray.unshift(node);
     }
   }
@@ -253,7 +257,7 @@ class HTMLParser {
   private chars(text: string) {
     if (!text.trim()) return;
 
-    const node: TextNode = {
+    const node: SimpleNode = {
       node: 'text',
       text,
     };
@@ -264,14 +268,28 @@ class HTMLParser {
       this.results.nodes.push(node);
     } else {
       const parent = this.bufArray[0];
-      if (parent.nodes === undefined) {
+      if (!parent.nodes) {
         parent.nodes = [];
       }
       parent.nodes.push(node);
     }
   }
 
-  html2json(html: string): HtmlParserResult {
+  private comment(text: string) {
+    const node: SimpleNode = {
+      node: 'comment',
+      text
+    };
+    const parent = this.bufArray[0];
+
+    if (!parent.children) {
+      parent.children = [];
+    }
+
+    parent.children.push(node);
+  }
+
+  html2json(html: string): NodeInfo {
     // 在 HTML 解析过程中，通常我们会先处理结束标签（end tag）再处理开始标签（start tag）。这是因为在解析HTML的过程中，我们需要确保标签的嵌套是正确的，即开始标签和结束标签的配对应该是正确的
     // 处理字符串
     html = removeDOCTYPE(html);
@@ -280,41 +298,59 @@ class HTMLParser {
     let chars, index, match;
     while (html) {
       chars = true;
+      if (!this.stack.last() || !special[this.stack.last()]) {
+        // Comment
+        if (html.startsWith('<!--')) {
+          index = html.indexOf('-->');
 
-      if (html.startsWith('</')) {
-        match = html.match(endTag);
+          if (index >= 0) {
+            this.comment(html.substring(4, index));
+            html = html.substring(index + 3);
+            chars = false;
+          }
+          // end tag
+        } else if (html.startsWith('</')) {
+          match = html.match(endTag);
 
-        if (match) {
-          html = html.substring(match[0].length);
+          if (match) {
+            html = html.substring(match[0].length);
 
-          match[0].replace(endTag, this.parseEndTag.bind(this));
-          chars = false;
+            match[0].replace(endTag, this.parseEndTag.bind(this));
+            chars = false;
+          }
+          // start tag
+        } else if (html.startsWith('<')) {
+          match = html.match(startTag);
+
+          if (match) {
+            html = html.substring(match[0].length);
+            match[0].replace(startTag, this.parseStartTag.bind(this));
+            chars = false;
+          }
         }
-        // start tag
-      } else if (html.startsWith('<')) {
-        match = html.match(startTag);
 
-        if (match) {
-          html = html.substring(match[0].length);
-          match[0].replace(startTag, this.parseStartTag.bind(this));
-          chars = false;
-        }
-      }
-
-      if (chars) {
-        index = html.indexOf('<');
-        let text = '';
-        while (index === 0) {
-          text += '<';
-          html = html.substring(1);
+        if (chars) {
           index = html.indexOf('<');
+          let text = '';
+          while (index === 0) {
+            text += '<';
+            html = html.substring(1);
+            index = html.indexOf('<');
+          }
+          text += index < 0 ? html : html.substring(0, index);
+          html = index < 0 ? '' : html.substring(index);
+
+          this.chars(text);
         }
-        text += index < 0 ? html : html.substring(0, index);
-        html = index < 0 ? '' : html.substring(index);
-
-        this.chars(text);
+      } else {
+        // 处理style，script标签
+        html = html.replace(new RegExp('([\\s\\S]*?)<\/' + this.stack.last() + '[^>]*>'), function (all, text) {
+          text = text.replace(/<!--([\s\S]*?)-->|<!\[CDATA\[([\s\S]*?)]]>/g, '$1$2');
+          this.chars(text);
+          return '';
+        });
+        this.parseEndTag('', this.stack.last());
       }
-
       if (html === this.last) throw new Error(`Parse Error: ${html}`);
       this.last = html;
     }
