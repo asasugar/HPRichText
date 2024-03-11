@@ -4,7 +4,7 @@ import { HPRichText } from '@ohos/HPRichText'
 @Component
 struct Index {
   @State content: string = `
-  <h1 class=test style="text-align: center;text-decoration: underline #0000FF">111<u>我是下划线标签内容1</u></h1>
+  <h1 class=test style="text-align: center;text-decoration: underline #0000FF">12211<u>我是下划线标签内容</u><p>我是P标签</p>11111112<u>666</u></h1>
 <button disabled>我是button按钮</button>
 `
   // <h3 style="text-align: center;text-decoration: underline #0000FF">h3标题3</h3>
@@ -22,37 +22,7 @@ struct Index {
   build() {
     Column() {
       HPRichText({ content: this.content })
-      // List({ space: 0 }) {
-      //   // List、Grid、Swiper以及WaterFlow
-      //   ListItem() {
-      //     Row() {
-      //       Text('h1下划线')
-      //       List({ space: 0 }) {
-      //         ListItem() {
-      //           List({ space: 0 }) {
-      //             // List、Grid、Swiper以及WaterFlow
-      //             ListItem() {
-      //               Text('我是下划线标签内容')
-      //             }
-      //           }
-      //           .listDirection(Axis.Vertical) // 排列方向
-      //           .edgeEffect(EdgeEffect.Spring) // 滑动到边缘无效果
-      //           .width('100%');
-      //         }
-      //       }
-      //       .listDirection(Axis.Vertical) // 排列方向
-      //       .edgeEffect(EdgeEffect.Spring) // 滑动到边缘无效果
-      //       .width('100%');
-      //     }
-      //   }
-      //
-      //   ListItem() {
-      //     Text('我是button按钮')
-      //   }
-      // }
-      // .listDirection(Axis.Vertical) // 排列方向
-      // .edgeEffect(EdgeEffect.Spring) // 滑动到边缘无效果
-      // .width('100%');
     }
+    .alignItems(HorizontalAlign.Start)
   }
 }

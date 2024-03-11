@@ -7,15 +7,77 @@ export struct HPRichText {
   @Prop content: string;
   private htmlJson: HtmlParserResult = {};
 
+  @Builder inlineNodesBuilder($$: {
+    nodes: NodeInfo[],
+    parentNode?: NodeInfo
+  }) {
+    if ($$.nodes.length) {
+      ForEach($$.nodes, (item) => {
+        // 标签
+        if (item.node === 'element') {
+          // video
+          if (item.tag === 'video') {
+            Video({
+              src: item.attr?.src,
+              previewUri: item.attr?.poster,
+            })
+              .fancyVideo(item?.artUIStyleObject, item?.attr)
+          } else if (item.tag === 'img') {
+            // img
+            Image(item.attr?.src)
+              .fancyImage(item?.artUIStyleObject, item?.attr);
+          } else {
+            // 处理行内样式层级问题
+            if (item.nodes.findIndex(node => node.tagType === 'block') > -1) {
+              // 若找到块级标签，则三等分递归保证block标签是唯一的一项
+              Row() {
+                this.inlineNodesBuilder({
+                  nodes: item.nodes.slice(0, item.nodes.findIndex(node => node.tagType === 'block')),
+                  parentNode: item
+                });
+              }
+
+              Row() {
+                this.inlineNodesBuilder({
+                  nodes: [item.nodes[item.nodes.findIndex(node => node.tagType === 'block')]],
+                  parentNode: item
+                });
+              }
+
+              Row() {
+                this.inlineNodesBuilder({
+                  nodes: item.nodes.slice(item.nodes.findIndex(node => node.tagType === 'block') + 1),
+                  parentNode: item
+                });
+              }
+            } else {
+              Row() {
+                this.inlineNodesBuilder({ nodes: item.nodes, parentNode: item });
+              }
+            }
+          }
+        } else if (item.node === 'text') {
+          Row() {
+            this.textBuilder({ node: item, parentNode: $$.parentNode });
+          }
+        }
+      }, (item, index) => index + item.node)
+    }
+  }
   // element类型的节点构造器内容
   @Builder nodesBuilder($$: {
     nodes: NodeInfo[],
-    paramsNodes?: NodeInfo
+    parentNode?: NodeInfo
   }) {
+
     // 遍历
     List({ space: 0 }) {
       // List、Grid、Swiper以及WaterFlow
       LazyForEach(new RichTextDataSource($$.nodes), (item, index) => {
+
+        if (item.tagType !== 'block' && $$.nodes) {
+
+        }
         // 标签
         if (item.node === 'element') {
           ListItem() {
@@ -30,50 +92,56 @@ export struct HPRichText {
               // img
               Image(item.attr?.src)
                 .fancyImage(item?.artUIStyleObject, item?.attr);
-            } else if (item.nodes.length) {
+            } else {
+              this.nodesBuilder({ nodes: item.nodes, parentNode: item });
+
               // 如果nodes列表中下一个节点是inline类型，则需要处理为同层级使用Row包裹
               if (item.nodes[index] && item.nodes?.[index + 1]?.tagType === 'inline') {
                 Row() {
                   // 纯文本
                   if (item.nodes[index].node === 'text') {
-                    this.textBuilder({
-                      text: item.nodes[index]?.text,
-                      tag: item?.tag,
-                      artUIStyleObject: item.artUIStyleObject,
-                      attr: item.attr
-                    });
+                    // this.textBuilder({
+                    //   text: item.nodes[index]?.text,
+                    //   tag: item?.tag,
+                    //   artUIStyleObject: item.artUIStyleObject,
+                    //   attr: item.attr
+                    // });
                   }
 
-                  this.nodesBuilder({ nodes: item.nodes.slice(1), paramsNodes: item });
+                  this.nodesBuilder({ nodes: item.nodes.slice(1), parentNode: item });
                 }
               } else {
 
-                this.nodesBuilder({ nodes: item.nodes, paramsNodes: item });
+                this.nodesBuilder({ nodes: item.nodes, parentNode: item });
               }
             }
           }
         } else if (item.node === 'text') {
           // 纯文本
-          this.textBuilder({
-            text: item?.text,
-            tag: $$.paramsNodes?.tag,
-            artUIStyleObject: $$.paramsNodes.artUIStyleObject,
-            attr: $$.paramsNodes.attr
-          });
+          // this.textBuilder({
+          //   text: item?.text,
+          //   tag: $$.parentNode?.tag,
+          //   artUIStyleObject: $$.parentNode.artUIStyleObject,
+          //   attr: $$.parentNode.attr
+          // });
         }
       }, (item, index) => index + item.node);
     }
     .listDirection(Axis.Vertical) // 排列方向
-    .edgeEffect(EdgeEffect.Spring) // 滑动到边缘无效果
-    .width('100%');
+    .edgeEffect(EdgeEffect.None) // 滑动到边缘无效果
+    .width('100%')
   }
 
   // 文本样式构造器
-  @Builder textBuilder($$: Pick<NodeInfo, 'text' | 'tag' | 'artUIStyleObject' | 'attr'>) {
+  @Builder textBuilder($$: {
+    node: NodeInfo,
+    parentNode: NodeInfo
+  }) {
+
     // a标签增加点击事件
-    if ($$.tag === 'a') {
-      Text($$.text)
-        .fancyText($$.artUIStyleObject)
+    if ($$.node.tag === 'a') {
+      Text($$.node.text)
+        .fancyText($$.parentNode.artUIStyleObject)
         .onClick(() => {
           try {
             // 等待真机验证
@@ -82,19 +150,21 @@ export struct HPRichText {
           }
         })
     } else {
-      Text($$.text)
-        .fancyText($$.artUIStyleObject);
+      Text($$.node.text)
+        .fancyText($$.parentNode.artUIStyleObject);
     }
   }
 
   aboutToAppear() {
     const htmlParser = new HTMLParser();
     this.htmlJson = htmlParser.html2json(this.content);
-    console.log('转化之后的html11', JSON.stringify(this.htmlJson));
+    console.log('转化之后的html11', JSON.stringify(this.htmlJson.nodes));
   }
 
   build() {
-    this.nodesBuilder({ nodes: this.htmlJson.nodes });
+    this.inlineNodesBuilder({ nodes: this.htmlJson.nodes });
+
+    // this.nodesBuilder({ nodes: this.htmlJson.nodes });
   }
 }
 
