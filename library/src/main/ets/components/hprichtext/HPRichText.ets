@@ -7,11 +7,52 @@ export struct HPRichText {
   @Prop content: string;
   private htmlJson: HtmlParserResult = {};
 
+  getBlockIndex(node: NodeInfo): number {
+    const index = node.nodes.findIndex(node => node.tagType === 'block');
+    return index;
+  }
+
+  @Builder labelLevelBuilder($$: {
+    node: NodeInfo
+  }) {
+    if ($$.node) {
+      // 处理行内样式层级问题
+      if (this.getBlockIndex($$.node) > -1) {
+        // 若找到块级标签，则三等分递归保证block标签是唯一的一项
+        // 前面一项都是非block
+        Row() {
+          this.inlineNodesBuilder({
+            nodes: $$.node.nodes.slice(0, this.getBlockIndex($$.node)),
+            parentNode: $$.node
+          });
+        }
+        // 中间一项为单独的block
+        this.inlineNodesBuilder({
+          nodes: [$$.node.nodes[this.getBlockIndex($$.node)]],
+          parentNode: $$.node
+        });
+
+        // 第三项中可能还存在block，所以需要递归处理第三项数据
+        this.labelLevelBuilder({
+          node: Object.assign({}, $$.node, { nodes: $$.node.nodes.slice(this.getBlockIndex($$.node) + 1) }),
+        })
+      } else {
+        // Row() {
+        this.inlineNodesBuilder({
+          nodes: $$.node.nodes,
+          parentNode: $$.node
+        });
+        // }
+      }
+    }
+  }
+
   @Builder inlineNodesBuilder($$: {
     nodes: NodeInfo[],
     parentNode?: NodeInfo
   }) {
     if ($$.nodes.length) {
+
       ForEach($$.nodes, (item) => {
         // 标签
         if (item.node === 'element') {
@@ -28,32 +69,10 @@ export struct HPRichText {
               .fancyImage(item?.artUIStyleObject, item?.attr);
           } else {
             // 处理行内样式层级问题
-            if (item.nodes.findIndex(node => node.tagType === 'block') > -1) {
-              // 若找到块级标签，则三等分递归保证block标签是唯一的一项
-              Row() {
-                this.inlineNodesBuilder({
-                  nodes: item.nodes.slice(0, item.nodes.findIndex(node => node.tagType === 'block')),
-                  parentNode: item
-                });
-              }
-
-              Row() {
-                this.inlineNodesBuilder({
-                  nodes: [item.nodes[item.nodes.findIndex(node => node.tagType === 'block')]],
-                  parentNode: item
-                });
-              }
-
-              Row() {
-                this.inlineNodesBuilder({
-                  nodes: item.nodes.slice(item.nodes.findIndex(node => node.tagType === 'block') + 1),
-                  parentNode: item
-                });
-              }
+            if (this.getBlockIndex(item) > -1) {
+              this.labelLevelBuilder({ node: item })
             } else {
-              Row() {
-                this.inlineNodesBuilder({ nodes: item.nodes, parentNode: item });
-              }
+              this.inlineNodesBuilder({ nodes: item.nodes, parentNode: item });
             }
           }
         } else if (item.node === 'text') {
@@ -141,7 +160,7 @@ export struct HPRichText {
     // a标签增加点击事件
     if ($$.node.tag === 'a') {
       Text($$.node.text)
-        .fancyText($$.parentNode.artUIStyleObject)
+        .fancyText($$.parentNode?.artUIStyleObject)
         .onClick(() => {
           try {
             // 等待真机验证
@@ -151,7 +170,7 @@ export struct HPRichText {
         })
     } else {
       Text($$.node.text)
-        .fancyText($$.parentNode.artUIStyleObject);
+        .fancyText($$.parentNode?.artUIStyleObject);
     }
   }
 

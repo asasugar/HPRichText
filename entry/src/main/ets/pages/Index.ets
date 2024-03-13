@@ -4,9 +4,9 @@ import { HPRichText } from '@ohos/HPRichText'
 @Component
 struct Index {
   @State content: string = `
-  <h1 class=test style="text-align: center;text-decoration: underline #0000FF">12211<u>我是下划线标签内容</u><p>我是P标签</p>11111112<u>666</u></h1>
-<button disabled>我是button按钮</button>
+  <button disabled>我是button22按钮<u>dddd</u>jjjjjj</button>
 `
+  // <h1>12211<u>我是下划线标签内容</u><p>我是P标签</p>11111112<u>666</u>77777<p>我是P标签2222</p>11112222<u>gggg</u><p>7878</p></h1>
   // <h3 style="text-align: center;text-decoration: underline #0000FF">h3标题3</h3>
   // <img width="200px" style="height:100px" src="https://img04.luckincoffeecdn.com/group2/M00/C0/86/CtwiPGWOeu2ABX__AAKqV4dfcn4041.png_.webp" />
   // <a href="www.baidu.com">我是a链接</a>
