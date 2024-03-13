@@ -1,5 +1,6 @@
 import type { NodeInfo, HtmlParserResult } from '../../common/types/HtmlParser';
 import HTMLParser from '../../common/utils/html/html-parser';
+import Node from '../../common/utils/html/node';
 import RichTextDataSource from '../../viewModel/RichTextDataSource';
 
 @Component
@@ -9,6 +10,7 @@ export struct HPRichText {
 
   getBlockIndex(node: NodeInfo): number {
     const index = node.nodes.findIndex(node => node.tagType === 'block');
+    // console.log('99999', index)
     return index;
   }
 
@@ -37,12 +39,12 @@ export struct HPRichText {
           node: Object.assign({}, $$.node, { nodes: $$.node.nodes.slice(this.getBlockIndex($$.node) + 1) }),
         })
       } else {
-        // Row() {
-        this.inlineNodesBuilder({
-          nodes: $$.node.nodes,
-          parentNode: $$.node
-        });
-        // }
+        Row() {
+          this.inlineNodesBuilder({
+            nodes: $$.node.nodes,
+            parentNode: $$.node
+          });
+        }
       }
     }
   }
@@ -72,13 +74,15 @@ export struct HPRichText {
             if (this.getBlockIndex(item) > -1) {
               this.labelLevelBuilder({ node: item })
             } else {
+              // Row() {
               this.inlineNodesBuilder({ nodes: item.nodes, parentNode: item });
+              // }
             }
           }
         } else if (item.node === 'text') {
-          Row() {
-            this.textBuilder({ node: item, parentNode: $$.parentNode });
-          }
+          // Row() {
+          this.textBuilder({ node: item, parentNode: $$.parentNode });
+          // }
         }
       }, (item, index) => index + item.node)
     }
@@ -182,8 +186,6 @@ export struct HPRichText {
 
   build() {
     this.inlineNodesBuilder({ nodes: this.htmlJson.nodes });
-
-    // this.nodesBuilder({ nodes: this.htmlJson.nodes });
   }
 }
 
