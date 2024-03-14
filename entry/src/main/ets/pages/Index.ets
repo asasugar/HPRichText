@@ -4,9 +4,9 @@ import { HPRichText } from '@ohos/HPRichText'
 @Component
 struct Index {
   @State content: string = `
-  <p><h1>12211<u>我是下划线标签内容</u><p>我是P标签</p>11111112<u>666</u>77777<p>我是P标签2222</p>11112222<u>gggg</u></h1>
+ <h1>12211<u>我是下划线标签内标签内容我是下划线标签内容我是下划线标签内容我是下划线标签内容</u><p>我是P标签</p>11111112<u>666</u>77777<p>我是P标签2222</p>11112222<u>gggg</u></h1>
   dddddd777777
-  <button>我是button按11钮<u>aaa</u>bbb<i>eee</i><h1>ccc</h1>ddd<i>eee</i></button></p>
+  <button>我是button按11钮<u>aaa</u>bbb<i>eee</i><h1>ccc</h1>ddd<i>eee</i></button>
 `
   // <h3 style="text-align: center;text-decoration: underline #0000FF">h3标题3</h3>
   // <img width="200px" style="height:100px" src="https://img04.luckincoffeecdn.com/group2/M00/C0/86/CtwiPGWOeu2ABX__AAKqV4dfcn4041.png_.webp" />
@@ -21,9 +21,11 @@ struct Index {
   // '<p style="font-size: 35px;text-align: center;font-weight: bold; color: rgb(24,78,228)">字体大小35px,行高45px</p>' +
 
   build() {
-    Column() {
+    // Column() {
+    Row() {
       HPRichText({ content: this.content })
     }
-    .alignItems(HorizontalAlign.Start)
+    // }
+    // .alignItems(HorizontalAlign.Start)
   }
 }

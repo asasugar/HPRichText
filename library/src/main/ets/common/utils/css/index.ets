@@ -1,5 +1,5 @@
 import type { StyleObject } from '../../types/HtmlParser';
-import { attrsMap } from './constants';
+import { attrsMap, headingStyles, specialStyles } from './constants';
 /**
  * @description: 将首字母转化为大写
  * @param {string} str: auok
@@ -71,6 +71,17 @@ export function specialAttributes(harmonyKey: string, childKey: string, value: s
     value = BorderStyle[firstLetterToLowerCase(value)];
   }
   return value;
+}
+
+/**
+ * @description: 设置HTML标签的初始样式
+ * @param {string} tagName 标签
+ * @returns {*}
+ */
+export function setHtmlAttributes(tagName: string): Record<string, any> | {} {
+  // 使用对象映射查找并返回对应标签的样式
+  const predefinedStyle = (headingStyles[tagName] || specialStyles[tagName]) || {};
+  return predefinedStyle;
 }
 
 export function parseStyle(styleStr: string): StyleObject {

@@ -43,3 +43,45 @@ export const attrsMap = {
 
 // 不处理的样式
 // 'linear-gradient', 'clip'
+
+// 定义标题标签和对应的样式映射对象
+export const headingStyles = {
+  h1: { fontWeight: FontWeight.Bold, fontSize: 40, margin: { top: 13.4, bottom: 13.4 } },
+  h2: { fontWeight: FontWeight.Bold, fontSize: 30, margin: { top: 16.6, bottom: 16.6 } },
+  h3: { fontWeight: FontWeight.Bold, fontSize: 23.4, margin: { top: 40, bottom: 40 } },
+  h4: { fontWeight: FontWeight.Bold, fontSize: 18, margin: { top: 26.6, bottom: 26.6 } },
+  h5: { fontWeight: FontWeight.Bold, fontSize: 16.6, margin: { top: 33.4, bottom: 33.4 } },
+  h6: { fontWeight: FontWeight.Bold, fontSize: 13.4, margin: { top: 46.6, bottom: 46.6 } }
+}
+
+// 定义特殊样式标签及其样式映射对象
+export const specialStyles = {
+  p: { margin: { top: 20, bottom: 20 } },
+  i: { fontStyle: FontStyle.Italic },
+  cite: { fontStyle: FontStyle.Italic },
+  em: { fontStyle: FontStyle.Italic },
+  var: { fontStyle: FontStyle.Italic },
+  address: { fontStyle: FontStyle.Italic },
+  pre: { fontFamily: 'monospace', backgroundColor: '#f5f5f5', padding: 10, margin: { top: 10, bottom: 10 } },
+  tt: { fontFamily: 'monospace' },
+  code: { fontFamily: 'monospace', backgroundColor: '#f5f5f5' },
+  kbd: { fontFamily: 'monospace' },
+  samp: { fontFamily: 'monospace' },
+  big: { fontSize: 33.4 },
+  small: { fontSize: 16.6 },
+  sub: { fontSize: 16.6, offset: { y: 6 } },
+  sup: { fontSize: 16.6, offset: { y: -6 } },
+  s: { decoration: { type: TextDecorationType.LineThrough } },
+  strike: { decoration: { type: TextDecorationType.LineThrough } },
+  del: { decoration: { type: TextDecorationType.LineThrough } },
+  a: { fontColor: Color.Blue, decoration: { type: TextDecorationType.Underline, color: Color.Blue } },
+  video: { textAlign: TextAlign.Center, magin: { top: 12, bottom: 12 } },
+  blockquote: { margin: { top: 12, bottom: 12 }, padding: { top: 24, bottom: 24, left: 24 } },
+  ol: { margin: { top: 20, bottom: 20 }, padding: { left: 34 } },
+  ul: { margin: { top: 20, bottom: 20 }, padding: { left: 34 } },
+  u: { decoration: { type: TextDecorationType.Underline } },
+  hide: { visibility: Visibility.None },
+  // table: { width: '100%' },
+  // tr: { width: '100%', border: { width: 1, color: '#e0e0e0' } }
+};
+

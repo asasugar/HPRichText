@@ -9,7 +9,7 @@ import type {
   ImageProp,
   HtmlParserResult
 } from '../../types/HtmlParser';
-import { parseStyle, parseToArtUI } from '../css/index';
+import { parseStyle, parseToArtUI, setHtmlAttributes } from '../css/index';
 import { strDiscode, urlToHttpUrl } from './discode';
 import {
   attr,
@@ -117,6 +117,9 @@ class HTMLParser {
       node.tagType = 'block';
     } else if (inline[tag]) {
       node.tagType = 'inline';
+      // @ts-ignore
+      node.parentTagType = this.bufArray[0]?.tagType;
+
     } else if (closeSelf[tag]) {
       node.tagType = 'closeSelf';
     }
@@ -126,7 +129,7 @@ class HTMLParser {
       // 优化样式相关属性
       if (name === 'style') {
         const styleObj = parseStyle(value as string); // parse to object
-        node.artUIStyleObject = parseToArtUI(styleObj) as TextAttribute
+        node.artUIStyleObject = parseToArtUI(styleObj) as TextAttribute;
       } else if (value.match(/ /)) {
         // make it array of attribute
         pre[name] = value.split(' ');
@@ -147,7 +150,6 @@ class HTMLParser {
           pre[name] = value;
         }
       }
-
       return pre;
     }, {});
 
@@ -173,13 +175,13 @@ class HTMLParser {
     }
 
     // 处理a标签属性
-    if (node.tag === 'a') {
-      node.attr.href = node.attr.href || '';
-      this.assignArtUIStyleObject(node, {
-        fontColor: Color.Blue,
-        decoration: { type: TextDecorationType.Underline, color: Color.Blue }
-      })
-    }
+    // if (node.tag === 'a') {
+    //   node.attr.href = node.attr.href || '';
+    //   this.assignArtUIStyleObject(node, {
+    //     fontColor: Color.Blue,
+    //     decoration: { type: TextDecorationType.Underline, color: Color.Blue }
+    //   })
+    // }
 
     // 处理font标签样式属性
     if (node.tag === 'font') {
@@ -204,13 +206,12 @@ class HTMLParser {
 
     this.customHandler?.start?.(node, this.results);
 
-
-    // 处理行内数据
-    // console.log('123', JSON.stringify(node))
-    // if (node.tagType === 'inline') {
-    //   // @ts-ignore
-    //   node.index = 1;
-    // }
+    // 整合标签默认样式和style样式
+    const htmlStyles = setHtmlAttributes(node.tag);
+    if (!node.artUIStyleObject) {
+      node.artUIStyleObject = {}
+    }
+    Object.assign(node.artUIStyleObject, htmlStyles)
 
     if (unary) {
       // if this tag doesn't have end tag
@@ -250,6 +251,11 @@ class HTMLParser {
       if (!parent.nodes) {
         parent.nodes = [];
       }
+      // 子节点继承父节点样式
+      if (!node.artUIStyleObject) {
+        node.artUIStyleObject = {};
+      }
+      Object.assign(node.artUIStyleObject, parent.artUIStyleObject, node.artUIStyleObject);
       parent.nodes.push(node);
     }
   }
@@ -271,6 +277,9 @@ class HTMLParser {
       if (!parent.nodes) {
         parent.nodes = [];
       }
+      // @ts-ignore
+      node.parentTagType = parent.parentTagType
+      // console.log('6666', parent.tag)
       parent.nodes.push(node);
     }
   }
@@ -282,11 +291,12 @@ class HTMLParser {
     };
     const parent = this.bufArray[0];
 
-    if (!parent.children) {
-      parent.children = [];
+    if (!parent.nodes) {
+      parent.nodes = [];
     }
-
-    parent.children.push(node);
+    // @ts-ignore
+    node.parentTagType = parent.parentTagType
+    parent.nodes.push(node);
   }
 
   html2json(html: string): NodeInfo {
