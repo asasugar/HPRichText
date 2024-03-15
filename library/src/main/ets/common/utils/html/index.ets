@@ -19,6 +19,12 @@ export function trimHtml(html) {
     .replace(/<style[^]*<\/style>/gi, '');
 }
 
+
+export function addRootDiv(html) {
+  if (!html) return html;
+  return `<div>${html}</div>`
+}
+
 export const startTag = /^<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z0-9_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/;
 
 export const endTag = /^<\/([-A-Za-z0-9_]+)[^>]*>/;
@@ -45,3 +51,14 @@ export const fillAttrs = makeMap('checked,compact,declare,defer,disabled,ismap,m
 export const filterAttrs = makeMap('style,class');
 
 export const special = makeMap('script,style');
+
+export function replaceWebpPic(imgUrl: string): string {
+  if (!imgUrl) return imgUrl;
+  const reg = /(http)(s)?:\/\/(img|static)(.*?)\.(png|jpg|gif|jpeg|bmp)(?!_.webp)/gi;
+  if (imgUrl.match(reg)) {
+    imgUrl = imgUrl.replace(reg, img => {
+      return `${img}_.webp`;
+    });
+  }
+  return imgUrl;
+}

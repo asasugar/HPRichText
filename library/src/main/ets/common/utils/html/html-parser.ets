@@ -9,7 +9,7 @@ import type {
   ImageProp,
   HtmlParserResult
 } from '../../types/HtmlParser';
-import { parseStyle, parseToArtUI, setHtmlAttributes } from '../css/index';
+import { parseStyle, parseToArtUI, setHtmlAttributes, excludeExtendsParentArtUIStyle } from '../css/index';
 import { strDiscode, urlToHttpUrl } from './discode';
 import {
   attr,
@@ -23,38 +23,47 @@ import {
   inline,
   removeDOCTYPE,
   startTag,
-  trimHtml
+  trimHtml,
+  replaceWebpPic
 } from './index';
 import Node from './node';
 import Stack from './stack';
 
+const defaultCustomHandler: CustomHandler = {
+  start() {
+    return (node) => {
+      node.attr.class = null;
+      node.attr.style = null;
+    };
+  },
+  end: null,
+  chars: null
+};
+const defaultImageProp: ImageProp = {
+  objectFit: 'Contain',
+  padding: 0,
+  webp: false
+};
+
 class HTMLParser {
+  private customHandler: CustomHandler = defaultCustomHandler;
+  private imageProp: ImageProp = defaultImageProp;
   private last: string = '';
   private stack: Stack<string> = new Stack();
   private bufArray: NodeInfo[] = [];
   public results: HtmlParserResult = {
     nodes: [],
   }
-  private customHandler: CustomHandler = {
-    start() {
-      return (node) => {
-        node.attr.class = null;
-        node.attr.style = null;
-      };
-    },
-    end: null,
-    chars: null
-  };
-  private imageProp: ImageProp = {
-    mode: 'aspectFit',
-    padding: 0,
-    lazyLoad: false,
-    domain: '',
-  }
 
-  constructor(customHandler?: CustomHandler, imageProp?: ImageProp) {
-    this.customHandler = customHandler;
-    this.imageProp = imageProp;
+  constructor({customHandler,imageProp}: {
+    customHandler?: CustomHandler,
+    imageProp?: ImageProp
+  }={
+    customHandler: defaultCustomHandler,
+    imageProp: defaultImageProp
+  }) {
+    customHandler && (this.customHandler = customHandler);
+    imageProp && (this.imageProp = Object.assign(this.imageProp, imageProp));
   }
 
   private parseEndTag(tag, tagName?: string) {
@@ -117,9 +126,6 @@ class HTMLParser {
       node.tagType = 'block';
     } else if (inline[tag]) {
       node.tagType = 'inline';
-      // @ts-ignore
-      node.parentTagType = this.bufArray[0]?.tagType;
-
     } else if (closeSelf[tag]) {
       node.tagType = 'closeSelf';
     }
@@ -156,13 +162,19 @@ class HTMLParser {
     // 对img添加额外数据
     if (node.tag === 'img') {
       let imgUrl = node.attr.src;
-      imgUrl = urlToHttpUrl(imgUrl, this.imageProp.domain);
-      Object.assign(node.attr, this.imageProp, {
+      imgUrl = urlToHttpUrl(imgUrl);
+      // webp替换
+      if (this.imageProp.webp) {
+        imgUrl = replaceWebpPic(imgUrl)
+      }
+      Object.assign(node.attr, {
         src: imgUrl || '',
       });
       this.assignArtUIStyleObject(node, {
         width: node?.artUIStyleObject?.width || node.attr.width,
-        height: node?.artUIStyleObject?.height || node.attr.height
+        height: node?.artUIStyleObject?.height || node.attr.height,
+        objectFit: ImageFit[this.imageProp.objectFit],
+        padding: this.imageProp.padding
       })
     }
 
@@ -173,15 +185,6 @@ class HTMLParser {
         height: node?.artUIStyleObject?.height || node.attr.height || '100%'
       })
     }
-
-    // 处理a标签属性
-    // if (node.tag === 'a') {
-    //   node.attr.href = node.attr.href || '';
-    //   this.assignArtUIStyleObject(node, {
-    //     fontColor: Color.Blue,
-    //     decoration: { type: TextDecorationType.Underline, color: Color.Blue }
-    //   })
-    // }
 
     // 处理font标签样式属性
     if (node.tag === 'font') {
@@ -251,11 +254,11 @@ class HTMLParser {
       if (!parent.nodes) {
         parent.nodes = [];
       }
-      // 子节点继承父节点样式
+      // 子节点继承父节点样式(需要排除不需要继承的样式)
       if (!node.artUIStyleObject) {
         node.artUIStyleObject = {};
       }
-      Object.assign(node.artUIStyleObject, parent.artUIStyleObject, node.artUIStyleObject);
+      Object.assign(node.artUIStyleObject, excludeExtendsParentArtUIStyle(parent.artUIStyleObject), node.artUIStyleObject);
       parent.nodes.push(node);
     }
   }
@@ -277,9 +280,6 @@ class HTMLParser {
       if (!parent.nodes) {
         parent.nodes = [];
       }
-      // @ts-ignore
-      node.parentTagType = parent.parentTagType
-      // console.log('6666', parent.tag)
       parent.nodes.push(node);
     }
   }
@@ -294,14 +294,13 @@ class HTMLParser {
     if (!parent.nodes) {
       parent.nodes = [];
     }
-    // @ts-ignore
-    node.parentTagType = parent.parentTagType
     parent.nodes.push(node);
   }
 
   html2json(html: string): NodeInfo {
     // 在 HTML 解析过程中，通常我们会先处理结束标签（end tag）再处理开始标签（start tag）。这是因为在解析HTML的过程中，我们需要确保标签的嵌套是正确的，即开始标签和结束标签的配对应该是正确的
     // 处理字符串
+    this.last = html;
     html = removeDOCTYPE(html);
     html = trimHtml(html);
     html = strDiscode(html);
@@ -338,7 +337,6 @@ class HTMLParser {
             chars = false;
           }
         }
-
         if (chars) {
           index = html.indexOf('<');
           let text = '';
@@ -349,7 +347,6 @@ class HTMLParser {
           }
           text += index < 0 ? html : html.substring(0, index);
           html = index < 0 ? '' : html.substring(index);
-
           this.chars(text);
         }
       } else {

@@ -28,16 +28,15 @@ export interface NodeInfo extends SimpleNode {
 }
 
 export interface CustomHandler {
-  start: Function,
-  end: Function,
-  chars: Function
+  start: Function;
+  end: Function;
+  chars: Function;
 }
 
 export interface ImageProp {
-  mode: string,
-  padding: number,
-  lazyLoad: boolean,
-  domain: string,
+  objectFit?: 'Contain' | 'Cover' | 'Auto' | 'Fill' | 'ScaleDown' | 'None';
+  padding?: number | string;
+  webp?: boolean;
 }
 
 export interface HtmlParserResult extends NodeInfo {

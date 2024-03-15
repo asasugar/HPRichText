@@ -1,5 +1,5 @@
 import type { StyleObject } from '../../types/HtmlParser';
-import { attrsMap, headingStyles, specialStyles } from './constants';
+import { attrsMap, headingStyles, specialStyles, attrEnums } from './constants';
 /**
  * @description: 将首字母转化为大写
  * @param {string} str: auok
@@ -22,7 +22,6 @@ export function parseToArtUI(composeCss: StyleObject): TextAttribute {
   for (const attr in composeCss) {
 
     const harmonyKey: string | Record<string, string[]> = attrsMap[attr];
-
     if (harmonyKey) {
       if (harmonyKey instanceof Object) {
         const transformedStyle = transformObject(composeCss[attr], harmonyKey);
@@ -51,9 +50,15 @@ export function transformObject(originalValue: string, map: Record<string, strin
       const mappedObject = {};
 
       for (let i = 0; i < map[harmonyKey].length; i++) {
-
         const childKey = map[harmonyKey][i];
-        mappedObject[childKey] = specialAttributes(harmonyKey, childKey, newValue[i]);
+        const value = newValue[i];
+        const attrEnum = attrEnums?.[harmonyKey]?.[childKey]?.[value];
+        // 匹配鸿蒙属性枚举值
+        if (attrEnum !== undefined) {
+          mappedObject[childKey] = attrEnum;
+        } else {
+          mappedObject[childKey] = value;
+        }
       }
       transformedObject[harmonyKey] = mappedObject;
     }
@@ -61,14 +66,36 @@ export function transformObject(originalValue: string, map: Record<string, strin
   return transformedObject;
 }
 
+// 过滤和设置一些不需要继承的父级标签样式
+export function excludeExtendsParentArtUIStyle(style: Record<string, any>): Record<string, any> {
+  return {
+    ...style,
+    border: null, // 不继承border属性
+    margin: {
+      right: style?.margin?.right, left: style?.margin?.left
+    },
+    padding: {
+      right: style?.padding?.right, left: style?.padding?.left
+    }
+  }
+
+}
+
 export function specialAttributes(harmonyKey: string, childKey: string, value: string = '') {
   // decoration-type属性特殊转化
   if (harmonyKey === 'decoration' && childKey === 'type') {
-    value = TextDecorationType[firstLetterToLowerCase(value)];
+    // TextDecorationType.None
+    // TextDecorationType.Underline
+    // TextDecorationType.LineThrough
+    value = attrEnums[harmonyKey][childKey][value];
   }
   // border-style属性特殊转化
   if (harmonyKey === 'border' && childKey === 'style') {
     value = BorderStyle[firstLetterToLowerCase(value)];
+  }
+  // overflow
+  if (harmonyKey === 'textOverflow' && childKey === 'overflow') {
+    value = TextOverflow[firstLetterToLowerCase(value)];
   }
   return value;
 }

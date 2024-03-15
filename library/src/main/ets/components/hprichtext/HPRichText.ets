@@ -7,16 +7,15 @@ import RichTextDataSource from '../../viewModel/RichTextDataSource';
 export struct HPRichText {
   @Prop content: string;
   private htmlJson: HtmlParserResult = {};
-  // private lastParentTagName
+
   getBlockIndex(node: NodeInfo): number {
-    const index = node.nodes.findIndex(node => node.tagType === 'block');
-    // console.log('99999', index)
+    const index = node.nodes?.findIndex(node => node.tagType === 'block');
     return index;
   }
 
   @Builder labelLevelBuilder($$: {
     node: NodeInfo;
-    parentNode: NodeInfo;
+    parentNode: NodeInfo
   }) {
     if ($$.node) {
       // 处理行内样式层级问题
@@ -24,76 +23,55 @@ export struct HPRichText {
         // 若找到块级标签，则三等分递归保证block标签是唯一的一项
         // 前面一项都是非block
         if (this.getBlockIndex($$.node) > 0) {
-          // Row() {
-          // Text($$.node.tag)
-          // @ts-ignore
-          // Row() {
-          // Column() {
-          Text() {
-            this.inlineNodesBuilder({
-              nodes: $$.node.nodes.slice(0, this.getBlockIndex($$.node)),
-              parentNode: $$.node,
-            });
+          Row() {
+            Text() {
+              this.nodesBuilder({
+                nodes: $$.node.nodes.slice(0, this.getBlockIndex($$.node)),
+                parentNode: $$.node,
+              });
+            }
+            .fancyText($$.node?.artUIStyleObject)
           }
-          // }
-
-          // }
-
-          // }
-          // .alignItems(VerticalAlign.Top)
+          .justifyContent(FlexAlign.End)
         }
 
         // 中间一项为单独的block
-        // Column() {
-        // Column() {
-        // @ts-ignore
-        this.inlineNodesBuilder({
+        this.nodesBuilder({
           nodes: [$$.node.nodes[this.getBlockIndex($$.node)]],
           parentNode: $$.node,
         });
-        // }
-        // }
-
 
         // 第三项中可能还存在block，所以需要递归处理第三项数据
-
         this.labelLevelBuilder({
           node: Object.assign({}, $$.node, { nodes: $$.node.nodes.slice(this.getBlockIndex($$.node) + 1) }),
-          parentNode: $$.parentNode,
+          parentNode: $$.node
         })
       } else {
-        // @ts-ignore
-        if ($$.node.tagType === 'inline') {
-          // @ts-ignore
-          Span($$.node?.parentTagType + '99' + $$.node.tagType)
-
-          this.inlineNodesBuilder({
+        if ($$.node.tagType === 'inline' && $$.parentNode) {
+          this.nodesBuilder({
             nodes: $$.node.nodes,
             parentNode: $$.node,
           });
-
         } else {
-          // Row() {
-          // @ts-ignore
-
           Text() {
-            this.inlineNodesBuilder({
+            this.nodesBuilder({
               nodes: $$.node.nodes,
               parentNode: $$.node,
             });
           }
-          // }
-
+          .fancyText($$.node?.artUIStyleObject)
         }
       }
     }
+
   }
 
-  @Builder inlineNodesBuilder($$: {
+  @Builder nodesBuilder($$: {
     nodes: NodeInfo[];
     parentNode?: NodeInfo;
   }) {
-    if ($$.nodes.length) {
+    if ($$.nodes?.length) {
+
       ForEach($$.nodes, (item) => {
         // 标签
         if (item.node === 'element') {
@@ -109,86 +87,26 @@ export struct HPRichText {
             Image(item.attr?.src)
               .fancyImage(item?.artUIStyleObject, item?.attr);
           } else {
-            // 处理行内样式层级问题
-            if (item?.tagType === 'inline') {
-              Row() {
-                this.labelLevelBuilder({ node: item, parentNode: $$.parentNode })
-              }
-            } else {
-              // TODO：此处可加优化
-              Column() {
-                this.labelLevelBuilder({ node: item, parentNode: $$.parentNode })
-              }.alignItems(HorizontalAlign.Start)
+            // 处理子节点
+            Column() {
+              this.labelLevelBuilder({ node: item, parentNode: $$.parentNode })
             }
+            .width('100%')
+            .alignItems(HorizontalAlign.Start)
+            .border(item?.artUIStyleObject?.border)
           }
         } else if (item.node === 'text') {
+          // if ($$.nodes.length === 1) {
+          //   Text() {
+          //     this.textBuilder({ node: item, parentNode: $$.parentNode });
+          //   }
+          // } else {
           this.textBuilder({ node: item, parentNode: $$.parentNode });
+          // }
         }
       }, (item, index) => index + item.node)
+
     }
-  }
-  // element类型的节点构造器内容
-  @Builder nodesBuilder($$: {
-    nodes: NodeInfo[],
-    parentNode?: NodeInfo
-  }) {
-
-    // 遍历
-    List({ space: 0 }) {
-      // List、Grid、Swiper以及WaterFlow
-      LazyForEach(new RichTextDataSource($$.nodes), (item, index) => {
-        // 标签
-        if (item.node === 'element') {
-          ListItem() {
-            // video
-            if (item.tag === 'video') {
-              Video({
-                src: item.attr?.src,
-                previewUri: item.attr?.poster,
-              })
-                .fancyVideo(item?.artUIStyleObject, item?.attr)
-            } else if (item.tag === 'img') {
-              // img
-              Image(item.attr?.src)
-                .fancyImage(item?.artUIStyleObject, item?.attr);
-            } else {
-              this.nodesBuilder({ nodes: item.nodes, parentNode: item });
-
-              // 如果nodes列表中下一个节点是inline类型，则需要处理为同层级使用Row包裹
-              if (item.nodes[index] && item.nodes?.[index + 1]?.tagType === 'inline') {
-                Row() {
-                  // 纯文本
-                  if (item.nodes[index].node === 'text') {
-                    // this.textBuilder({
-                    //   text: item.nodes[index]?.text,
-                    //   tag: item?.tag,
-                    //   artUIStyleObject: item.artUIStyleObject,
-                    //   attr: item.attr
-                    // });
-                  }
-
-                  this.nodesBuilder({ nodes: item.nodes.slice(1), parentNode: item });
-                }
-              } else {
-
-                this.nodesBuilder({ nodes: item.nodes, parentNode: item });
-              }
-            }
-          }
-        } else if (item.node === 'text') {
-          // 纯文本
-          // this.textBuilder({
-          //   text: item?.text,
-          //   tag: $$.parentNode?.tag,
-          //   artUIStyleObject: $$.parentNode.artUIStyleObject,
-          //   attr: $$.parentNode.attr
-          // });
-        }
-      }, (item, index) => index + item.node);
-    }
-    .listDirection(Axis.Vertical) // 排列方向
-    .edgeEffect(EdgeEffect.None) // 滑动到边缘无效果
-    .width('100%')
   }
 
   // 文本样式构造器
@@ -196,52 +114,51 @@ export struct HPRichText {
     node: NodeInfo;
     parentNode: NodeInfo;
   }) {
-
     // a标签增加点击事件
     if ($$.node.tag === 'a') {
-      Text($$.node.text)
-        .fancyText($$.parentNode?.artUIStyleObject)
-        .onClick(() => {
-          try {
-            // 等待真机验证
-          } catch (error) {
-            console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
-          }
-        })
+      Text() {
+        Span($$.node.text)
+          .fancySpan($$.parentNode?.artUIStyleObject)
+      }
+      .fancyText($$.parentNode?.artUIStyleObject)
+      .onClick(() => {
+        try {
+          // 等待真机验证
+        } catch (error) {
+          console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
+        }
+      })
     } else {
-      // @ts-ignore
-      // if ($$.node?.parentTagType === 'block') {
-      // Text() {
       Span($$.node.text)
-      // }
-      // } else {
-      //   Text($$.node.text)
-      //     .fancyText($$.parentNode?.artUIStyleObject);
-      // }
-      //   Text($$.parentNode.tag + $$.parentNode.tagType)
-
+        .fancySpan($$.parentNode?.artUIStyleObject);
     }
   }
 
   aboutToAppear() {
-    const htmlParser = new HTMLParser();
-    this.htmlJson = htmlParser.html2json(`<div>${this.content}</div>`);
-    console.log('转化之后的html11', JSON.stringify(this.htmlJson.nodes));
+    const htmlParser = new HTMLParser({ imageProp: { webp: true } });
+    this.htmlJson = htmlParser.html2json(this.content);
+    console.log('转化之后的html', JSON.stringify?.(this.htmlJson));
   }
 
   build() {
-    this.inlineNodesBuilder({ nodes: this.htmlJson.nodes });
+    this.nodesBuilder({ nodes: this.htmlJson.nodes });
   }
 }
 
 
-@Extend(Text) function fancyText({ flexBasis, flexGrow, flexShrink, alignSelf, clip, width, height, margin, padding, linearGradient, zIndex, border, opacity, backgroundColor, backgroundImage, backgroundRepeat, backgroundImageSize, backgroundImagePosition, rotate, scale, translate, transform, visibility, offset, decoration, lineHeight, letterSpacing, fontColor, fontSize, fontStyle, fontWeight, fontFamily, textOverflow, textAlign }: Record<string, any>={
+@Extend(Span) function fancySpan({  decoration, letterSpacing, fontColor, fontSize, fontStyle, fontWeight, fontFamily}: Record<string, any>={
 }) {
-  // TODO: 增加textOverflow属性就会报错，暂时先不加
-  // .maxLines(styleObj?.['text-overflow'] === 'ellipsis' ? 1 : styleObj?.['-webkit-line-clamp'] ?? 999999)
-  // .textOverflow({
-  //   overflow: (styleObj?.['text-overflow'] === 'ellipsis' || styleObj?.['-webkit-line-clamp']) ? TextOverflow.Ellipsis : TextOverflow.None
-  // })
+  .fontColor(fontColor)
+  .fontSize(fontSize)
+  .fontStyle(fontStyle)
+  .fontWeight(fontWeight)
+  .fontFamily(fontFamily)
+  .letterSpacing(letterSpacing)
+  .decoration(decoration)
+}
+
+@Extend(Text) function fancyText({flexBasis, flexGrow, flexShrink, alignSelf, clip, width, height, margin, padding, linearGradient, zIndex, opacity, backgroundColor, backgroundImage, backgroundRepeat, backgroundImageSize, backgroundImagePosition, rotate, scale, translate, transform, visibility, offset, decoration, lineHeight, letterSpacing, fontColor, fontSize, fontStyle, fontWeight, fontFamily, textOverflow, maxLines,textAlign }: Record<string, any>={
+}) {
   .flexBasis(flexBasis)
   .flexGrow(flexGrow)
   .flexShrink(flexShrink)
@@ -253,7 +170,6 @@ export struct HPRichText {
   .padding(padding)
   .linearGradient(linearGradient)
   .zIndex(zIndex)
-  .border(border)
   .opacity(opacity)
   .backgroundColor(backgroundColor)
   .backgroundImage(backgroundImage)
@@ -273,9 +189,11 @@ export struct HPRichText {
   .fontWeight(fontWeight)
   .fontFamily(fontFamily)
   .textAlign(textAlign)
+  .textOverflow(textOverflow)
+  .maxLines(Number(maxLines))
 }
 
-@Extend(Image) function fancyImage({ width, height, margin, padding, opacity }: Record<string, any>={
+@Extend(Image) function fancyImage({ width, height, margin, padding, opacity ,objectFit}: Record<string, any>={
 }, { alt }: Record<string, any>={}) {
   .width(width)
   .height(height)
@@ -283,6 +201,7 @@ export struct HPRichText {
   .padding(padding)
   .alt(alt)
   .opacity(opacity)
+  .objectFit(objectFit)
 }
 
 @Extend(Video) function fancyVideo({ width,height }: Record<string, any>={

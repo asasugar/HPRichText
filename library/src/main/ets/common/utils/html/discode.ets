@@ -180,11 +180,9 @@ function strDiscode(str) {
   return str;
 }
 
-function urlToHttpUrl(url, domain) {
+function urlToHttpUrl(url) {
   if (/^\/\//.test(url)) {
     return `https:${url}`;
-  } else if (/^\//.test(url)) {
-    return `https://${domain}${url}`;
   }
   return url;
 }

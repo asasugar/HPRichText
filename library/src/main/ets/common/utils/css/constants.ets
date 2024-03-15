@@ -7,7 +7,7 @@ export const attrsMap = {
   'width': 'width',
   'height': 'height',
   'margin': 'margin',
-  'padding': 'padding',
+  'padding': { padding: ['top', 'right', 'bottom', 'left'] },
   'z-index': 'zIndex',
   'border': { border: ['width', 'style', 'color'] },
   'border-style': 'borderStyle',
@@ -29,6 +29,8 @@ export const attrsMap = {
   // 'shadow':'shadow',
   'offset': 'offset',
   'text-decoration': { decoration: ['type', 'color'] },
+  'text-overflow': { textOverflow: ['overflow'] },
+  '-webkit-line-clamp': 'maxLines',
   'line-height': 'lineHeight',
   'letter-spacing': 'letterSpacing',
   // 'line-height':'maxLines',
@@ -37,10 +39,34 @@ export const attrsMap = {
   'font-style': 'fontStyle',
   'font-weight': 'fontWeight',
   'font-family': 'fontFamily',
-  'text-overflow': 'textOverflow',
   'text-align': 'textAlign'
 };
 
+export const attrEnums = {
+  'border': {
+    style: {
+      'solid': BorderStyle.Solid,
+      'dashed': BorderStyle.Dashed,
+      'dotted': BorderStyle.Dotted,
+    }
+  },
+  'decoration': {
+    type: {
+      'underline': TextDecorationType.Underline,
+      'line-through': TextDecorationType.LineThrough,
+      'overline': TextDecorationType.Overline,
+      'none': TextDecorationType.None
+    }
+  },
+  'textAlign': { left: TextAlign.Start, center: TextAlign.Center, right: TextAlign.End },
+  'textOverflow': {
+    overflow: {
+      'ellipsis': TextOverflow.Ellipsis,
+      'clip': TextOverflow.Clip,
+      'none': TextOverflow.None
+    }
+  }
+}
 // 不处理的样式
 // 'linear-gradient', 'clip'
 
@@ -56,7 +82,7 @@ export const headingStyles = {
 
 // 定义特殊样式标签及其样式映射对象
 export const specialStyles = {
-  p: { margin: { top: 20, bottom: 20 } },
+  p: { margin: { top: 5, bottom: 5 } },
   i: { fontStyle: FontStyle.Italic },
   cite: { fontStyle: FontStyle.Italic },
   em: { fontStyle: FontStyle.Italic },
