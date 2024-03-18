@@ -1,9 +1,15 @@
 {
   "name": "@ohos/HPRichText",
   "version": "1.0.0",
-  "description": "Please describe the basic information.",
+  "description": "鸿蒙富文本组件。",
+  "keywords": [
+    "HPRichText",
+    "rich-text",
+    "harmony",
+    "harmony-rich-text"
+  ],
   "main": "index.ets",
-  "author": "",
+  "author": "asasugar",
   "license": "Apache-2.0",
   "dependencies": {}
 }
