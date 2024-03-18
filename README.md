@@ -38,7 +38,7 @@ ohpm install @ohps/hp-richtext
 ## 使用示例
 
 ```ets
-import { HPRichText } from '@ohos/hp-richtext';
+import { HPRichText } from '@ohasasugar/hp-richtext';
 @Component
 struct Index {
   @State content: string = `

@@ -1,4 +1,4 @@
-import { HPRichText } from '@ohos/hp-richtext';
+import { HPRichText } from '@ohasasugar/hp-richtext';
 
 @Entry
 @Component

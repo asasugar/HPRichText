@@ -6,6 +6,6 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@ohos/hp-richtext": "file:../library"
+    "@ohasasugar/hp-richtext": "file:../library"
   }
 }
