@@ -1,4 +1,4 @@
-# HPRichText
+# hp-richtext - 鸿蒙高性能富文本组件
 
 ## 简介
 
@@ -16,7 +16,7 @@ h1~h6、p、br、font、hr、image、div、i、u、行内style、style和script
 
 ![20240201102119](https://raw.githubusercontent.com/asasugar/pic-bed/master/imgs/20240201102119.png)
 
-### 4. `HPRichText` 组件是怎么解决这些问题？
+### 4. `hp-richtext` 组件是怎么解决这些问题？
 
 - 解析HTML，生成描述性的JSON
 - 递归遍历JSON结构，通过builder装饰器生成对应的鸿蒙基础组件、通过@Extend装饰器扩展组件样式生成对应的鸿蒙样式
@@ -32,13 +32,13 @@ ohos.permission.INTERNET
 ## 下载安装
 
 ```bish
-ohpm install @ohps/HPRichText
+ohpm install @ohps/hp-richtext
 ```
 
 ## 使用示例
 
 ```ets
-import { HPRichText } from '@ohos/HPRichText';
+import { HPRichText } from '@ohos/hp-richtext';
 @Component
 struct Index {
   @State content: string = `

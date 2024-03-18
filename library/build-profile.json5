@@ -1,6 +1,7 @@
 {
   "apiType": "stageMode",
   "buildOption": {
+    "artifactType": "original"
   },
   "targets": [
     {

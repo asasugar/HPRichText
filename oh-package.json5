@@ -1,5 +1,5 @@
 {
-  "name": "HPRichText",
+  "name": "hp-richtext",
   "version": "1.0.0",
   "description": "High performance Harmony RichText Component",
   "main": "./library/src/main/ets/components/hprichtext/HPRichText.ets",

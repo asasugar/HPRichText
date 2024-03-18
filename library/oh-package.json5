@@ -1,9 +1,10 @@
 {
-  "name": "@ohos/HPRichText",
+  "name": "@ohos/hp-richtext",
   "version": "1.0.0",
   "description": "鸿蒙富文本组件。",
+  "homepage": "https://github.com/asasugar/hp-richtext",
   "keywords": [
-    "HPRichText",
+    "hp-richtext",
     "rich-text",
     "harmony",
     "harmony-rich-text"

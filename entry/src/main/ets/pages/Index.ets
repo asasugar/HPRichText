@@ -1,4 +1,4 @@
-import { HPRichText } from '@ohos/HPRichText';
+import { HPRichText } from '@ohos/hp-richtext';
 
 @Entry
 @Component
