@@ -163,7 +163,12 @@ export struct HPRichText {
   }
 
   build() {
-    this.nodesBuilder({ nodes: this.htmlJson.nodes });
+    Scroll() {
+      Column() {
+        this.nodesBuilder({ nodes: this.htmlJson.nodes });
+      }
+      .alignItems(HorizontalAlign.Start)
+    }
   }
 }
 

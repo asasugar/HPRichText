@@ -1,4 +1,4 @@
-import { HPRichText } from '@ohos/HPRichText'
+import { HPRichText } from '@ohos/HPRichText';
 
 @Entry
 @Component
@@ -42,11 +42,8 @@ struct Index {
 `
 
   build() {
-    Scroll() {
-      Column() {
-        HPRichText({ content: this.content })
-      }
-      .alignItems(HorizontalAlign.Start)
+    Column() {
+      HPRichText({ content: this.content })
     }
   }
 }
