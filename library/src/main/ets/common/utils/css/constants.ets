@@ -6,9 +6,9 @@ export const attrsMap = {
   // 'clip': 'clip', 已废弃
   'width': 'width',
   'height': 'height',
-  'margin': 'margin',
-  'padding': { padding: ['top', 'right', 'bottom', 'left'] },
   'z-index': 'zIndex',
+  'margin': { margin: ['top', 'right', 'bottom', 'left'] },
+  'padding': { padding: ['top', 'right', 'bottom', 'left'] },
   'border': { border: ['width', 'style', 'color'] },
   'border-style': 'borderStyle',
   'border-width': 'borderWidth',
@@ -33,13 +33,12 @@ export const attrsMap = {
   '-webkit-line-clamp': 'maxLines',
   'line-height': 'lineHeight',
   'letter-spacing': 'letterSpacing',
-  // 'line-height':'maxLines',
   'color': 'fontColor',
   'font-size': 'fontSize',
   'font-style': 'fontStyle',
   'font-weight': 'fontWeight',
   'font-family': 'fontFamily',
-  'text-align': 'textAlign'
+  'text-align': 'textAlign',
 };
 
 export const attrEnums = {
@@ -72,31 +71,33 @@ export const attrEnums = {
 
 // 定义标题标签和对应的样式映射对象
 export const headingStyles = {
-  h1: { fontWeight: FontWeight.Bold, fontSize: 40, margin: { top: 13.4, bottom: 13.4 } },
-  h2: { fontWeight: FontWeight.Bold, fontSize: 30, margin: { top: 16.6, bottom: 16.6 } },
-  h3: { fontWeight: FontWeight.Bold, fontSize: 23.4, margin: { top: 40, bottom: 40 } },
-  h4: { fontWeight: FontWeight.Bold, fontSize: 18, margin: { top: 26.6, bottom: 26.6 } },
-  h5: { fontWeight: FontWeight.Bold, fontSize: 16.6, margin: { top: 33.4, bottom: 33.4 } },
-  h6: { fontWeight: FontWeight.Bold, fontSize: 13.4, margin: { top: 46.6, bottom: 46.6 } }
+  h1: { fontWeight: FontWeight.Bold, fontSize: 40, margin: { top: 15, bottom: 15 } },
+  h2: { fontWeight: FontWeight.Bold, fontSize: 30, margin: { top: 13.4, bottom: 13.4 } },
+  h3: { fontWeight: FontWeight.Bold, fontSize: 23.4, margin: { top: 13, bottom: 13 } },
+  h4: { fontWeight: FontWeight.Bold, fontSize: 18, margin: { top: 15, bottom: 15 } },
+  h5: { fontWeight: FontWeight.Bold, fontSize: 16.6, margin: { top: 15.6, bottom: 15.6 } },
+  h6: { fontWeight: FontWeight.Bold, fontSize: 13.4, margin: { top: 17, bottom: 17 } }
 }
 
 // 定义特殊样式标签及其样式映射对象
 export const specialStyles = {
-  p: { margin: { top: 5, bottom: 5 } },
+  b: { fontWeight: FontWeight.Bold },
+  strong: { fontWeight: FontWeight.Bold },
+  p: { margin: { top: 10, bottom: 10 } },
   i: { fontStyle: FontStyle.Italic },
   cite: { fontStyle: FontStyle.Italic },
   em: { fontStyle: FontStyle.Italic },
   var: { fontStyle: FontStyle.Italic },
   address: { fontStyle: FontStyle.Italic },
   pre: { fontFamily: 'monospace', backgroundColor: '#f5f5f5', padding: 10, margin: { top: 10, bottom: 10 } },
-  tt: { fontFamily: 'monospace' },
   code: { fontFamily: 'monospace', backgroundColor: '#f5f5f5' },
+  tt: { fontFamily: 'monospace' },
   kbd: { fontFamily: 'monospace' },
   samp: { fontFamily: 'monospace' },
-  big: { fontSize: 33.4 },
+  big: { fontSize: 28 },
   small: { fontSize: 16.6 },
-  sub: { fontSize: 16.6, offset: { y: 6 } },
-  sup: { fontSize: 16.6, offset: { y: -6 } },
+  sub: { fontSize: 12, offset: { y: 10 } },
+  sup: { fontSize: 12, offset: { y: -10 } },
   s: { decoration: { type: TextDecorationType.LineThrough } },
   strike: { decoration: { type: TextDecorationType.LineThrough } },
   del: { decoration: { type: TextDecorationType.LineThrough } },
@@ -110,4 +111,3 @@ export const specialStyles = {
   // table: { width: '100%' },
   // tr: { width: '100%', border: { width: 1, color: '#e0e0e0' } }
 };
-

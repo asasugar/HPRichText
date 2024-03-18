@@ -115,8 +115,9 @@ class HTMLParser {
     // node for this element
     const node: NodeInfo = new Node(tag);
 
+    let parent;
     if (this.bufArray.length !== 0) {
-      const parent = this.bufArray[0];
+      parent = this.bufArray[0];
       if (!parent.nodes) {
         parent.nodes = [];
       }
@@ -209,12 +210,13 @@ class HTMLParser {
 
     this.customHandler?.start?.(node, this.results);
 
-    // 整合标签默认样式和style样式
+    // 子节点继承父节点样式(需要排除不需要继承的样式)
+
     const htmlStyles = setHtmlAttributes(node.tag);
-    if (!node.artUIStyleObject) {
-      node.artUIStyleObject = {}
-    }
-    Object.assign(node.artUIStyleObject, htmlStyles)
+
+    // 整合父标签过滤之后的可继承样式+标签默认样式+自身style样式
+    node.artUIStyleObject = Object.assign({
+    }, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), htmlStyles, node.artUIStyleObject);
 
     if (unary) {
       // if this tag doesn't have end tag
@@ -254,11 +256,6 @@ class HTMLParser {
       if (!parent.nodes) {
         parent.nodes = [];
       }
-      // 子节点继承父节点样式(需要排除不需要继承的样式)
-      if (!node.artUIStyleObject) {
-        node.artUIStyleObject = {};
-      }
-      Object.assign(node.artUIStyleObject, excludeExtendsParentArtUIStyle(parent.artUIStyleObject), node.artUIStyleObject);
       parent.nodes.push(node);
     }
   }

@@ -48,16 +48,20 @@ export function transformObject(originalValue: string, map: Record<string, strin
 
       const newValue = (originalValue as string).split(' ');
       const mappedObject = {};
-
+      let lastValue;
       for (let i = 0; i < map[harmonyKey].length; i++) {
         const childKey = map[harmonyKey][i];
-        const value = newValue[i];
+
+        const value = newValue[i]; // 如：padding/margin 设置 一个值，则newValue[i]只有i=0的时候有值
         const attrEnum = attrEnums?.[harmonyKey]?.[childKey]?.[value];
         // 匹配鸿蒙属性枚举值
         if (attrEnum !== undefined) {
           mappedObject[childKey] = attrEnum;
         } else {
-          mappedObject[childKey] = value;
+          mappedObject[childKey] = value || lastValue;
+          if (value) {
+            lastValue = value;
+          }
         }
       }
       transformedObject[harmonyKey] = mappedObject;
@@ -70,7 +74,8 @@ export function transformObject(originalValue: string, map: Record<string, strin
 export function excludeExtendsParentArtUIStyle(style: Record<string, any>): Record<string, any> {
   return {
     ...style,
-    border: null, // 不继承border属性
+    border: {}, // 不继承border属性
+    // textOverflow: null,
     margin: {
       right: style?.margin?.right, left: style?.margin?.left
     },
@@ -81,24 +86,24 @@ export function excludeExtendsParentArtUIStyle(style: Record<string, any>): Reco
 
 }
 
-export function specialAttributes(harmonyKey: string, childKey: string, value: string = '') {
-  // decoration-type属性特殊转化
-  if (harmonyKey === 'decoration' && childKey === 'type') {
-    // TextDecorationType.None
-    // TextDecorationType.Underline
-    // TextDecorationType.LineThrough
-    value = attrEnums[harmonyKey][childKey][value];
-  }
-  // border-style属性特殊转化
-  if (harmonyKey === 'border' && childKey === 'style') {
-    value = BorderStyle[firstLetterToLowerCase(value)];
-  }
-  // overflow
-  if (harmonyKey === 'textOverflow' && childKey === 'overflow') {
-    value = TextOverflow[firstLetterToLowerCase(value)];
-  }
-  return value;
-}
+// export function specialAttributes(harmonyKey: string, childKey: string, value: string = '') {
+//   // decoration-type属性特殊转化
+//   if (harmonyKey === 'decoration' && childKey === 'type') {
+//     // TextDecorationType.None
+//     // TextDecorationType.Underline
+//     // TextDecorationType.LineThrough
+//     value = attrEnums[harmonyKey][childKey][value];
+//   }
+//   // border-style属性特殊转化
+//   if (harmonyKey === 'border' && childKey === 'style') {
+//     value = BorderStyle[firstLetterToLowerCase(value)];
+//   }
+//   // overflow
+//   if (harmonyKey === 'textOverflow' && childKey === 'overflow') {
+//     value = TextOverflow[firstLetterToLowerCase(value)];
+//   }
+//   return value;
+// }
 
 /**
  * @description: 设置HTML标签的初始样式

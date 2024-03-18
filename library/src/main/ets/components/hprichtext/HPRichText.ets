@@ -9,13 +9,19 @@ export struct HPRichText {
   private htmlJson: HtmlParserResult = {};
 
   getBlockIndex(node: NodeInfo): number {
-    const index = node.nodes?.findIndex(node => node.tagType === 'block');
+    const index = node?.nodes?.findIndex(node => node.tagType === 'block');
+    return index;
+  }
+
+  getSpecialIndex(node: NodeInfo): number {
+    const index = node.nodes?.findIndex(node => node.tag === 'video' || node.tag === 'img' || node.tag === 'input' || node.tag === 'textarea');
     return index;
   }
 
   @Builder labelLevelBuilder($$: {
     node: NodeInfo;
-    parentNode: NodeInfo
+    parentNode: NodeInfo;
+    isSetOutStyle: boolean;
   }) {
     if ($$.node) {
       // 处理行内样式层级问题
@@ -44,7 +50,8 @@ export struct HPRichText {
         // 第三项中可能还存在block，所以需要递归处理第三项数据
         this.labelLevelBuilder({
           node: Object.assign({}, $$.node, { nodes: $$.node.nodes.slice(this.getBlockIndex($$.node) + 1) }),
-          parentNode: $$.node
+          parentNode: $$.node,
+          isSetOutStyle: $$.isSetOutStyle
         })
       } else {
         if ($$.node.tagType === 'inline' && $$.parentNode) {
@@ -59,6 +66,7 @@ export struct HPRichText {
               parentNode: $$.node,
             });
           }
+          .border(!$$.isSetOutStyle ? $$.node?.artUIStyleObject?.border : null)
           .fancyText($$.node?.artUIStyleObject)
         }
       }
@@ -78,31 +86,45 @@ export struct HPRichText {
           // video
           if (item.tag === 'video') {
             Video({
-              src: item.attr?.src,
-              previewUri: item.attr?.poster,
+              src: item.attr?.src
             })
               .fancyVideo(item?.artUIStyleObject, item?.attr)
           } else if (item.tag === 'img') {
             // img
             Image(item.attr?.src)
               .fancyImage(item?.artUIStyleObject, item?.attr);
+          } else if (item.tag === 'input') {
+            TextInput({ text: item?.attr?.value, placeholder: item?.attr?.placeholder })
+              .fancyTextInput(item?.artUIStyleObject, item?.attr)
+          } else if (item.tag === 'textarea') {
+            TextArea({
+              placeholder: item?.attr?.placeholder,
+              text: item?.nodes?.[0]?.text
+            })
+              .fancyTextArea(item?.artUIStyleObject)
+
           } else {
             // 处理子节点
             Column() {
-              this.labelLevelBuilder({ node: item, parentNode: $$.parentNode })
+              this.labelLevelBuilder({
+                node: item,
+                parentNode: $$.parentNode,
+                isSetOutStyle: this.getBlockIndex(item) > -1
+              })
             }
             .width('100%')
             .alignItems(HorizontalAlign.Start)
-            .border(item?.artUIStyleObject?.border)
+            .border(this.getBlockIndex(item) > -1 ? item?.artUIStyleObject?.border : null)
           }
         } else if (item.node === 'text') {
-          // if ($$.nodes.length === 1) {
-          //   Text() {
-          //     this.textBuilder({ node: item, parentNode: $$.parentNode });
-          //   }
-          // } else {
-          this.textBuilder({ node: item, parentNode: $$.parentNode });
-          // }
+          if ($$.parentNode) {
+            this.textBuilder({ node: item, parentNode: $$.parentNode });
+          } else {
+            // 纯文本，无标签场景
+            Text() {
+              this.textBuilder({ node: item, parentNode: $$.parentNode });
+            }
+          }
         }
       }, (item, index) => index + item.node)
 
@@ -137,7 +159,7 @@ export struct HPRichText {
   aboutToAppear() {
     const htmlParser = new HTMLParser({ imageProp: { webp: true } });
     this.htmlJson = htmlParser.html2json(this.content);
-    console.log('转化之后的html', JSON.stringify?.(this.htmlJson));
+    console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
 
   build() {
@@ -190,7 +212,7 @@ export struct HPRichText {
   .fontFamily(fontFamily)
   .textAlign(textAlign)
   .textOverflow(textOverflow)
-  .maxLines(Number(maxLines))
+  .maxLines(maxLines ? Number(maxLines) : textOverflow ? 1 : null)
 }
 
 @Extend(Image) function fancyImage({ width, height, margin, padding, opacity ,objectFit}: Record<string, any>={
@@ -205,7 +227,7 @@ export struct HPRichText {
 }
 
 @Extend(Video) function fancyVideo({ width,height }: Record<string, any>={
-}, {muted,autoplay,loop}: Record<string, any>={}) {
+}, { muted, autoplay, loop }: Record<string, any>={}) {
   .width(width)
   .height(height)
   .muted(muted)
@@ -213,4 +235,35 @@ export struct HPRichText {
   .loop(loop)
   .controls(true) // 默认为非自定义控制器
   .objectFit(ImageFit.Contain)
+}
+
+@Extend(TextInput) function fancyTextInput({ width, height, fontSize = 14, fontColor = Color.Black}: Record<string, any> = {
+}, { type, maxlength, pattern }: Record<string, any> = {}) {
+  .width(width)
+  .height(height)
+  .type(
+      type === 'number' ? InputType.Number :
+        type === 'tel' ? InputType.PhoneNumber :
+          type === 'password' ? InputType.Password :
+            type === 'email' ? InputType.Email :
+          InputType.Normal
+  )
+  .placeholderColor(Color.Grey)
+  .placeholderFont({ size: 14, weight: 400 })
+  .fontSize(fontSize)
+  .fontColor(fontColor)
+  .maxLength(maxlength)
+  .inputFilter(pattern, (e) => {
+    console.log(JSON.stringify(e))
+  })
+}
+
+@Extend(TextArea) function fancyTextArea({ width, height, fontSize = 14, fontColor = Color.Black, backgroundColor }: Record<string, any> = {
+}) {
+  .width(width)
+  .height(height)
+  .placeholderFont({ size: 16, weight: 400 })
+  .fontSize(fontSize)
+  .fontColor(fontColor)
+  .backgroundColor(backgroundColor)
 }
