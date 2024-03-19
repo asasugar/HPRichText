@@ -4,11 +4,6 @@ export interface Attribute {
   escaped: string;
 }
 
-export interface ScreenInfo {
-  width: number;
-  height: number;
-}
-
 export interface SimpleNode {
   node?: 'element' | 'text' | 'comment';
   text?: string;
@@ -16,15 +11,17 @@ export interface SimpleNode {
 
 export interface NodeInfo extends SimpleNode {
   tag?: string;
-  $screen?: {
-    width: number;
-    height: number;
-  };
   tagType?: 'block' | 'inline' | 'closeSelf';
   attr?: Attr;
   artUIStyleObject?: Record<string, any>;
   nodes?: NodeInfo[];
   children?: NodeInfo[];
+}
+
+export interface ImageProp {
+  objectFit?: 'Contain' | 'Cover' | 'Auto' | 'Fill' | 'ScaleDown' | 'None';
+  padding?: number | string;
+  webp?: boolean;
 }
 
 export interface CustomHandler {
@@ -33,10 +30,10 @@ export interface CustomHandler {
   chars: Function;
 }
 
-export interface ImageProp {
-  objectFit?: 'Contain' | 'Cover' | 'Auto' | 'Fill' | 'ScaleDown' | 'None';
-  padding?: number | string;
-  webp?: boolean;
+export interface RichTextOption {
+  content: string;
+  imageProp?: ImageProp;
+  customHandler?: CustomHandler;
 }
 
 export interface HtmlParserResult extends NodeInfo {

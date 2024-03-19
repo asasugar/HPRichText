@@ -1,11 +1,9 @@
-import type { NodeInfo, HtmlParserResult } from '../../common/types/HtmlParser';
+import type { NodeInfo, HtmlParserResult, RichTextOption } from '../../common/types/HtmlParser';
 import HTMLParser from '../../common/utils/html/html-parser';
-import Node from '../../common/utils/html/node';
-import RichTextDataSource from '../../viewModel/RichTextDataSource';
 
 @Component
 export struct HPRichText {
-  @Prop content: string;
+  @Link richTextOption: RichTextOption;
   private htmlJson: HtmlParserResult = {};
 
   getBlockIndex(node: NodeInfo): number {
@@ -157,8 +155,11 @@ export struct HPRichText {
   }
 
   aboutToAppear() {
-    const htmlParser = new HTMLParser({ imageProp: { webp: true } });
-    this.htmlJson = htmlParser.html2json(this.content);
+    const htmlParser = new HTMLParser({
+      customHandler: this.richTextOption?.customHandler,
+      imageProp: this.richTextOption?.imageProp
+    });
+    this.htmlJson = htmlParser.html2json(this.richTextOption.content);
     console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
 

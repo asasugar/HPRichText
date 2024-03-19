@@ -55,7 +55,7 @@ class HTMLParser {
     nodes: [],
   }
 
-  constructor({customHandler,imageProp}: {
+  constructor({ customHandler, imageProp }: {
     customHandler?: CustomHandler,
     imageProp?: ImageProp
   }={
