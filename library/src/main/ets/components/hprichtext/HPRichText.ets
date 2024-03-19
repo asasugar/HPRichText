@@ -1,3 +1,7 @@
+/**
+ * HPRichText: https://github.com/asasugar/HPRichText
+ * @Author: asasugar<xxj95719@gmail.com>
+ */
 import type { NodeInfo, HtmlParserResult, RichTextOption } from '../../common/types/HtmlParser';
 import HTMLParser from '../../common/utils/html/html-parser';
 
