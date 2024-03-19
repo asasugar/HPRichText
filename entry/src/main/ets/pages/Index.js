@@ -1,4 +1,4 @@
-import { HPRichText } from '@ohos/hp-richtext';
+import { HPRichText } from '@ohasasugar/hp-richtext';
 struct Index extends   {
     constructor() { }
     // '<video width="100px" height="200px" loop muted autoplay poster="https://static.luckincoffeecdn.com/mini/images/mp_v2/menu/default-big-img.png" src="http://video2.luckincoffeecdn.com/group1/M00/66/ED/CtwhA2Usnm-ABh3LAQK2rudTyG0222.mp4" />'

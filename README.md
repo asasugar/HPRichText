@@ -25,6 +25,7 @@ h1~h6、p、br、font、hr、image、div、i、u、行内style、style和script
 
 ## 需要权限
 
+如果img、video 引用网络资源需要
 ```
 ohos.permission.INTERNET
 ```
@@ -32,7 +33,7 @@ ohos.permission.INTERNET
 ## 下载安装
 
 ```bish
-ohpm install @ohps/hp-richtext
+ohpm install @ohasasugar/hp-richtext
 ```
 
 ## 使用示例
