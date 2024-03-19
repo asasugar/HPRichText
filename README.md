@@ -1,4 +1,4 @@
-# hp-richtext - 鸿蒙高性能富文本组件
+# hp-richtext 是一个适用于 Harmony 的富文本解析组件。
 
 ## 简介
 
