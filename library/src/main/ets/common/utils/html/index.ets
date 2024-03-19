@@ -53,7 +53,7 @@ export const filterAttrs = makeMap('style,class');
 export const special = makeMap('script,style');
 
 export function replaceWebpPic(imgUrl: string): string {
-  if (!imgUrl) return imgUrl;
+  if (!imgUrl || typeof imgUrl !== 'string') return imgUrl;
   const reg = /(http)(s)?:\/\/(img|static)(.*?)\.(png|jpg|gif|jpeg|bmp)(?!_.webp)/gi;
   if (imgUrl.match(reg)) {
     imgUrl = imgUrl.replace(reg, img => {
