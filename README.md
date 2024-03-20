@@ -1,5 +1,9 @@
 # hp-richtext 是一个适用于 Harmony 的富文本解析组件。
 
+## 更新日志
+
+[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
+
 ## 简介
 
 ### 原生存在 `RichText` 组件了，为什么还要花费时间做这个事情？
