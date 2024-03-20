@@ -2,32 +2,39 @@
  * HPRichText: https://github.com/asasugar/HPRichText
  * @Author: asasugar<xxj95719@gmail.com>
  */
-import type { NodeInfo, HtmlParserResult, RichTextOption } from '../../common/types/HtmlParser';
+import type { NodeInfo, HtmlParserResult, Attr } from '../../common/types/htmlParser';
+import type {
+  RichTextOption,
+  TextBuilderOptions,
+  LabelLevelBuilderOptions,
+  NodesBuilderOptions,
+  FancySpanOptions,
+  FancyTextOptions,
+  FancyImageOptions,
+  fancyVideoOptions,
+  fancyTextInputOptions,
+  fancyTextAreaOptions
+} from './index';
 import HTMLParser from '../../common/utils/html/html-parser';
+import { assign } from './helperful';
 
 @Component
 export struct HPRichText {
   @Link richTextOption: RichTextOption;
-  private htmlJson: HtmlParserResult = {};
+  private htmlJson: HtmlParserResult = {
+    nodes: []
+  };
 
   getBlockIndex(node: NodeInfo): number {
     const index = node?.nodes?.findIndex(node => node.tagType === 'block');
-    return index;
+    return index as number;
   }
 
-  getSpecialIndex(node: NodeInfo): number {
-    const index = node.nodes?.findIndex(node => node.tag === 'video' || node.tag === 'img' || node.tag === 'input' || node.tag === 'textarea');
-    return index;
-  }
-
-  @Builder labelLevelBuilder($$: {
-    node: NodeInfo;
-    parentNode: NodeInfo;
-    isSetOutStyle: boolean;
-  }) {
+  @Builder
+  labelLevelBuilder($$: LabelLevelBuilderOptions) {
     if ($$.node) {
       // 处理行内样式层级问题
-      if (this.getBlockIndex($$.node) > -1) {
+      if ($$.node.nodes && this.getBlockIndex($$.node) > -1) {
         // 若找到块级标签，则三等分递归保证block标签是唯一的一项
         // 前面一项都是非block
         if (this.getBlockIndex($$.node) > 0) {
@@ -51,7 +58,7 @@ export struct HPRichText {
 
         // 第三项中可能还存在block，所以需要递归处理第三项数据
         this.labelLevelBuilder({
-          node: Object.assign({}, $$.node, { nodes: $$.node.nodes.slice(this.getBlockIndex($$.node) + 1) }),
+          node: assign({}, $$.node, { nodes: $$.node.nodes.slice(this.getBlockIndex($$.node) + 1) }),
           parentNode: $$.node,
           isSetOutStyle: $$.isSetOutStyle
         })
@@ -76,13 +83,11 @@ export struct HPRichText {
 
   }
 
-  @Builder nodesBuilder($$: {
-    nodes: NodeInfo[];
-    parentNode?: NodeInfo;
-  }) {
+  @Builder
+  nodesBuilder($$: NodesBuilderOptions) {
     if ($$.nodes?.length) {
 
-      ForEach($$.nodes, (item) => {
+      ForEach($$.nodes, (item: NodeInfo) => {
         // 标签
         if (item.node === 'element') {
           // video
@@ -128,16 +133,13 @@ export struct HPRichText {
             }
           }
         }
-      }, (item, index) => index + item.node)
-
+      }, (item: NodeInfo, index: number) => index + item.node)
     }
   }
 
   // 文本样式构造器
-  @Builder textBuilder($$: {
-    node: NodeInfo;
-    parentNode: NodeInfo;
-  }) {
+  @Builder
+  textBuilder($$: TextBuilderOptions) {
     // a标签增加点击事件
     if ($$.node.tag === 'a') {
       Text() {
@@ -159,12 +161,9 @@ export struct HPRichText {
   }
 
   aboutToAppear() {
-    const htmlParser = new HTMLParser({
-      customHandler: this.richTextOption?.customHandler,
-      imageProp: this.richTextOption?.imageProp
-    });
+    const htmlParser = new HTMLParser(this.richTextOption?.customHandler, this.richTextOption?.imageProp);
     this.htmlJson = htmlParser.html2json(this.richTextOption.content);
-    console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
+    // console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
 
   build() {
@@ -178,102 +177,93 @@ export struct HPRichText {
 }
 
 
-@Extend(Span) function fancySpan({  decoration, letterSpacing, fontColor, fontSize, fontStyle, fontWeight, fontFamily}: Record<string, any>={
-}) {
-  .fontColor(fontColor)
-  .fontSize(fontSize)
-  .fontStyle(fontStyle)
-  .fontWeight(fontWeight)
-  .fontFamily(fontFamily)
-  .letterSpacing(letterSpacing)
-  .decoration(decoration)
+@Extend(Span)
+function fancySpan($$: FancySpanOptions = {}) {
+  .fontColor($$.fontColor)
+  .fontSize($$.fontSize)
+  .fontStyle($$.fontStyle)
+  .fontWeight($$.fontWeight)
+  .fontFamily($$.fontFamily)
+  .letterSpacing($$.letterSpacing)
+  .decoration($$.decoration)
 }
 
-@Extend(Text) function fancyText({flexBasis, flexGrow, flexShrink, alignSelf, clip, width, height, margin, padding, linearGradient, zIndex, opacity, backgroundColor, backgroundImage, backgroundRepeat, backgroundImageSize, backgroundImagePosition, rotate, scale, translate, transform, visibility, offset, decoration, lineHeight, letterSpacing, fontColor, fontSize, fontStyle, fontWeight, fontFamily, textOverflow, maxLines,textAlign }: Record<string, any>={
-}) {
-  .flexBasis(flexBasis)
-  .flexGrow(flexGrow)
-  .flexShrink(flexShrink)
-  .alignSelf(alignSelf)
-  .clip(clip)
-  .width(width)
-  .height(height)
-  .margin(margin)
-  .padding(padding)
-  .linearGradient(linearGradient)
-  .zIndex(zIndex)
-  .opacity(opacity)
-  .backgroundColor(backgroundColor)
-  .backgroundImage(backgroundImage)
-  .backgroundImageSize(backgroundImageSize)
-  .backgroundImagePosition(backgroundImagePosition)
-  .rotate(rotate)
-  .scale(scale)
-  .translate(translate)
-  .transform(transform)
-  .visibility(visibility)
-  .offset(offset)
-  .decoration(decoration)
-  .lineHeight(lineHeight)
-  .letterSpacing(letterSpacing)
-  .fontColor(fontColor)
-  .fontSize(fontSize)
-  .fontWeight(fontWeight)
-  .fontFamily(fontFamily)
-  .textAlign(textAlign)
-  .textOverflow(textOverflow)
-  .maxLines(maxLines ? Number(maxLines) : textOverflow ? 1 : null)
+@Extend(Text)
+function fancyText($$: FancyTextOptions = {}) {
+  .width($$.width)
+  .height($$.height)
+  .margin($$.margin)
+  .padding($$.padding)
+  .zIndex($$.zIndex)
+  .opacity($$.opacity)
+  .backgroundColor($$.backgroundColor)
+  .backgroundImage($$.backgroundImage)
+  .rotate($$.rotate)
+  .scale($$.scale)
+  .offset($$.offset)
+  .decoration($$.decoration)
+  .lineHeight($$.lineHeight)
+  .letterSpacing($$.letterSpacing)
+  .fontColor($$.fontColor)
+  .fontSize($$.fontSize)
+  .fontWeight($$.fontWeight)
+  .fontFamily($$.fontFamily)
+  .textAlign($$.textAlign)
+  .textOverflow($$.textOverflow)
+  .maxLines($$.maxLines ? Number($$.maxLines) : $$.textOverflow ? 1 : null)
 }
 
-@Extend(Image) function fancyImage({ width, height, margin, padding, opacity ,objectFit}: Record<string, any>={
-}, { alt }: Record<string, any>={}) {
-  .width(width)
-  .height(height)
-  .margin(margin)
-  .padding(padding)
-  .alt(alt)
-  .opacity(opacity)
-  .objectFit(objectFit)
+@Extend(Image)
+function fancyImage($$: FancyImageOptions = {}, attrs: Attr = {}) {
+  .width($$.width)
+  .height($$.height)
+  .margin($$.margin)
+  .padding($$.padding)
+  .alt(attrs.alt)
+  .opacity($$.opacity)
+  .objectFit($$.objectFit)
 }
 
-@Extend(Video) function fancyVideo({ width,height }: Record<string, any>={
-}, { muted, autoplay, loop }: Record<string, any>={}) {
-  .width(width)
-  .height(height)
-  .muted(muted)
-  .autoPlay(autoplay)
-  .loop(loop)
+
+@Extend(Video)
+function fancyVideo($$: fancyVideoOptions = {}, attrs: Attr = {}) {
+  .width($$.width)
+  .height($$.height)
+  .muted(attrs.muted)
+  .autoPlay(attrs.autoplay)
+  .loop(attrs.loop)
   .controls(true) // 默认为非自定义控制器
   .objectFit(ImageFit.Contain)
 }
 
-@Extend(TextInput) function fancyTextInput({ width, height, fontSize = 14, fontColor = Color.Black}: Record<string, any> = {
-}, { type, maxlength, pattern }: Record<string, any> = {}) {
-  .width(width)
-  .height(height)
+
+@Extend(TextInput)
+function fancyTextInput($$: fancyTextInputOptions = { fontSize: 14, fontColor: Color.Black }, attrs: Attr = {}) {
+  .width($$.width)
+  .height($$.height)
   .type(
-      type === 'number' ? InputType.Number :
-        type === 'tel' ? InputType.PhoneNumber :
-          type === 'password' ? InputType.Password :
-            type === 'email' ? InputType.Email :
+    attrs.type === 'number' ? InputType.Number :
+      attrs.type === 'tel' ? InputType.PhoneNumber :
+        attrs.type === 'password' ? InputType.Password :
+          attrs.type === 'email' ? InputType.Email :
           InputType.Normal
   )
   .placeholderColor(Color.Grey)
   .placeholderFont({ size: 14, weight: 400 })
-  .fontSize(fontSize)
-  .fontColor(fontColor)
-  .maxLength(maxlength)
-  .inputFilter(pattern, (e) => {
-    console.log(JSON.stringify(e))
+  .fontSize($$.fontSize)
+  .fontColor($$.fontColor)
+  .maxLength(attrs.maxlength)
+  .inputFilter(attrs.pattern, (e) => {
+    // console.log(JSON.stringify(e))
   })
 }
 
-@Extend(TextArea) function fancyTextArea({ width, height, fontSize = 14, fontColor = Color.Black, backgroundColor }: Record<string, any> = {
-}) {
-  .width(width)
-  .height(height)
+@Extend(TextArea)
+function fancyTextArea($$: fancyTextAreaOptions = {}) {
+  .width($$.width)
+  .height($$.height)
   .placeholderFont({ size: 16, weight: 400 })
-  .fontSize(fontSize)
-  .fontColor(fontColor)
-  .backgroundColor(backgroundColor)
+  .fontSize($$.fontSize)
+  .fontColor($$.fontColor)
+  .backgroundColor($$.backgroundColor)
 }

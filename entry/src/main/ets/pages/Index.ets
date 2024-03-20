@@ -43,7 +43,7 @@ struct Index {
       <video height="500px" loop muted autoplay src="xx" />
     `,
     imageProp: {
-      webp: true
+      webp: true,
     },
   }
 
