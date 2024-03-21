@@ -10,7 +10,7 @@
     "harmony",
     "harmony-rich-text"
   ],
-  "main": "./library/src/main/ets/components/hprichtext/HPRichText.ets",
+  "main": "./src/main/ets/components/hprichtext/HPRichText.ets",
   "author": "asasugar",
   "license": "Apache-2.0",
   "devDependencies": {
