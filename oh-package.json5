@@ -1,11 +1,17 @@
 {
-  "name": "hp-richtext",
-  "version": "1.0.0",
-  "description": "High performance Harmony RichText Component",
-  "main": "./library/src/main/ets/components/hprichtext/HPRichText.ets",
+  "name": "@ohasasugar/hp-richtext",
+  "version": "2.0.0",
+  "description": "hp-richtext, 是一个基于HTML的标签解析，扩展了更多属性和样式的鸿蒙富文本组件，解决了遍历嵌套渲染原生RichText的性能问题。",
+  "homepage": "https://github.com/asasugar/hp-richtext",
+  "repository": "https://github.com/asasugar/hp-richtext",
+  "keywords": [
+    "hp-richtext",
+    "rich-text",
+    "harmony",
+    "harmony-rich-text"
+  ],
+  "main": "index.ets",
   "author": "asasugar",
-  "license": "MIT",
-  "devDependencies": {
-    "@ohos/hypium": "1.0.6"
-  }
+  "license": "Apache-2.0",
+  "dependencies": {}
 }
