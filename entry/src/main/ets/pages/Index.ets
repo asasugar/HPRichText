@@ -49,7 +49,7 @@ struct Index {
 
   build() {
     Column() {
-      HPRichText({ richTextOption: $richTextOption })
+      HPRichText({ richTextOption: $richTextOption, needScroll: true })
     }
   }
 }

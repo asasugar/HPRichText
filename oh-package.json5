@@ -1,7 +1,7 @@
 {
   "name": "@ohasasugar/hp-richtext",
   "version": "1.0.0",
-  "description": "hp-richtext, 是一个基于HTML的标签解析，扩展了更多属性和样式的鸿蒙富文本组件，解决了遍历嵌套渲染原生RichText的性能问题。",
+  "description": "@ohasasugar/hp-richtext效果演示",
   "homepage": "https://github.com/asasugar/hp-richtext",
   "repository": "https://github.com/asasugar/hp-richtext",
   "keywords": [
@@ -10,8 +10,10 @@
     "harmony",
     "harmony-rich-text"
   ],
-  "main": "index.ets",
+  "main": "./entry/src/main/ets/pages/Index.ets",
   "author": "asasugar",
   "license": "Apache-2.0",
-  "dependencies": {}
+  "devDependencies": {
+    "@ohos/hypium": "1.0.6"
+  }
 }

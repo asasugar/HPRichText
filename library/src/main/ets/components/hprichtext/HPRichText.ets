@@ -21,6 +21,7 @@ import { assign } from './helperful';
 @Component
 export struct HPRichText {
   @Link richTextOption: RichTextOption;
+  @Prop needScroll: boolean;
   private htmlJson: HtmlParserResult = {
     nodes: []
   };
@@ -167,7 +168,14 @@ export struct HPRichText {
   }
 
   build() {
-    Scroll() {
+    if (this.needScroll) {
+      Scroll() {
+        Column() {
+          this.nodesBuilder({ nodes: this.htmlJson.nodes });
+        }
+        .alignItems(HorizontalAlign.Start)
+      }
+    } else {
       Column() {
         this.nodesBuilder({ nodes: this.htmlJson.nodes });
       }

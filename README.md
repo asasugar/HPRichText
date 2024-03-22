@@ -95,19 +95,25 @@ struct Index {
 
   build() {
     Column() {
-      HPRichText({ richTextOption: $richTextOption })
+      HPRichText({ richTextOption: $richTextOption, needScroll: true })
     }
   }
 }
 ```
 
-## 属性
+## richTextOption属性
 
 | 名称            | 类型       | 必填  | 默认值 | 描述            |
 |---------------|----------|-----|-----|---------------|
 | content       | String   | 是   | —   | 渲染内容          |
 | customHandler | Function | 否   | 见源码 | 自定义 parser 函数 |
 | imageProp     | Object   | 否   | 见下文 | 图片相关参数        |
+
+## needScroll属性
+
+| 名称 | 类型 | 必填 | 默认值 | 描述 |
+|------------|---------|-----|-------|--|
+| needScroll | Boolean | 否 | false | 富文本内容超过一屏幕是否使用Scroll组件包裹 |
 
 ### 自定义 parser 函数具体介绍
 
