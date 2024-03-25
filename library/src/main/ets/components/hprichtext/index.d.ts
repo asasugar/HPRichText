@@ -76,3 +76,12 @@ export interface RichTextOption {
   imageProp?: ImageProp;
   customHandler?: CustomHandler;
 }
+
+export interface LinkPressParame {
+  text?: string;
+  link: string;
+}
+
+export interface LinkPressMethod<T = LinkPressParame> {
+  (arg: T): T | void
+}

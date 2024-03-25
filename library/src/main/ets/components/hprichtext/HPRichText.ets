@@ -2,6 +2,7 @@
  * HPRichText: https://github.com/asasugar/HPRichText
  * @Author: asasugar<xxj95719@gmail.com>
  */
+import type { Nullable } from '../../common/types/common';
 import type { NodeInfo, HtmlParserResult, Attr } from '../../common/types/htmlParser';
 import type {
   RichTextOption,
@@ -13,15 +14,18 @@ import type {
   FancyImageOptions,
   fancyVideoOptions,
   fancyTextInputOptions,
-  fancyTextAreaOptions
+  fancyTextAreaOptions,
+  LinkPressMethod
 } from './index';
 import HTMLParser from '../../common/utils/html/html-parser';
 import { assign } from './helperful';
+
 
 @Component
 export struct HPRichText {
   @Link richTextOption: RichTextOption;
   @Prop needScroll: boolean;
+  onLinkPress: Nullable<LinkPressMethod> = null;
   private htmlJson: HtmlParserResult = {
     nodes: []
   };
@@ -141,24 +145,18 @@ export struct HPRichText {
   // 文本样式构造器
   @Builder
   textBuilder($$: TextBuilderOptions) {
-    // a标签增加点击事件
-    if ($$.node.tag === 'a') {
-      Text() {
-        Span($$.node.text)
-          .fancySpan($$.parentNode?.artUIStyleObject)
-      }
-      .fancyText($$.parentNode?.artUIStyleObject)
+    Span($$.node.text)
+      .fancySpan($$.parentNode?.artUIStyleObject)
       .onClick(() => {
+        if ($$.parentNode?.tag !== 'a') return;
+
+        // a标签增加回调事件
         try {
-          // 等待真机验证
+          this.onLinkPress?.({ text: $$.node.text, link: $$.parentNode?.attr?.href });
         } catch (error) {
           console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
         }
       })
-    } else {
-      Span($$.node.text)
-        .fancySpan($$.parentNode?.artUIStyleObject);
-    }
   }
 
   aboutToAppear() {

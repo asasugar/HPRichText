@@ -5,6 +5,7 @@
 方式一：安装最新的DevEco Studio Next版本的IDE(该版本目前对合作伙伴开放)；
 
 方式二：
+
 - 修改hvigor-config.json5文件的配置为当前IDE对应的版本,如IDE版本3.1：
   ```json
    {
@@ -109,13 +110,19 @@ struct Index {
       <video height="500px" loop muted autoplay src="xx" />
     `,
     imageProp: {
-      webp: true
-    },
-  }
+      webp: true,
+    }
+  };
 
   build() {
     Column() {
-      HPRichText({ richTextOption: $richTextOption, needScroll: true })
+      HPRichText({
+        richTextOption: $richTextOption,
+        needScroll: true,
+        onLinkPress: (e) => {
+          return e;
+        }
+      })
     }
   }
 }
@@ -128,12 +135,6 @@ struct Index {
 | content       | String   | 是   | —   | 渲染内容          |
 | customHandler | Function | 否   | 见源码 | 自定义 parser 函数 |
 | imageProp     | Object   | 否   | 见下文 | 图片相关参数        |
-
-## needScroll属性
-
-| 名称 | 类型 | 必填 | 默认值 | 描述 |
-|------------|---------|-----|-------|--|
-| needScroll | Boolean | 否 | false | 富文本内容超过一屏幕是否使用Scroll组件包裹 |
 
 ### 自定义 parser 函数具体介绍
 
@@ -159,6 +160,18 @@ struct Index {
 | objectFit | Contain/Cover/Auto/Fill/ScaleDown/None | Contain | 图片裁剪、缩放的模式,详见鸿蒙开发文档 |
 | padding   | Number/String                          | 0       | 图片内边距               |
 | webp      | Boolean                                | false   | 图片webp替换            |
+
+## needScroll属性
+
+| 名称         | 类型      | 必填  | 默认值   | 描述                       |
+|------------|---------|-----|-------|--------------------------|
+| needScroll | Boolean | 否   | false | 富文本内容超过一屏幕是否使用Scroll组件包裹 |
+
+## onLinkPress属性
+
+| 名称          | 类型            | 必填  | 默认值  | 描述                |
+|-------------|---------------|-----|------|-------------------|
+| onLinkPress | Function/Null | 否   | null | 点击标签事件回调（目前支持a标签） |
 
 ## 注意点
 

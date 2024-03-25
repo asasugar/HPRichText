@@ -44,12 +44,18 @@ struct Index {
     `,
     imageProp: {
       webp: true,
-    },
-  }
+    }
+  };
 
   build() {
     Column() {
-      HPRichText({ richTextOption: $richTextOption, needScroll: true })
+      HPRichText({
+        richTextOption: $richTextOption,
+        needScroll: true,
+        onLinkPress: (e) => {
+          return e;
+        }
+      })
     }
   }
 }
