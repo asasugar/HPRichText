@@ -31,18 +31,18 @@ export const enum FontStyle {
 }
 
 export const enum Color {
-  White,
-  Black,
-  Blue,
-  Brown,
-  Gray,
-  Green,
-  Grey,
-  Orange,
-  Pink,
-  Red,
-  Yellow,
-  Transparent
+  White = '#ffffffff',
+  Black = '#ff000000',
+  Blue = '#ff0000ff',
+  Brown = '#ffa52a2a',
+  Gray = '#ff808080',
+  Green = '#ff008000',
+  Grey = '#ff808080',
+  Orange = '#ffffa500',
+  Pink = '#ffffc0cb',
+  Red = '#ffff0000',
+  Yellow = '#ffffff00',
+  Transparent = '#00000000'
 }
 
 export const enum Visibility {
