@@ -1,5 +1,10 @@
 # hp-richtext 是一个适用于 Harmony 的富文本解析组件。
 
+
+## OpenHarmony三方库中心仓链接
+
+[@ohasasugar/hp-richtext](https://ohpm.openharmony.cn/#/cn/detail/@ohasasugar%2Fhp-richtext)
+
 ## 更新日志
 
 [changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
