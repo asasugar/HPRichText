@@ -1,5 +1,20 @@
 # hp-richtext 是一个适用于 Harmony 的富文本解析组件。
 
+如果需要直接运行该代码示例，需要
+
+方式一：安装最新的DevEco Studio Next版本的IDE(该版本目前对合作伙伴开放)；
+
+方式二：
+- 修改hvigor-config.json5文件的配置为当前IDE对应的版本,如IDE版本3.1：
+  ```json
+   {
+      "hvigorVersion": "2.4.2",
+      "dependencies": {
+        "@ohos/hvigor-ohos-plugin": "2.4.2"
+      }
+    }
+  ```
+- 点击构建-清理项目/重新建构项目/鼠标选中library文件，构建library
 
 ## OpenHarmony三方库中心仓链接
 
