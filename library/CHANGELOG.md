@@ -1,5 +1,11 @@
 # Changelog
 
+### Features
+
+* 🎸
+  新增a标签onLinkPress点击事件回调 ([780e4ae](https://github.com/asasugar/HPRichText/commit/780e4aec1138a64f87e442596a82759e9df27609))
+
+
 ### [v1.0.0-next](https://github.com/asasugar/HPRichText/releases/tag/v1.0.0-next) (2024-03-20)
 
 ### Features
