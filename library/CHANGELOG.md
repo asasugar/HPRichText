@@ -1,5 +1,7 @@
 # Changelog
 
+### [v1.0.1](https://github.com/asasugar/HPRichText/releases/tag/v1.0.1) (2024-03-26)
+
 ### Features
 
 * 🎸
