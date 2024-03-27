@@ -190,6 +190,7 @@ struct Index {
 - b/strong
 - big
 - small
+- br
 - s/strike/del
 - a
 - img
