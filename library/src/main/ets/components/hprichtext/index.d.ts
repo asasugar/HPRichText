@@ -1,7 +1,7 @@
 import type { FontAttr, PositionAttr, ResourceColor, ShapeAttr, } from '../../common/types/artUIBase';
 import { Color } from '../../common/types/artUIEnum';
 
-import type { NodeInfo, ImageProp, CustomHandler } from '../../common/types/htmlParser';
+import type { CustomHandler, ImageProp, NodeInfo } from '../../common/types/htmlParser';
 
 
 export interface TextBuilderOptions {
@@ -17,6 +17,7 @@ export interface LabelLevelBuilderOptions extends TextBuilderOptions {
 export interface NodesBuilderOptions {
   nodes?: NodeInfo[];
   parentNode?: NodeInfo;
+  needTextTag?: boolean;
 }
 
 export interface FancySpanOptions extends FontAttr {

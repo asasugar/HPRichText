@@ -3,19 +3,19 @@
  * @Author: asasugar<xxj95719@gmail.com>
  */
 import type { Nullable } from '../../common/types/common';
-import type { NodeInfo, HtmlParserResult, Attr } from '../../common/types/htmlParser';
+import type { Attr, HtmlParserResult, NodeInfo } from '../../common/types/htmlParser';
 import type {
-  RichTextOption,
-  TextBuilderOptions,
-  LabelLevelBuilderOptions,
-  NodesBuilderOptions,
-  FancySpanOptions,
-  FancyTextOptions,
   FancyImageOptions,
-  fancyVideoOptions,
-  fancyTextInputOptions,
+  FancySpanOptions,
   fancyTextAreaOptions,
-  LinkPressMethod
+  fancyTextInputOptions,
+  FancyTextOptions,
+  fancyVideoOptions,
+  LabelLevelBuilderOptions,
+  LinkPressMethod,
+  NodesBuilderOptions,
+  RichTextOption,
+  TextBuilderOptions
 } from './index';
 import HTMLParser from '../../common/utils/html/html-parser';
 import { assign } from './helperful';
@@ -117,26 +117,25 @@ export struct HPRichText_1 {
 
           } else {
             // 处理子节点
-            Column() {
-              this.labelLevelBuilder({
-                node: item,
-                parentNode: $$.parentNode,
-                isSetOutStyle: this.getBlockIndex(item) > -1
-              })
-            }
-            .width('100%')
-            .alignItems(HorizontalAlign.Start)
-            .border(this.getBlockIndex(item) > -1 ? item?.artUIStyleObject?.border : null)
+            this.nodesBuilder({
+              nodes: item.nodes,
+              parentNode: item,
+              needTextTag: !!!$$.parentNode
+            });
+
+            // Column() {
+            //   this.labelLevelBuilder({
+            //     node: item,
+            //     parentNode: $$.parentNode,
+            //     isSetOutStyle: this.getBlockIndex(item) > -1
+            //   })
+            // }
+            // .width('100%')
+            // .alignItems(HorizontalAlign.Start)
+            // .border(this.getBlockIndex(item) > -1 ? item?.artUIStyleObject?.border : null)
           }
         } else if (item.node === 'text') {
-          if ($$.parentNode) {
-            this.textBuilder({ node: item, parentNode: $$.parentNode });
-          } else {
-            // 纯文本，无标签场景
-            Text() {
-              this.textBuilder({ node: item, parentNode: $$.parentNode });
-            }
-          }
+          this.textBuilder({ node: item, parentNode: $$.parentNode });
         }
       }, (item: NodeInfo, index: number) => index + item.node)
     }
@@ -145,18 +144,20 @@ export struct HPRichText_1 {
   // 文本样式构造器
   @Builder
   textBuilder($$: TextBuilderOptions) {
-    Span($$.node.text)
-      .fancySpan($$.parentNode?.artUIStyleObject)
-      .onClick(() => {
-        if ($$.parentNode?.tag !== 'a') return;
+    Text() {
+      Span($$.node.text)
+        .fancySpan($$.parentNode?.artUIStyleObject)
+        .onClick(() => {
+          if ($$.parentNode?.tag !== 'a') return;
 
-        // a标签增加回调事件
-        try {
-          this.onLinkPress?.({ text: $$.node.text, link: $$.parentNode?.attr?.href });
-        } catch (error) {
-          console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
-        }
-      })
+          // a标签增加回调事件
+          try {
+            this.onLinkPress?.({ text: $$.node.text, link: $$.parentNode?.attr?.href });
+          } catch (error) {
+            console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
+          }
+        })
+    }
   }
 
   aboutToAppear() {
@@ -169,7 +170,6 @@ export struct HPRichText_1 {
     if (this.needScroll) {
       Scroll() {
         Column() {
-          Text('1111')
           this.nodesBuilder({ nodes: this.htmlJson.nodes });
         }
         .alignItems(HorizontalAlign.Start)

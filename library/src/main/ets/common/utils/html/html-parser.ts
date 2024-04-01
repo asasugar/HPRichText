@@ -282,6 +282,9 @@ class HTMLParser {
       if (!parent.nodes) {
         parent.nodes = [];
       }
+      if(parent.tagType === 'block') {
+        node.text = `\n${text}`
+      }
       parent.nodes.push(node);
     }
   }
