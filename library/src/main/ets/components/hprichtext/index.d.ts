@@ -11,13 +11,13 @@ export interface TextBuilderOptions {
 
 
 export interface LabelLevelBuilderOptions extends TextBuilderOptions {
-  isSetOutStyle: boolean;
+  isInlineBlockNesting: boolean;
 }
 
 export interface NodesBuilderOptions {
   nodes?: NodeInfo[];
   parentNode?: NodeInfo;
-  needTextTag?: boolean;
+  isInlineBlockNesting?: boolean;
 }
 
 export interface FancySpanOptions extends FontAttr {

@@ -3,13 +3,13 @@
  */
 import type {
   Attribute,
-  NodeInfo,
-  SimpleNode,
   CustomHandler,
+  HtmlParserResult,
   ImageProp,
-  HtmlParserResult
+  NodeInfo,
+  SimpleNode
 } from '../../types/htmlParser';
-import { parseStyle, parseToArtUI, setHtmlAttributes, excludeExtendsParentArtUIStyle } from '../css/index';
+import { excludeExtendsParentArtUIStyle, parseStyle, parseToArtUI, setHtmlAttributes } from '../css/index';
 import { strDiscode, urlToHttpUrl } from './discode';
 import { ImageFit } from '../../types/artUIEnum';
 import {
@@ -18,14 +18,14 @@ import {
   closeSelf,
   empty,
   endTag,
-  special,
   fillAttrs,
   filterAttrs,
   inline,
   removeDOCTYPE,
+  replaceWebpPic,
+  special,
   startTag,
-  trimHtml,
-  replaceWebpPic
+  trimHtml
 } from './index';
 import Node from './node';
 import Stack from './stack';
@@ -49,64 +49,18 @@ const defaultImageProp: ImageProp = {
 };
 
 class HTMLParser {
+  public results: HtmlParserResult = {
+    nodes: [],
+  }
   private customHandler: CustomHandler = defaultCustomHandler;
   private imageProp: ImageProp = defaultImageProp;
   private last: string = '';
   private stack: Stack<string> = new Stack();
   private bufArray: NodeInfo[] = [];
-  public results: HtmlParserResult = {
-    nodes: [],
-  }
 
   constructor(customHandler?: CustomHandler, imageProp?: ImageProp) {
     customHandler && (this.customHandler = customHandler);
     imageProp && Object.assign(this.imageProp, imageProp);
-  }
-
-  // tag不可删除，replace函数使用
-  private parseEndTag(tag?: string | Record<string, string>, tagName?: string) {
-    // If no tag name is provided, clean shop
-    let pos = tagName ? this.stack.lastIndexOf(tagName.toLowerCase()) : 0;
-    if (pos >= 0) {
-      // Close all the open elements, up the stack
-      while (this.stack.length > pos) {
-        this.end(this.stack.pop() as string);
-      }
-    }
-  }
-
-  private parseStartTag(tag: string | Record<string, string>, tagName: string, rest: string, unary: boolean) {
-    tagName = tagName.toLowerCase();
-    // 处理块级标签内的内联元素
-    if (block[tagName]) {
-      while (this.stack.last() && inline[this.stack.last()]) {
-        this.parseEndTag('', this.stack.last());
-      }
-    }
-    // 处理自闭合标签
-    if (closeSelf[tagName] && this.stack.last() === tagName) {
-      this.parseEndTag('', tagName);
-    }
-
-    unary = empty[tagName] || !!unary;
-
-    if (!unary) this.stack.push(tagName);
-
-    const attrs: Attribute[] = [];
-
-    // 使用正则表达式匹配属性并生成属性对象
-    rest.replace(attr, (match, attributeName: string, attributeValueSingleQuote: string = '', attributeValueDoubleQuote: string = '', attributeValueNoQuote: string = '') => {
-      const value = attributeValueSingleQuote || attributeValueDoubleQuote || attributeValueNoQuote || (fillAttrs[attributeName] ? attributeName : '');
-      // 对属性值进行转义
-      const escapedValue = value.replace(/(^|[^\\])"/g, '$1\\"');
-      attrs.push({
-        name: attributeName,
-        value: escapedValue,
-        escaped: escapedValue,
-      });
-      return `${attributeName}="${escapedValue}"`;
-    });
-    this.start(tagName, attrs, unary);
   }
 
   start(tag: string, attrs: Attribute[], unary: boolean) {
@@ -239,69 +193,6 @@ class HTMLParser {
     }
   }
 
-  private end(tag: string) {
-    // merge into parent tag
-    const node = this.bufArray.shift();
-    if (node.tag !== tag) {
-      console.error('invalid state: mismatch end tag');
-    }
-
-    // 当有缓存source资源时于于video补上src资源
-    if (node.tag === 'video' && this.results.source) {
-      node.attr.src = this.results.source;
-      delete this.results.source;
-    }
-
-    this.customHandler?.end?.(node, this.results);
-
-    if (this.bufArray.length === 0) {
-      this.results.nodes.push(node);
-    } else {
-      const parent = this.bufArray[0];
-      if (!parent.nodes) {
-        parent.nodes = [];
-      }
-      parent.nodes.push(node);
-    }
-  }
-
-  private chars(text: string) {
-    if (!text?.trim()) return;
-
-    const node: SimpleNode = {
-      node: 'text',
-      text,
-    };
-
-    this.customHandler?.chars?.(node, this.results);
-
-    if (this.bufArray.length === 0) {
-      this.results.nodes.push(node);
-    } else {
-      const parent = this.bufArray[0];
-      if (!parent.nodes) {
-        parent.nodes = [];
-      }
-      if(parent.tagType === 'block') {
-        node.text = `\n${text}`
-      }
-      parent.nodes.push(node);
-    }
-  }
-
-  private comment(text: string) {
-    const node: SimpleNode = {
-      node: 'comment',
-      text
-    };
-    const parent = this.bufArray[0];
-
-    if (!parent.nodes) {
-      parent.nodes = [];
-    }
-    parent.nodes.push(node);
-  }
-
   html2json(html: string) {
     // 在 HTML 解析过程中，通常我们会先处理结束标签（end tag）再处理开始标签（start tag）。这是因为在解析HTML的过程中，我们需要确保标签的嵌套是正确的，即开始标签和结束标签的配对应该是正确的
     // 处理字符串
@@ -369,6 +260,112 @@ class HTMLParser {
 
     this.parseEndTag(undefined, undefined);
     return this.results;
+  }
+
+  // tag不可删除，replace函数使用
+  private parseEndTag(tag?: string | Record<string, string>, tagName?: string) {
+    // If no tag name is provided, clean shop
+    let pos = tagName ? this.stack.lastIndexOf(tagName.toLowerCase()) : 0;
+    if (pos >= 0) {
+      // Close all the open elements, up the stack
+      while (this.stack.length > pos) {
+        this.end(this.stack.pop() as string);
+      }
+    }
+  }
+
+  private parseStartTag(tag: string | Record<string, string>, tagName: string, rest: string, unary: boolean) {
+    tagName = tagName.toLowerCase();
+    // 处理块级标签内的内联元素
+    if (block[tagName]) {
+      while (this.stack.last() && inline[this.stack.last()]) {
+        this.parseEndTag('', this.stack.last());
+      }
+    }
+    // 处理自闭合标签
+    if (closeSelf[tagName] && this.stack.last() === tagName) {
+      this.parseEndTag('', tagName);
+    }
+
+    unary = empty[tagName] || !!unary;
+
+    if (!unary) this.stack.push(tagName);
+
+    const attrs: Attribute[] = [];
+
+    // 使用正则表达式匹配属性并生成属性对象
+    rest.replace(attr, (match, attributeName: string, attributeValueSingleQuote: string = '', attributeValueDoubleQuote: string = '', attributeValueNoQuote: string = '') => {
+      const value = attributeValueSingleQuote || attributeValueDoubleQuote || attributeValueNoQuote || (fillAttrs[attributeName] ? attributeName : '');
+      // 对属性值进行转义
+      const escapedValue = value.replace(/(^|[^\\])"/g, '$1\\"');
+      attrs.push({
+        name: attributeName,
+        value: escapedValue,
+        escaped: escapedValue,
+      });
+      return `${attributeName}="${escapedValue}"`;
+    });
+    this.start(tagName, attrs, unary);
+  }
+
+  private end(tag: string) {
+    // merge into parent tag
+    const node = this.bufArray.shift();
+    if (node.tag !== tag) {
+      console.error('invalid state: mismatch end tag');
+    }
+
+    // 当有缓存source资源时于于video补上src资源
+    if (node.tag === 'video' && this.results.source) {
+      node.attr.src = this.results.source;
+      delete this.results.source;
+    }
+
+    this.customHandler?.end?.(node, this.results);
+
+    if (this.bufArray.length === 0) {
+      this.results.nodes.push(node);
+    } else {
+      const parent = this.bufArray[0];
+      if (!parent.nodes) {
+        parent.nodes = [];
+      }
+      parent.nodes.push(node);
+    }
+  }
+
+  private chars(text: string) {
+    if (!text?.trim()) return;
+
+    const node: SimpleNode = {
+      node: 'text',
+      text,
+    };
+
+    this.customHandler?.chars?.(node, this.results);
+
+    if (this.bufArray.length === 0) {
+      this.results.nodes.push(node);
+    } else {
+      const parent = this.bufArray[0];
+      if (!parent.nodes) {
+        parent.nodes = [];
+      }
+      parent.nodes.push(node);
+    }
+  }
+
+  private comment(text: string) {
+    const node: SimpleNode = {
+      node: 'comment',
+      text
+    };
+    const parent = this.bufArray[0];
+
+    if (!parent.nodes) {
+      parent.nodes = [];
+    }
+    parent.nodes.push(node);
   }
 
   private assignArtUIStyleObject<T>(node: NodeInfo, artUIStyleObject: T) {

@@ -1,7 +1,7 @@
 export const enum BorderStyle {
-  Dotted,
+  Solid,
   Dashed,
-  Solid
+  Dotted,
 }
 
 export const enum TextDecorationType {
