@@ -1,5 +1,11 @@
 # Changelog
 
+### [v1.0.2](https://github.com/asasugar/HPRichText/releases/tag/v1.0.2) (2024-03-26)
+
+### Bug Fixes
+
+* 🐛 降低遍历复杂度 [(#2)](https://github.com/asasugar/HPRichText/issues/2) ([8e422a2](https://github.com/asasugar/HPRichText/commit/8e422a2e2a30c42f050dcd6ed2455f3af579ea3e))
+
 ### [v1.0.1](https://github.com/asasugar/HPRichText/releases/tag/v1.0.1) (2024-03-26)
 
 ### Features
