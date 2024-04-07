@@ -1,6 +1,6 @@
 # Changelog
 
-### [v1.0.2](https://github.com/asasugar/HPRichText/releases/tag/v1.0.2) (2024-03-26)
+### [v1.0.2](https://github.com/asasugar/HPRichText/releases/tag/v1.0.2) (2024-04-07)
 
 ### Bug Fixes
 
