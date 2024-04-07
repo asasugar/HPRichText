@@ -3,22 +3,21 @@
  * @Author: asasugar<xxj95719@gmail.com>
  */
 import type { Nullable } from '../../common/types/common';
-import type { NodeInfo, HtmlParserResult, Attr } from '../../common/types/htmlParser';
+import type { Attr, HtmlParserResult, NodeInfo } from '../../common/types/htmlParser';
 import type {
-  RichTextOption,
-  TextBuilderOptions,
-  LabelLevelBuilderOptions,
-  NodesBuilderOptions,
-  FancySpanOptions,
-  FancyTextOptions,
   FancyImageOptions,
-  fancyVideoOptions,
-  fancyTextInputOptions,
+  FancySpanOptions,
   fancyTextAreaOptions,
-  LinkPressMethod
+  fancyTextInputOptions,
+  FancyTextOptions,
+  fancyVideoOptions,
+  LabelLevelBuilderOptions,
+  LinkPressMethod,
+  NodesBuilderOptions,
+  RichTextOption,
+  TextBuilderOptions
 } from './index';
 import HTMLParser from '../../common/utils/html/html-parser';
-import { assign } from './helperful';
 
 
 @Component
@@ -30,119 +29,20 @@ export struct HPRichText {
     nodes: []
   };
 
-  getBlockIndex(node: NodeInfo): number {
+  getBlockIndex(node?: NodeInfo): number {
     const index = node?.nodes?.findIndex(node => node.tagType === 'block');
     return index as number;
   }
 
-  @Builder
-  labelLevelBuilder($$: LabelLevelBuilderOptions) {
-    if ($$.node) {
-      // 处理行内样式层级问题
-      if ($$.node.nodes && this.getBlockIndex($$.node) > -1) {
-        // 若找到块级标签，则三等分递归保证block标签是唯一的一项
-        // 前面一项都是非block
-        if (this.getBlockIndex($$.node) > 0) {
-          Row() {
-            Text() {
-              this.nodesBuilder({
-                nodes: $$.node.nodes.slice(0, this.getBlockIndex($$.node)),
-                parentNode: $$.node,
-              });
-            }
-            .fancyText($$.node?.artUIStyleObject)
-          }
-          .justifyContent(FlexAlign.End)
-        }
-
-        // 中间一项为单独的block
-        this.nodesBuilder({
-          nodes: [$$.node.nodes[this.getBlockIndex($$.node)]],
-          parentNode: $$.node,
-        });
-
-        // 第三项中可能还存在block，所以需要递归处理第三项数据
-        this.labelLevelBuilder({
-          node: assign({}, $$.node, { nodes: $$.node.nodes.slice(this.getBlockIndex($$.node) + 1) }),
-          parentNode: $$.node,
-          isSetOutStyle: $$.isSetOutStyle
-        })
-      } else {
-        if ($$.node.tagType === 'inline' && $$.parentNode) {
-          this.nodesBuilder({
-            nodes: $$.node.nodes,
-            parentNode: $$.node,
-          });
-        } else {
-          Text() {
-            this.nodesBuilder({
-              nodes: $$.node.nodes,
-              parentNode: $$.node,
-            });
-          }
-          .border(!$$.isSetOutStyle ? $$.node?.artUIStyleObject?.border : null)
-          .fancyText($$.node?.artUIStyleObject)
-        }
-      }
-    }
-
+  getInlineIndex(node?: NodeInfo): number {
+    const index = node?.nodes?.findIndex(node => node.tagType === 'inline');
+    return index as number;
   }
 
-  @Builder
-  nodesBuilder($$: NodesBuilderOptions) {
-    if ($$.nodes?.length) {
-
-      ForEach($$.nodes, (item: NodeInfo) => {
-        // 标签
-        if (item.node === 'element') {
-          // video
-          if (item.tag === 'video') {
-            Video({
-              src: item.attr?.src
-            })
-              .fancyVideo(item?.artUIStyleObject, item?.attr)
-          } else if (item.tag === 'img') {
-            // img
-            Image(item.attr?.src)
-              .fancyImage(item?.artUIStyleObject, item?.attr);
-          } else if (item.tag === 'input') {
-            TextInput({ text: item?.attr?.value, placeholder: item?.attr?.placeholder })
-              .fancyTextInput(item?.artUIStyleObject, item?.attr)
-          } else if (item.tag === 'textarea') {
-            TextArea({
-              placeholder: item?.attr?.placeholder,
-              text: item?.nodes?.[0]?.text
-            })
-              .fancyTextArea(item?.artUIStyleObject)
-
-          } else {
-            // 处理子节点
-            Column() {
-              this.labelLevelBuilder({
-                node: item,
-                parentNode: $$.parentNode,
-                isSetOutStyle: this.getBlockIndex(item) > -1
-              })
-            }
-            .width('100%')
-            .alignItems(HorizontalAlign.Start)
-            .border(this.getBlockIndex(item) > -1 ? item?.artUIStyleObject?.border : null)
-          }
-        } else if (item.node === 'text') {
-          if ($$.parentNode) {
-            this.textBuilder({ node: item, parentNode: $$.parentNode });
-          } else {
-            // 纯文本，无标签场景
-            Text() {
-              this.textBuilder({ node: item, parentNode: $$.parentNode });
-            }
-          }
-        }
-      }, (item: NodeInfo, index: number) => index + item.node)
-    }
-  }
-
-  // 文本样式构造器
+  /**
+   * @description: Span文本样式构造器
+   * @returns {*}
+   */
   @Builder
   textBuilder($$: TextBuilderOptions) {
     Span($$.node.text)
@@ -159,6 +59,138 @@ export struct HPRichText {
       })
   }
 
+  /**
+   * @description: 块级、行内标签拆分构造器
+   * @returns {*}
+   */
+  @Builder
+  labelLevelBuilder($$: LabelLevelBuilderOptions) {
+    if ($$.node) {
+      // 若找到块级标签且块级标签不是第一项，则二分数组处理
+      if ($$.node.nodes && this.getBlockIndex($$.node) > 0) {
+        // 处理行内样式层级问题
+        Text() {
+          this.nodesBuilder({
+            nodes: $$.node.nodes.slice(0, this.getBlockIndex($$.node)),
+            parentNode: $$.node,
+            isInlineBlockNesting: $$.isInlineBlockNesting
+          });
+        }
+        .fancyText($$.node?.artUIStyleObject)
+
+        // 处理剩余数组：可能还存在block
+        this.nodesBuilder({
+          nodes: $$.node.nodes.slice(this.getBlockIndex($$.node)),
+          parentNode: $$.node,
+          isInlineBlockNesting: false
+        })
+      } else {
+        // inline标签
+        if (($$.node.tagType === 'inline' && $$.parentNode?.tagType === 'block')) {
+          // 长度为 1 直接渲染，降低复杂度
+          if ($$.node.nodes?.length === 1 && $$.node.nodes?.[0].node === 'text') {
+            this.textBuilder({ node: $$.node.nodes[0], parentNode: $$.node })
+          } else {
+            this.nodesBuilder({
+              nodes: $$.node.nodes,
+              parentNode: $$.node,
+              isInlineBlockNesting: $$.isInlineBlockNesting
+            });
+          }
+        } else {
+
+          // block标签
+          // 长度为 1 直接渲染，降低复杂度
+          if ($$.node.nodes?.length === 1 && $$.node.nodes[0].node === 'text') {
+            Text() {
+              this.textBuilder({ node: $$.node.nodes[0], parentNode: $$.node })
+            }
+            .border(!$$.isInlineBlockNesting ? $$.node?.artUIStyleObject?.border : null)
+            .fancyText($$.node?.artUIStyleObject)
+          } else {
+            Text() {
+              this.nodesBuilder({
+                nodes: $$.node.nodes,
+                parentNode: $$.node,
+                isInlineBlockNesting: $$.isInlineBlockNesting
+              });
+            }
+            .border(!$$.isInlineBlockNesting ? $$.node?.artUIStyleObject?.border : null)
+            .fancyText($$.node?.artUIStyleObject)
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * @description: 节点构造器函数
+   * @returns {*}
+   */
+  @Builder
+  nodesBuilder($$: NodesBuilderOptions) {
+    if ($$.nodes?.length && $$.parentNode) {
+      ForEach($$.nodes, (item: NodeInfo) => {
+        // 标签
+        if (item.node === 'element') {
+          // video
+          if (item.tag === 'video') {
+            Video({
+              src: item.attr?.src
+            })
+              .fancyVideo(item?.artUIStyleObject, item?.attr);
+          } else if (item.tag === 'img') {
+            // img
+            Image(item.attr?.src)
+              .fancyImage(item?.artUIStyleObject, item?.attr);
+          } else if (item.tag === 'input') {
+            TextInput({ text: item?.attr?.value, placeholder: item?.attr?.placeholder })
+              .fancyTextInput(item?.artUIStyleObject, item?.attr);
+          } else if (item.tag === 'textarea') {
+            TextArea({
+              placeholder: item?.attr?.placeholder,
+              text: item?.nodes?.[0]?.text
+            })
+              .fancyTextArea(item?.artUIStyleObject);
+          } else {
+            // 处理子节点
+            if ($$.isInlineBlockNesting || (this.getInlineIndex(item) > -1 && this.getBlockIndex(item) > -1)) {
+              this.labelLevelBuilder({
+                node: item,
+                parentNode: $$.parentNode,
+                isInlineBlockNesting: true
+              });
+            } else {
+
+              if ($$.isInlineBlockNesting) {
+                Text() {
+                  this.nodesBuilder({
+                    nodes: item.nodes,
+                    parentNode: item,
+                  });
+                }
+              }
+              this.nodesBuilder({
+                nodes: item.nodes,
+                parentNode: item,
+              });
+            }
+          }
+        } else if (item.node === 'text') {
+          if ($$.parentNode && this.getInlineIndex(item) > -1 && this.getBlockIndex(item) > -1) {
+            this.textBuilder({ node: item, parentNode: $$.parentNode });
+          } else {
+            Text() {
+              this.textBuilder({ node: item, parentNode: $$.parentNode });
+            }
+            .border(!$$.isInlineBlockNesting ? $$.parentNode?.artUIStyleObject?.border : null)
+            .fancyText($$.parentNode?.artUIStyleObject);
+          }
+        }
+      }, (item: NodeInfo, index: number) => index + item.node)
+    }
+  }
+
   aboutToAppear() {
     const htmlParser = new HTMLParser(this.richTextOption?.customHandler, this.richTextOption?.imageProp);
     this.htmlJson = htmlParser.html2json(this.richTextOption.content);
@@ -169,15 +201,15 @@ export struct HPRichText {
     if (this.needScroll) {
       Scroll() {
         Column() {
-          this.nodesBuilder({ nodes: this.htmlJson.nodes });
+          this.nodesBuilder({ nodes: this.htmlJson.nodes, parentNode: this.htmlJson as NodeInfo });
         }
-        .alignItems(HorizontalAlign.Start)
+        .alignItems(HorizontalAlign?.Start)
       }
     } else {
       Column() {
         this.nodesBuilder({ nodes: this.htmlJson.nodes });
       }
-      .alignItems(HorizontalAlign.Start)
+      .alignItems(HorizontalAlign?.Start)
     }
   }
 }
@@ -248,13 +280,13 @@ function fancyTextInput($$: fancyTextInputOptions = { fontSize: 14, fontColor: C
   .width($$.width)
   .height($$.height)
   .type(
-    attrs.type === 'number' ? InputType.Number :
-      attrs.type === 'tel' ? InputType.PhoneNumber :
-        attrs.type === 'password' ? InputType.Password :
-          attrs.type === 'email' ? InputType.Email :
-          InputType.Normal
+    attrs.type === 'number' ? InputType?.Number :
+      attrs.type === 'tel' ? InputType?.PhoneNumber :
+        attrs.type === 'password' ? InputType?.Password :
+          attrs.type === 'email' ? InputType?.Email :
+            InputType?.Normal
   )
-  .placeholderColor(Color.Grey)
+  .placeholderColor(Color?.Grey)
   .placeholderFont({ size: 14, weight: 400 })
   .fontSize($$.fontSize)
   .fontColor($$.fontColor)
