@@ -57,10 +57,12 @@ class HTMLParser {
   private last: string = '';
   private stack: Stack<string> = new Stack();
   private bufArray: NodeInfo[] = [];
+  private baseFontSize: number = 16;
 
-  constructor(customHandler?: CustomHandler, imageProp?: ImageProp) {
+  constructor(customHandler?: CustomHandler, imageProp?: ImageProp, baseFontSize?: number) {
     customHandler && (this.customHandler = customHandler);
     imageProp && Object.assign(this.imageProp, imageProp);
+    baseFontSize && (this.baseFontSize = baseFontSize);
   }
 
   start(tag: string, attrs: Attribute[], unary: boolean) {
@@ -171,7 +173,7 @@ class HTMLParser {
 
     // 子节点继承父节点样式(需要排除不需要继承的样式)
 
-    const htmlStyles = setHtmlAttributes(node.tag);
+    const htmlStyles = setHtmlAttributes(node.tag, this.baseFontSize);
 
     // 整合父标签过滤之后的可继承样式+标签默认样式+自身style样式
     node.artUIStyleObject = Object.assign({

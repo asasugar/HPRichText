@@ -1,12 +1,4 @@
-import {
-  BorderStyle,
-  Color,
-  FontStyle,
-  TextAlign,
-  TextDecorationType,
-  TextOverflow,
-  Visibility
-} from './artUIEnum';
+import { BorderStyle, Color, FontStyle, TextAlign, TextDecorationType, TextOverflow, Visibility } from './artUIEnum';
 
 export type AttrsMap = Record<string, string | Record<string, string[]>>;
 
@@ -63,6 +55,7 @@ export interface SpecialStyles {
   b: { fontWeight: number | string; };
   strong: { fontWeight: number | string; };
   p: {
+    fontSize: number;
     margin: {
       top: number;
       bottom: number;
@@ -108,7 +101,7 @@ export interface SpecialStyles {
   };
   video: {
     textAlign: TextAlign;
-    magin: {
+    margin: {
       top: number;
       bottom: number;
     };

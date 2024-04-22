@@ -74,6 +74,7 @@ export interface fancyTextAreaOptions {
 
 export interface RichTextOption {
   content: string;
+  baseFontSize?: number;
   imageProp?: ImageProp;
   customHandler?: CustomHandler;
 }

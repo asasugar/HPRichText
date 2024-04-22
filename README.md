@@ -130,11 +130,12 @@ struct Index {
 
 ## richTextOption属性
 
-| 名称            | 类型       | 必填  | 默认值 | 描述            |
-|---------------|----------|-----|-----|---------------|
-| content       | String   | 是   | —   | 渲染内容          |
-| customHandler | Function | 否   | 见源码 | 自定义 parser 函数 |
-| imageProp     | Object   | 否   | 见下文 | 图片相关参数        |
+| 名称            | 类型       | 必填  | 默认值 | 描述               |
+|---------------|----------|-----|-----|------------------|
+| content       | String   | 是   | —   | 渲染内容             |
+| baseFontSize  | Number   | 否   | 16  | 基准字体大小，以 p 标签为基准 |
+| customHandler | Function | 否   | 见源码 | 自定义 parser 函数    |
+| imageProp     | Object   | 否   | 见下文 | 图片相关参数           |
 
 ### 自定义 parser 函数具体介绍
 
