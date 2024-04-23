@@ -83,11 +83,17 @@ export interface SpecialStyles {
   small: { fontSize: number; };
   sub: {
     fontSize: number;
-    offset: { y: number; };
+    // offset?: {
+    //   x?: number
+    //   y?: number;
+    // };
   };
   sup: {
     fontSize: number;
-    offset: { y: number; };
+    // offset?: {
+    //   x?: number
+    //   y?: number;
+    // };
   };
   s: { decoration: { type: TextDecorationType; }; };
   strike: { decoration: { type: TextDecorationType; }; };

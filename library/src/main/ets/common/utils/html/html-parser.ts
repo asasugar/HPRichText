@@ -13,6 +13,7 @@ import { excludeExtendsParentArtUIStyle, parseStyle, parseToArtUI, setHtmlAttrib
 import { strDiscode, urlToHttpUrl } from './discode';
 import { ImageFit } from '../../types/artUIEnum';
 import {
+  addRootDiv,
   attr,
   block,
   closeSelf,
@@ -22,9 +23,11 @@ import {
   filterAttrs,
   inline,
   removeDOCTYPE,
+  replaceBr,
   replaceWebpPic,
   special,
   startTag,
+  startWithHTMLElement,
   trimHtml
 } from './index';
 import Node from './node';
@@ -198,10 +201,18 @@ class HTMLParser {
   html2json(html: string) {
     // 在 HTML 解析过程中，通常我们会先处理结束标签（end tag）再处理开始标签（start tag）。这是因为在解析HTML的过程中，我们需要确保标签的嵌套是正确的，即开始标签和结束标签的配对应该是正确的
     // 处理字符串
+
     this.last = html;
     html = removeDOCTYPE(html);
     html = trimHtml(html);
+    html = replaceBr(html);
     html = strDiscode(html);
+
+    // 判断字符串是否以 HTML 标签开头，不是的话增加div
+    if (!startWithHTMLElement(html)) {
+      html = addRootDiv(html);
+    }
+
     let chars, index, match;
     while (html) {
       chars = true;

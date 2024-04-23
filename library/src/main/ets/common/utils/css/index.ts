@@ -178,8 +178,8 @@ export function specialStyles(baseFontSize: number): SpecialStyles {
     samp: { fontFamily: 'monospace' },
     big: { fontSize: 1.75 * baseFontSize },
     small: { fontSize: 0.9 * baseFontSize },
-    sub: { fontSize: 0.75 * baseFontSize, offset: { y: 0.625 * baseFontSize } },
-    sup: { fontSize: 0.75 * baseFontSize, offset: { y: -0.625 * baseFontSize } },
+    sub: { fontSize: 0.75 * baseFontSize }, // 0.625 * baseFontSize
+    sup: { fontSize: 0.75 * baseFontSize }, // -0.625 * baseFontSize
     s: { decoration: { type: TextDecorationType.LineThrough } },
     strike: { decoration: { type: TextDecorationType.LineThrough } },
     del: { decoration: { type: TextDecorationType.LineThrough } },

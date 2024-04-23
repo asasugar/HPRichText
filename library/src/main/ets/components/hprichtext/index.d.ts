@@ -9,7 +9,6 @@ export interface TextBuilderOptions {
   parentNode?: NodeInfo;
 }
 
-
 export interface LabelLevelBuilderOptions extends TextBuilderOptions {
   isInlineBlockNesting: boolean;
 }
@@ -45,6 +44,12 @@ export interface FancyTextOptions extends FontAttr, ShapeAttr, PositionAttr {
     overflow: 0 | 1 | 2 | 3;
   };
   maxLines?: number;
+  border?: {
+    width?: string | number;
+    style?: 0 | 1 | 2;
+    color?: Color | string;
+    radius?: string;
+  }
 }
 
 export interface FancyImageOptions extends ShapeAttr {

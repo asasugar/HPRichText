@@ -30,12 +30,7 @@ export struct HPRichText {
   };
 
   getBlockIndex(node?: NodeInfo): number {
-    const index = node?.nodes?.findIndex(node => node.tagType === 'block');
-    return index as number;
-  }
-
-  getInlineIndex(node?: NodeInfo): number {
-    const index = node?.nodes?.findIndex(node => node.tagType === 'inline');
+    const index = node?.nodes?.findIndex(n => n.tagType === 'block');
     return index as number;
   }
 
@@ -66,48 +61,76 @@ export struct HPRichText {
   @Builder
   labelLevelBuilder($$: LabelLevelBuilderOptions) {
     if ($$.node) {
-      // 若找到块级标签且块级标签不是第一项，则二分数组处理
-      if ($$.node.nodes && this.getBlockIndex($$.node) > 0) {
-        // 处理行内样式层级问题
-        Text() {
-          this.nodesBuilder({
-            nodes: $$.node.nodes.slice(0, this.getBlockIndex($$.node)),
-            parentNode: $$.node,
-            isInlineBlockNesting: $$.isInlineBlockNesting
-          });
-        }
-        .fancyText($$.node?.artUIStyleObject)
-
-        // 处理剩余数组：可能还存在block
-        this.nodesBuilder({
-          nodes: $$.node.nodes.slice(this.getBlockIndex($$.node)),
-          parentNode: $$.node,
-          isInlineBlockNesting: false
-        })
-      } else {
-        // inline标签
-        if (($$.node.tagType === 'inline' && $$.parentNode?.tagType === 'block')) {
-          // 长度为 1 直接渲染，降低复杂度
-          if ($$.node.nodes?.length === 1 && $$.node.nodes?.[0].node === 'text') {
-            this.textBuilder({ node: $$.node.nodes[0], parentNode: $$.node })
+      // 若找到块级标签
+      if ($$.node.nodes && this.getBlockIndex($$.node) > -1) {
+        // 块级标签不是第一项，则将行内标签元素统一处理
+        if (this.getBlockIndex($$.node) > 0) {
+          if (!$$.parentNode) {
+            Text() {
+              this.nodesBuilder({
+                nodes: $$.node.nodes.slice(0, this.getBlockIndex($$.node)),
+                parentNode: $$.node,
+                isInlineBlockNesting: $$.isInlineBlockNesting
+              });
+            }
+            .fancyText($$.node?.artUIStyleObject)
           } else {
             this.nodesBuilder({
-              nodes: $$.node.nodes,
+              nodes: $$.node.nodes.slice(0, this.getBlockIndex($$.node)),
               parentNode: $$.node,
               isInlineBlockNesting: $$.isInlineBlockNesting
             });
           }
+        }
+        // 中间一项为单独的块级标签
+        if (!$$.parentNode) {
+          Text() {
+            this.nodesBuilder({
+              nodes: [$$.node.nodes[this.getBlockIndex($$.node)]],
+              parentNode: $$.node,
+            });
+          }
+          .fancyText($$.node.nodes[this.getBlockIndex($$.node)]?.artUIStyleObject)
         } else {
 
-          // block标签
-          // 长度为 1 直接渲染，降低复杂度
-          if ($$.node.nodes?.length === 1 && $$.node.nodes[0].node === 'text') {
+          this.nodesBuilder({
+            nodes: [$$.node.nodes[this.getBlockIndex($$.node)]],
+            parentNode: $$.node,
+          });
+        }
+
+        // 第三项中判断还有剩余元素则递归处理
+        // 可能还存在block
+        if ($$.node.nodes.length - 1 > this.getBlockIndex($$.node)) {
+          if (!$$.parentNode) {
+            Text() {
+              this.nodesBuilder({
+                nodes: $$.node.nodes.slice(this.getBlockIndex($$.node) + 1),
+                parentNode: $$.node,
+              });
+            }
+            .border($$.node?.artUIStyleObject?.border)
+            .fancyText($$.node?.artUIStyleObject)
+          } else {
+            this.nodesBuilder({
+              nodes: $$.node.nodes.slice(this.getBlockIndex($$.node) + 1),
+              parentNode: $$.node,
+            });
+          }
+        }
+      } else {
+        // 长度为 1 直接渲染，降低复杂度
+        if ($$.node.nodes?.length === 1 && $$.node.nodes[0].node === 'text') {
+          if (!$$.parentNode) {
             Text() {
               this.textBuilder({ node: $$.node.nodes[0], parentNode: $$.node })
             }
-            .border(!$$.isInlineBlockNesting ? $$.node?.artUIStyleObject?.border : null)
             .fancyText($$.node?.artUIStyleObject)
           } else {
+            this.textBuilder({ node: $$.node.nodes[0], parentNode: $$.node })
+          }
+        } else {
+          if (!$$.parentNode) {
             Text() {
               this.nodesBuilder({
                 nodes: $$.node.nodes,
@@ -115,8 +138,13 @@ export struct HPRichText {
                 isInlineBlockNesting: $$.isInlineBlockNesting
               });
             }
-            .border(!$$.isInlineBlockNesting ? $$.node?.artUIStyleObject?.border : null)
             .fancyText($$.node?.artUIStyleObject)
+          } else {
+            this.nodesBuilder({
+              nodes: $$.node.nodes,
+              parentNode: $$.node,
+              isInlineBlockNesting: $$.isInlineBlockNesting
+            });
           }
         }
       }
@@ -129,7 +157,7 @@ export struct HPRichText {
    */
   @Builder
   nodesBuilder($$: NodesBuilderOptions) {
-    if ($$.nodes?.length && $$.parentNode) {
+    if ($$.nodes?.length) {
       ForEach($$.nodes, (item: NodeInfo) => {
         // 标签
         if (item.node === 'element') {
@@ -153,38 +181,19 @@ export struct HPRichText {
             })
               .fancyTextArea(item?.artUIStyleObject);
           } else {
-            // 处理子节点
-            if ($$.isInlineBlockNesting || (this.getInlineIndex(item) > -1 && this.getBlockIndex(item) > -1)) {
-              this.labelLevelBuilder({
-                node: item,
-                parentNode: $$.parentNode,
-                isInlineBlockNesting: true
-              });
-            } else {
-
-              if ($$.isInlineBlockNesting) {
-                Text() {
-                  this.nodesBuilder({
-                    nodes: item.nodes,
-                    parentNode: item,
-                  });
-                }
-              }
-              this.nodesBuilder({
-                nodes: item.nodes,
-                parentNode: item,
-              });
-            }
+            this.labelLevelBuilder({
+              node: item,
+              parentNode: $$.parentNode,
+              isInlineBlockNesting: true
+            });
           }
         } else if (item.node === 'text') {
-          if ($$.parentNode && this.getInlineIndex(item) > -1 && this.getBlockIndex(item) > -1) {
-            this.textBuilder({ node: item, parentNode: $$.parentNode });
-          } else {
+          if (!$$.parentNode) {
             Text() {
               this.textBuilder({ node: item, parentNode: $$.parentNode });
             }
-            .border(!$$.isInlineBlockNesting ? $$.parentNode?.artUIStyleObject?.border : null)
-            .fancyText($$.parentNode?.artUIStyleObject);
+          } else {
+            this.textBuilder({ node: item, parentNode: $$.parentNode });
           }
         }
       }, (item: NodeInfo, index: number) => index + item.node)
@@ -194,14 +203,14 @@ export struct HPRichText {
   aboutToAppear() {
     const htmlParser = new HTMLParser(this.richTextOption?.customHandler, this.richTextOption?.imageProp);
     this.htmlJson = htmlParser.html2json(this.richTextOption.content);
-    // console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
+    console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
 
   build() {
     if (this.needScroll) {
       Scroll() {
         Column() {
-          this.nodesBuilder({ nodes: this.htmlJson.nodes, parentNode: this.htmlJson as NodeInfo });
+          this.nodesBuilder({ nodes: this.htmlJson.nodes });
         }
         .alignItems(HorizontalAlign?.Start)
       }
@@ -238,7 +247,7 @@ function fancyText($$: FancyTextOptions = {}) {
   .backgroundImage($$.backgroundImage)
   .rotate($$.rotate)
   .scale($$.scale)
-  .offset($$.offset)
+  // .offset($$.offset)
   .decoration($$.decoration)
   .lineHeight($$.lineHeight)
   .letterSpacing($$.letterSpacing)
@@ -249,6 +258,7 @@ function fancyText($$: FancyTextOptions = {}) {
   .textAlign($$.textAlign)
   .textOverflow($$.textOverflow)
   .maxLines($$.maxLines ? Number($$.maxLines) : $$.textOverflow ? 1 : null)
+  .border($$.border)
 }
 
 @Extend(Image)

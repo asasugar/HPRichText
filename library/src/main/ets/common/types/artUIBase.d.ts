@@ -45,10 +45,10 @@ export interface PositionAttr {
     centerX?: number | string;
     centerY?: number | string;
   };
-  offset?: {
-    x: number;
-    y: number
-  };
+  // offset?: {
+  //   x: number;
+  //   y: number
+  // };
 }
 
 export interface OtherAttr {

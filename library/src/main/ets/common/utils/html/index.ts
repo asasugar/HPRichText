@@ -19,10 +19,20 @@ export function trimHtml(html: string) {
     .replace(/<style[^]*<\/style>/gi, '');
 }
 
+export function replaceBr(html: string) {
+  const reg = /<br\s*\/?>/gi;
+  return html.replace(reg, '\n');
+}
 
 export function addRootDiv(html: string) {
   if (!html) return html;
   return `<div>${html}</div>`
+}
+
+export function startWithHTMLElement(html: string) {
+  // 正则表达式匹配以 < 开头，后跟非空白字符，直至遇到 > 为止的序列
+  const reg = /^<\w+(\s+\w+="[^"]*"|\s+\w+='[^']*'|\s+[^\s>]+)*\s*>/;
+  return reg.test(html.replace(/\n/g, ""));
 }
 
 export const startTag = /^<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z0-9_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/;

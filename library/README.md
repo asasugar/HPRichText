@@ -177,10 +177,14 @@ struct Index {
 ## 注意点
 
 - text-overflow只对一级块级标签或者全都行内子标签生效，嵌套块级标签需要换行，即使用Text重新生成一个文本，导致最外层的Text设置的多行省略文本会被嵌套的块级标签分割开
-- 非文本标签，如: `img` 、 `input` 、 `textarea` 在组件中会当`块级标签`渲染
-- `table`、`li`暂不支持
+- 非文本标签，如: `img` 、 `input` 、 `textarea` 在组件中会当`块级标签`渲染，且由于鸿蒙 `Text`
+  组件渲染的时候不支持嵌套 `input` 、 `textarea` 组件,所以表单标签推荐在跟快级标签同级或者只存在一层嵌套关系
 - `ul`、`ol` 渲染为带初始样式普通块级标签
-- `style` 和 `script` 外部标签暂不支持，`行内style` 支持
+- `sub` 、`sup` 渲染为小字号的文本
+- `table`、`li`、`外部style` 和 `外部script` 标签暂不支持，
+- 支持 `行内style`
+- 块级标签嵌套块级标签且最外层设置 `border` 边框属性，样式不是预期（ps: 由于性能问题，不打算修复）
+  ![20240423161457](https://raw.githubusercontent.com/asasugar/pic-bed/master/imgs/20240423161457.png)
 
 ## 支持的标签列表
 
