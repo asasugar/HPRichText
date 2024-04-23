@@ -1,5 +1,19 @@
 # Changelog
 
+
+### [v1.0.3](https://github.com/asasugar/HPRichText/releases/tag/v1.0.3) (2024-04-23)
+
+### Features
+
+* 🎸
+  added example ([2406cf4](https://github.com/asasugar/HPRichText/commit/2406cf4ec03850064c9522f12f4fb88c271addb5))
+
+### Bug Fixes
+
+* 🐛 遍历算法优化  ([7b9d5b5](https://github.com/asasugar/HPRichText/commit/7b9d5b5cdd21c5f146aa3d3d4f0f90b820c47577))
+
+* 🐛 增加baseFontSize参数 [(#6)](https://github.com/asasugar/HPRichText/issues/6) ([01db736](https://github.com/asasugar/HPRichText/commit/01db7366bf6e52730fc4295d40e3665a672a3ed5))
+
 ### [v1.0.2](https://github.com/asasugar/HPRichText/releases/tag/v1.0.2) (2024-04-07)
 
 ### Bug Fixes
