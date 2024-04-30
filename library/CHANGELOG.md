@@ -5,7 +5,7 @@
 ### Bug Fixes
 
 * 🐛
-  修复富文本组件参数更新重新渲染问题 [(#7)](https://github.com/asasugar/HPRichText/issues/2) ([05bd28e](https://github.com/asasugar/HPRichText/commit/05bd28e95625ae3b0120879bf28814761e19b17c)
+  修复富文本组件参数更新重新渲染问题 [(#7)](https://github.com/asasugar/HPRichText/issues/7) ([05bd28e](https://github.com/asasugar/HPRichText/commit/05bd28e95625ae3b0120879bf28814761e19b17c)
 
 ### [v1.0.3](https://github.com/asasugar/HPRichText/releases/tag/v1.0.3) (2024-04-23)
 
