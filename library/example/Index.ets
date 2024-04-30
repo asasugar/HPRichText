@@ -50,6 +50,9 @@ struct Index {
 
   build() {
     Column() {
+      Button('改变数据').onClick(() => {
+        this.richTextOption.content = '我是改变之后的数据，如通过ajax请求返回的数据'
+      })
       HPRichText({
         richTextOption: $richTextOption,
         needScroll: true,

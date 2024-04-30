@@ -19,13 +19,12 @@ import type {
 } from './index';
 import HTMLParser from '../../common/utils/html/html-parser';
 
-
 @Component
 export struct HPRichText {
-  @Link richTextOption: RichTextOption;
+  @Link @Watch('onUpdateRichTextOption') richTextOption: RichTextOption;
   @Prop needScroll: boolean;
   onLinkPress: Nullable<LinkPressMethod> = null;
-  private htmlJson: HtmlParserResult = {
+  @State htmlJson: HtmlParserResult = {
     nodes: []
   };
 
@@ -196,14 +195,22 @@ export struct HPRichText {
             this.textBuilder({ node: item, parentNode: $$.parentNode });
           }
         }
-      }, (item: NodeInfo, index: number) => index + item.node)
+      }, (item: NodeInfo, index: number) => item.node + item.tag + item.tagType + index)
     }
   }
 
-  aboutToAppear() {
+  // 监听到richTextOption参数变化则重新触发 HTML转化函数
+  onUpdateRichTextOption() {
     const htmlParser = new HTMLParser(this.richTextOption?.customHandler, this.richTextOption?.imageProp);
     this.htmlJson = htmlParser.html2json(this.richTextOption.content);
-    console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
+  }
+
+  // 初始化更新
+  aboutToAppear() {
+    if (this.richTextOption.content) {
+      this.onUpdateRichTextOption();
+    }
+    // console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
 
   build() {
