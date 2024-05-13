@@ -137,6 +137,25 @@ struct Index {
 | customHandler | Function | 否   | 见源码 | 自定义 parser 函数    |
 | imageProp     | Object   | 否   | 见下文 | 图片相关参数           |
 
+```ts
+// Good ✅
+Button('改变数据').onClick(() => {
+  this.richTextOption = {
+    baseFontSize: 50,
+    content: '我是改变之后的数据，如通过ajax请求返回的数据'
+  }
+})
+```
+
+```ts
+// Bad ❌
+Button('改变数据').onClick(() => {
+  this.richTextOption.baseFontSize = 50;
+  this.richTextOption.content = '我是改变之后的数据，如通过ajax请求返回的数据';
+})
+```
+
+
 ### 自定义 parser 函数具体介绍
 
 * 回调参数为当前节点 `node` 对象及解析结果 `results` 对象，例如:
@@ -216,3 +235,5 @@ struct Index {
 ![20240318172402](https://raw.githubusercontent.com/asasugar/pic-bed/master/imgs/20240318172402.png)
 
 ![20240319094531](https://raw.githubusercontent.com/asasugar/pic-bed/master/imgs/20240319094531.png)
+
+![20240513154129](https://raw.githubusercontent.com/asasugar/pic-bed/master/imgs/20240513154129.png)

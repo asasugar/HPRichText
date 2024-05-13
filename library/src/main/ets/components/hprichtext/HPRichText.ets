@@ -201,7 +201,7 @@ export struct HPRichText {
 
   // 监听到richTextOption参数变化则重新触发 HTML转化函数
   onUpdateRichTextOption() {
-    const htmlParser = new HTMLParser(this.richTextOption?.customHandler, this.richTextOption?.imageProp);
+    const htmlParser = new HTMLParser(this.richTextOption?.customHandler, this.richTextOption?.imageProp, this.richTextOption?.baseFontSize);
     this.htmlJson = htmlParser.html2json(this.richTextOption.content);
   }
 

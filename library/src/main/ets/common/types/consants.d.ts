@@ -61,6 +61,9 @@ export interface SpecialStyles {
       bottom: number;
     };
   };
+  div: {
+    fontSize: number;
+  };
   i: { fontStyle: FontStyle; };
   cite: { fontStyle: FontStyle; };
   em: { fontStyle: FontStyle; };

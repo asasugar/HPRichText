@@ -1,6 +1,7 @@
 /**
  * htmlParser改造自: https://github.com/blowsie/Pure-JavaScript-HTML5-Parser
  */
+import { ImageFit } from '../../types/artUIEnum';
 import type {
   Attribute,
   CustomHandler,
@@ -11,7 +12,6 @@ import type {
 } from '../../types/htmlParser';
 import { excludeExtendsParentArtUIStyle, parseStyle, parseToArtUI, setHtmlAttributes } from '../css/index';
 import { strDiscode, urlToHttpUrl } from './discode';
-import { ImageFit } from '../../types/artUIEnum';
 import {
   addRootDiv,
   attr,
@@ -229,7 +229,6 @@ class HTMLParser {
           // end tag
         } else if (html.startsWith('</')) {
           match = html.match(endTag);
-
           if (match) {
             html = html.substring(match[0].length);
 

@@ -161,6 +161,7 @@ export function specialStyles(baseFontSize: number): SpecialStyles {
     b: { fontWeight: FontWeight.Bold },
     strong: { fontWeight: FontWeight.Bold },
     p: { fontSize: baseFontSize, margin: { top: 0.625 * baseFontSize, bottom: 0.625 * baseFontSize } },
+    div: { fontSize: baseFontSize },
     i: { fontStyle: FontStyle.Italic },
     cite: { fontStyle: FontStyle.Italic },
     em: { fontStyle: FontStyle.Italic },
