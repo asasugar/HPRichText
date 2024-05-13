@@ -1,5 +1,15 @@
 # Changelog
 
+### [v1.0.5](https://github.com/asasugar/HPRichText/releases/tag/v1.0.5) (2024-05-13)
+
+### Bug Fixes
+
+* 🐛
+  修复 ForEach循环key更新问题 [(#10)](https://github.com/asasugar/HPRichText/issues/10) ([e962cba](https://github.com/asasugar/HPRichText/commit/e962cba710a15e12ec406ff0140bedeec5bc8e85)
+
+* 🐛
+修复修改baseFontSize不生效问题 [(#9)](https://github.com/asasugar/HPRichText/issues/9) ([087f1ad](https://github.com/asasugar/HPRichText/commit/087f1adb4bb8d5ee1e32817abfa1df9c31464f60)
+
 ### [v1.0.4](https://github.com/asasugar/HPRichText/releases/tag/v1.0.4) (2024-04-30)
 
 ### Bug Fixes
