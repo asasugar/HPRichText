@@ -195,7 +195,7 @@ export struct HPRichText {
             this.textBuilder({ node: item, parentNode: $$.parentNode });
           }
         }
-      }, (item: NodeInfo, index: number) => item.node + item.tag + item.tagType + index)
+      }, (item: NodeInfo, index: number) => Math.random().toFixed(3) + item.node + item.tag + item.tagType + index)
     }
   }
 
@@ -203,6 +203,7 @@ export struct HPRichText {
   onUpdateRichTextOption() {
     const htmlParser = new HTMLParser(this.richTextOption?.customHandler, this.richTextOption?.imageProp, this.richTextOption?.baseFontSize);
     this.htmlJson = htmlParser.html2json(this.richTextOption.content);
+    // console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
 
   // 初始化更新
@@ -210,7 +211,6 @@ export struct HPRichText {
     if (this.richTextOption.content) {
       this.onUpdateRichTextOption();
     }
-    // console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
 
   build() {
