@@ -1,5 +1,12 @@
 # Changelog
 
+### [v1.0.6](https://github.com/asasugar/HPRichText/releases/tag/v1.0.3) (2024-05-17)
+
+### Features
+
+* 🎸
+  added example [(#11)](https://github.com/asasugar/HPRichText/issues/10) ([170c6bc](https://github.com/asasugar/HPRichText/commit/170c6bcd99d7762e1d4146ca9251e191f1e4a669))
+
 ### [v1.0.5](https://github.com/asasugar/HPRichText/releases/tag/v1.0.5) (2024-05-13)
 
 ### Bug Fixes
