@@ -37,6 +37,7 @@ export interface HeadingStyle {
   [x: string]: {
     fontWeight: number | string;
     fontSize: number;
+    fontColor: string;
     margin: {
       top: number;
       bottom: number;
@@ -44,18 +45,18 @@ export interface HeadingStyle {
   };
 }
 
-export interface P {
-  margin: {
-    top: number;
-    bottom: number;
-  }
-}
-
 export interface SpecialStyles {
-  b: { fontWeight: number | string; };
-  strong: { fontWeight: number | string; };
+  b: {
+    fontWeight: number | string;
+    fontColor: string;
+  };
+  strong: {
+    fontWeight: number | string;
+    fontColor: string;
+  };
   p: {
     fontSize: number;
+    fontColor: string;
     margin: {
       top: number;
       bottom: number;
@@ -63,29 +64,63 @@ export interface SpecialStyles {
   };
   div: {
     fontSize: number;
+    fontColor: string;
   };
-  i: { fontStyle: FontStyle; };
-  cite: { fontStyle: FontStyle; };
-  em: { fontStyle: FontStyle; };
-  var: { fontStyle: FontStyle; };
-  address: { fontStyle: FontStyle; };
+  i: {
+    fontStyle: FontStyle;
+    fontColor: string;
+  };
+  cite: {
+    fontStyle: FontStyle;
+    fontColor: string;
+  };
+  em: {
+    fontStyle: FontStyle;
+    fontColor: string;
+  };
+  var: {
+    fontStyle: FontStyle;
+    fontColor: string;
+  };
+  address: {
+    fontStyle: FontStyle;
+    fontColor: string;
+  };
   pre: {
     fontFamily: string;
+    fontColor: string;
     backgroundColor: string;
     padding: number;
     margin: {};
   };
   code: {
     fontFamily: string;
+    fontColor: string;
     backgroundColor: string;
   };
-  tt: { fontFamily: string; };
-  kbd: { fontFamily: string; };
-  samp: { fontFamily: string; };
-  big: { fontSize: number; };
-  small: { fontSize: number; };
+  tt: {
+    fontFamily: string;
+    fontColor: string;
+  };
+  kbd: {
+    fontFamily: string;
+    fontColor: string;
+  };
+  samp: {
+    fontFamily: string;
+    fontColor: string;
+  };
+  big: {
+    fontSize: number;
+    fontColor: string;
+  };
+  small: {
+    fontSize: number;
+    fontColor: string;
+  };
   sub: {
     fontSize: number;
+    fontColor: string;
     // offset?: {
     //   x?: number
     //   y?: number;
@@ -93,14 +128,24 @@ export interface SpecialStyles {
   };
   sup: {
     fontSize: number;
+    fontColor: string;
     // offset?: {
     //   x?: number
     //   y?: number;
     // };
   };
-  s: { decoration: { type: TextDecorationType; }; };
-  strike: { decoration: { type: TextDecorationType; }; };
-  del: { decoration: { type: TextDecorationType; }; };
+  s: {
+    decoration: { type: TextDecorationType; };
+    fontColor: string;
+  };
+  strike: {
+    decoration: { type: TextDecorationType; };
+    fontColor: string;
+  };
+  del: {
+    decoration: { type: TextDecorationType; };
+    fontColor: string;
+  };
   a: {
     fontColor: Color;
     decoration: {
@@ -110,12 +155,14 @@ export interface SpecialStyles {
   };
   video: {
     textAlign: TextAlign;
+    fontColor: string;
     margin: {
       top: number;
       bottom: number;
     };
   };
   blockquote: {
+    fontColor: string;
     margin: {
       top: number;
       bottom: number;
@@ -127,6 +174,7 @@ export interface SpecialStyles {
     };
   };
   ol: {
+    fontColor: string;
     margin: {
       top: number;
       bottom: number;
@@ -134,12 +182,27 @@ export interface SpecialStyles {
     padding: { left: number; };
   };
   ul: {
+    fontColor: string;
     margin: {
       top: number;
       bottom: number;
     };
     padding: { left: number; };
   };
-  u: { decoration: { type: TextDecorationType; }; };
-  hide: { visibility: Visibility; };
+  u: {
+    decoration: { type: TextDecorationType; };
+    fontColor: string;
+  };
+  hide: {
+    visibility: Visibility;
+    fontColor: string;
+  };
+  input: {
+    fontSize: number;
+    fontColor: string;
+  };
+  textarea: {
+    fontSize: number;
+    fontColor: string;
+  };
 }

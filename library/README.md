@@ -134,6 +134,7 @@ struct Index {
 |---------------|----------|-----|-----|------------------|
 | content       | String   | 是   | —   | 渲染内容             |
 | baseFontSize  | Number   | 否   | 16  | 基准字体大小，以 p 标签为基准 |
+| baseFontColor  | String   | 否   | #000000  | 基准字体色值 |
 | customHandler | Function | 否   | 见源码 | 自定义 parser 函数    |
 | imageProp     | Object   | 否   | 见下文 | 图片相关参数           |
 
@@ -142,6 +143,7 @@ struct Index {
 Button('改变数据').onClick(() => {
   this.richTextOption = {
     baseFontSize: 50,
+    baseFontColor: '#ecd88d',
     content: '我是改变之后的数据，如通过ajax请求返回的数据'
   }
 })

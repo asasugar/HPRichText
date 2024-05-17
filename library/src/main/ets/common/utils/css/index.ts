@@ -76,7 +76,8 @@ export function transformObject(originalValue: string, map: Record<string, strin
 
 
 // 过滤和设置一些不需要继承的父级标签样式
-export function excludeExtendsParentArtUIStyle(style: ArtStyleObject) {
+export function excludeExtendsParentArtUIStyle(style?: ArtStyleObject) {
+  if (!style) return {};
   return {
     ...style,
     border: {}, // 不继承border属性
@@ -94,9 +95,11 @@ export function excludeExtendsParentArtUIStyle(style: ArtStyleObject) {
  * @param {string} tagName 标签
  * @returns {*}
  */
-export function setHtmlAttributes(tagName: string, baseFontSize: number) {
+export function setHtmlAttributes(baseFontSize: number, baseFontColor: string, tagName?: string,) {
+  if (!tagName) return {};
   // 使用对象映射查找并返回对应标签的样式
-  const predefinedStyle = (headingStyles(baseFontSize)[tagName] || specialStyles(baseFontSize)[tagName]) || {};
+  const predefinedStyle = (headingStyles(baseFontSize, baseFontColor)[tagName] || specialStyles(baseFontSize, baseFontColor)[tagName]) || {
+  };
   return predefinedStyle;
 }
 
@@ -115,36 +118,42 @@ export function parseStyle(styleStr: string): StyleObject {
  * @param {number} baseFontSize 基准字体大小
  * @returns {*} HeadingStyle
  */
-export function headingStyles(baseFontSize: number): HeadingStyle {
+export function headingStyles(baseFontSize: number, baseFontColor: string): HeadingStyle {
   const baseStyles: HeadingStyle = {
     h1: {
       fontWeight: FontWeight.Bold,
       fontSize: 2.5 * baseFontSize,
+      fontColor: baseFontColor,
       margin: { top: 0.9375 * baseFontSize, bottom: 0.9375 * baseFontSize }
     },
     h2: {
       fontWeight: FontWeight.Bold,
       fontSize: 1.875 * baseFontSize,
+      fontColor: baseFontColor,
       margin: { top: 0.8375 * baseFontSize, bottom: 0.8375 * baseFontSize }
     },
     h3: {
       fontWeight: FontWeight.Bold,
       fontSize: 1.46 * baseFontSize,
+      fontColor: baseFontColor,
       margin: { top: 0.8125 * baseFontSize, bottom: 0.8125 * baseFontSize }
     },
     h4: {
       fontWeight: FontWeight.Bold,
       fontSize: 1.125 * baseFontSize,
+      fontColor: baseFontColor,
       margin: { top: 0.9375 * baseFontSize, bottom: 0.9375 * baseFontSize }
     },
     h5: {
       fontWeight: FontWeight.Bold,
       fontSize: baseFontSize,
+      fontColor: baseFontColor,
       margin: { top: 0.975 * baseFontSize, bottom: 0.975 * baseFontSize }
     },
     h6: {
       fontWeight: FontWeight.Bold,
       fontSize: 0.8375 * baseFontSize,
+      fontColor: baseFontColor,
       margin: { top: 1.0625 * baseFontSize, bottom: 1.0625 * baseFontSize }
     }
   };
@@ -156,44 +165,64 @@ export function headingStyles(baseFontSize: number): HeadingStyle {
  * @param {number} baseFontSize 基准字体大小
  * @returns {*} SpecialStyles
  */
-export function specialStyles(baseFontSize: number): SpecialStyles {
+export function specialStyles(baseFontSize: number, baseFontColor: string): SpecialStyles {
   const baseStyles: SpecialStyles = {
-    b: { fontWeight: FontWeight.Bold },
-    strong: { fontWeight: FontWeight.Bold },
-    p: { fontSize: baseFontSize, margin: { top: 0.625 * baseFontSize, bottom: 0.625 * baseFontSize } },
-    div: { fontSize: baseFontSize },
-    i: { fontStyle: FontStyle.Italic },
-    cite: { fontStyle: FontStyle.Italic },
-    em: { fontStyle: FontStyle.Italic },
-    var: { fontStyle: FontStyle.Italic },
-    address: { fontStyle: FontStyle.Italic },
+    b: { fontWeight: FontWeight.Bold, fontColor: baseFontColor },
+    strong: { fontWeight: FontWeight.Bold, fontColor: baseFontColor },
+    p: {
+      fontSize: baseFontSize,
+      fontColor: baseFontColor,
+      margin: { top: 0.625 * baseFontSize, bottom: 0.625 * baseFontSize }
+    },
+    div: { fontSize: baseFontSize, fontColor: baseFontColor },
+    i: { fontStyle: FontStyle.Italic, fontColor: baseFontColor },
+    cite: { fontStyle: FontStyle.Italic, fontColor: baseFontColor },
+    em: { fontStyle: FontStyle.Italic, fontColor: baseFontColor },
+    var: { fontStyle: FontStyle.Italic, fontColor: baseFontColor },
+    address: { fontStyle: FontStyle.Italic, fontColor: baseFontColor },
     pre: {
       fontFamily: 'monospace',
+      fontColor: baseFontColor,
       backgroundColor: '#f5f5f5',
       padding: 0.625 * baseFontSize,
       margin: { top: 0.625 * baseFontSize, bottom: 0.625 * baseFontSize }
     },
-    code: { fontFamily: 'monospace', backgroundColor: '#f5f5f5' },
-    tt: { fontFamily: 'monospace' },
-    kbd: { fontFamily: 'monospace' },
-    samp: { fontFamily: 'monospace' },
-    big: { fontSize: 1.75 * baseFontSize },
-    small: { fontSize: 0.9 * baseFontSize },
-    sub: { fontSize: 0.75 * baseFontSize }, // 0.625 * baseFontSize
-    sup: { fontSize: 0.75 * baseFontSize }, // -0.625 * baseFontSize
-    s: { decoration: { type: TextDecorationType.LineThrough } },
-    strike: { decoration: { type: TextDecorationType.LineThrough } },
-    del: { decoration: { type: TextDecorationType.LineThrough } },
+    code: { fontColor: baseFontColor, fontFamily: 'monospace', backgroundColor: '#f5f5f5' },
+    tt: { fontFamily: 'monospace', fontColor: baseFontColor },
+    kbd: { fontFamily: 'monospace', fontColor: baseFontColor },
+    samp: { fontFamily: 'monospace', fontColor: baseFontColor },
+    big: { fontSize: 1.75 * baseFontSize, fontColor: baseFontColor },
+    small: { fontSize: 0.9 * baseFontSize, fontColor: baseFontColor },
+    sub: { fontSize: 0.75 * baseFontSize, fontColor: baseFontColor }, // 0.625 * baseFontSize
+    sup: { fontSize: 0.75 * baseFontSize, fontColor: baseFontColor }, // -0.625 * baseFontSize
+    s: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor },
+    strike: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor },
+    del: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor },
     a: { fontColor: Color.Blue, decoration: { type: TextDecorationType.Underline, color: Color.Blue } },
-    video: { textAlign: TextAlign.Center, margin: { top: 0.75 * baseFontSize, bottom: 0.75 * baseFontSize } },
+    video: {
+      textAlign: TextAlign.Center,
+      margin: { top: 0.75 * baseFontSize, bottom: 0.75 * baseFontSize },
+      fontColor: baseFontColor
+    },
     blockquote: {
+      fontColor: baseFontColor,
       margin: { top: 0.75 * baseFontSize, bottom: 0.75 * baseFontSize },
       padding: { top: 1.5 * baseFontSize, bottom: 1.5 * baseFontSize, left: 1.5 * baseFontSize }
     },
-    ol: { margin: { top: 1.25 * baseFontSize, bottom: 1.25 * baseFontSize }, padding: { left: 2.125 * baseFontSize } },
-    ul: { margin: { top: 1.25 * baseFontSize, bottom: 1.25 * baseFontSize }, padding: { left: 2.125 * baseFontSize } },
-    u: { decoration: { type: TextDecorationType.Underline } },
-    hide: { visibility: Visibility.None },
+    ol: {
+      margin: { top: 1.25 * baseFontSize, bottom: 1.25 * baseFontSize },
+      padding: { left: 2.125 * baseFontSize },
+      fontColor: baseFontColor
+    },
+    ul: {
+      margin: { top: 1.25 * baseFontSize, bottom: 1.25 * baseFontSize },
+      padding: { left: 2.125 * baseFontSize },
+      fontColor: baseFontColor
+    },
+    u: { decoration: { type: TextDecorationType.Underline }, fontColor: baseFontColor },
+    hide: { visibility: Visibility.None, fontColor: baseFontColor },
+    input: { fontSize: baseFontSize, fontColor: baseFontColor },
+    textarea: { fontSize: baseFontSize, fontColor: baseFontColor },
   };
   return baseStyles;
 }

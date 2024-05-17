@@ -52,6 +52,7 @@ struct Index {
       Button('改变数据').onClick(() => {
         this.richTextOption = {
           baseFontSize: 50,
+          baseFontColor: '#ecd88d',
           content: '我是改变之后的数据，如通过ajax请求返回的数据'
         }
       })

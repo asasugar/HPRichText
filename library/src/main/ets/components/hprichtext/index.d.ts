@@ -80,6 +80,7 @@ export interface fancyTextAreaOptions {
 export interface RichTextOption {
   content: string;
   baseFontSize?: number;
+  baseFontColor?: string;
   imageProp?: ImageProp;
   customHandler?: CustomHandler;
 }

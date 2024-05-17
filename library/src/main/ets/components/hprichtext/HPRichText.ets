@@ -201,8 +201,8 @@ export struct HPRichText {
 
   // 监听到richTextOption参数变化则重新触发 HTML转化函数
   onUpdateRichTextOption() {
-    const htmlParser = new HTMLParser(this.richTextOption?.customHandler, this.richTextOption?.imageProp, this.richTextOption?.baseFontSize);
-    this.htmlJson = htmlParser.html2json(this.richTextOption.content);
+    const htmlParser = new HTMLParser(this.richTextOption);
+    this.htmlJson = htmlParser.html2json();
     // console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
 

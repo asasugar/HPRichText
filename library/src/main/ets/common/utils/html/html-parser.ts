@@ -1,6 +1,7 @@
 /**
  * htmlParser改造自: https://github.com/blowsie/Pure-JavaScript-HTML5-Parser
  */
+import type { RichTextOption } from '../../../components/hprichtext/index';
 import { ImageFit } from '../../types/artUIEnum';
 import type {
   Attribute,
@@ -37,6 +38,9 @@ import Stack from './stack';
 const defaultCustomHandler: CustomHandler = {
   start() {
     return (node: NodeInfo) => {
+      if(!node.attr) {
+        node.attr = {};
+      }
       node.attr.class = null;
       node.attr.style = null;
     };
@@ -55,17 +59,22 @@ class HTMLParser {
   public results: HtmlParserResult = {
     nodes: [],
   }
-  private customHandler: CustomHandler = defaultCustomHandler;
-  private imageProp: ImageProp = defaultImageProp;
-  private last: string = '';
   private stack: Stack<string> = new Stack();
   private bufArray: NodeInfo[] = [];
+  private customHandler: CustomHandler = defaultCustomHandler;
+  private imageProp: ImageProp = defaultImageProp;
+  private html: string = '';
   private baseFontSize: number = 16;
+  private baseFontColor: string = '#000000';
+  private last: string = '';
 
-  constructor(customHandler?: CustomHandler, imageProp?: ImageProp, baseFontSize?: number) {
+
+  constructor({ customHandler, imageProp, baseFontSize, baseFontColor, content }: RichTextOption) {
     customHandler && (this.customHandler = customHandler);
     imageProp && Object.assign(this.imageProp, imageProp);
     baseFontSize && (this.baseFontSize = baseFontSize);
+    baseFontColor && (this.baseFontColor = baseFontColor);
+    content && (this.html = content);
   }
 
   start(tag: string, attrs: Attribute[], unary: boolean) {
@@ -175,12 +184,11 @@ class HTMLParser {
     this.customHandler?.start?.(node, this.results);
 
     // 子节点继承父节点样式(需要排除不需要继承的样式)
-
-    const htmlStyles = setHtmlAttributes(node.tag, this.baseFontSize);
+    let htmlStyles = {};
+    htmlStyles = setHtmlAttributes(this.baseFontSize, this.baseFontColor, node.tag);
 
     // 整合父标签过滤之后的可继承样式+标签默认样式+自身style样式
-    node.artUIStyleObject = Object.assign({
-    }, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), htmlStyles, node.artUIStyleObject);
+    node.artUIStyleObject = Object.assign({}, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), htmlStyles, node.artUIStyleObject);
 
     if (unary) {
       // if this tag doesn't have end tag
@@ -198,7 +206,7 @@ class HTMLParser {
     }
   }
 
-  html2json(html: string) {
+  html2json(html: string = this.html) {
     // 在 HTML 解析过程中，通常我们会先处理结束标签（end tag）再处理开始标签（start tag）。这是因为在解析HTML的过程中，我们需要确保标签的嵌套是正确的，即开始标签和结束标签的配对应该是正确的
     // 处理字符串
 
@@ -323,26 +331,32 @@ class HTMLParser {
   private end(tag: string) {
     // merge into parent tag
     const node = this.bufArray.shift();
-    if (node.tag !== tag) {
+
+    if (node?.tag !== tag) {
       console.error('invalid state: mismatch end tag');
     }
 
     // 当有缓存source资源时于于video补上src资源
-    if (node.tag === 'video' && this.results.source) {
+    if (node?.tag === 'video' && this.results.source) {
+      if(!node.attr) {
+        node.attr = {}
+      }
       node.attr.src = this.results.source;
       delete this.results.source;
     }
 
     this.customHandler?.end?.(node, this.results);
 
-    if (this.bufArray.length === 0) {
-      this.results.nodes.push(node);
-    } else {
-      const parent = this.bufArray[0];
-      if (!parent.nodes) {
-        parent.nodes = [];
+    if(node) {
+      if (this.bufArray.length === 0) {
+        this.results.nodes.push(node);
+      } else {
+        const parent = this.bufArray[0];
+        if (!parent.nodes) {
+          parent.nodes = [];
+        }
+        parent.nodes.push(node);
       }
-      parent.nodes.push(node);
     }
   }
 
