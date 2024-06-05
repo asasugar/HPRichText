@@ -1,7 +1,7 @@
 /**
  * htmlParser改造自: https://github.com/blowsie/Pure-JavaScript-HTML5-Parser
  */
-import type { RichTextOption } from '../../../components/hprichtext/index';
+import type { PixelUnit, RichTextOption } from '../../../components/hprichtext/index';
 import { ImageFit } from '../../types/artUIEnum';
 import type {
   Attribute,
@@ -32,13 +32,14 @@ import {
   trimHtml
 } from './index';
 import Node from './node';
+import { px2Any } from './pixelUnit';
 import Stack from './stack';
 
 // 默认自定义标签匹配处理方法
 const defaultCustomHandler: CustomHandler = {
   start() {
     return (node: NodeInfo) => {
-      if(!node.attr) {
+      if (!node.attr) {
         node.attr = {};
       }
       node.attr.class = null;
@@ -58,21 +59,33 @@ const defaultImageProp: ImageProp = {
 class HTMLParser {
   public results: HtmlParserResult = {
     nodes: [],
-  }
+  };
   private stack: Stack<string> = new Stack();
   private bufArray: NodeInfo[] = [];
   private customHandler: CustomHandler = defaultCustomHandler;
   private imageProp: ImageProp = defaultImageProp;
   private html: string = '';
   private baseFontSize: number = 16;
+  private basePixelUnit: PixelUnit = 'vp';
+  private basePixelRatio: number = 1;
   private baseFontColor: string = '#000000';
   private last: string = '';
 
-
-  constructor({ customHandler, imageProp, baseFontSize, baseFontColor, content }: RichTextOption) {
+  constructor(
+    {
+      customHandler,
+      imageProp,
+      baseFontSize,
+      basePixelUnit,
+      basePixelRatio,
+      baseFontColor,
+      content
+    }: RichTextOption) {
     customHandler && (this.customHandler = customHandler);
     imageProp && Object.assign(this.imageProp, imageProp);
     baseFontSize && (this.baseFontSize = baseFontSize);
+    basePixelUnit && (this.basePixelUnit = basePixelUnit);
+    basePixelRatio && (this.basePixelRatio = basePixelRatio);
     baseFontColor && (this.baseFontColor = baseFontColor);
     content && (this.html = content);
   }
@@ -99,7 +112,7 @@ class HTMLParser {
     node.attr = attrs?.reduce((pre: Record<string, string | (string | string[])[]>, attr) => {
       // const { name, value } = attr; // v4不支持对象解构
       const name = attr.name;
-      const value = attr.value;
+      let value = attr.value;
       // 优化样式相关属性
       if (name === 'style') {
         const styleObj = parseStyle(value); // parse to object
@@ -134,7 +147,7 @@ class HTMLParser {
       imgUrl = urlToHttpUrl(imgUrl);
       // webp替换
       if (this.imageProp.webp) {
-        imgUrl = replaceWebpPic(imgUrl)
+        imgUrl = replaceWebpPic(imgUrl);
       }
       node.attr.src = imgUrl || '';
 
@@ -149,7 +162,7 @@ class HTMLParser {
                 this.imageProp.objectFit === 'None' ? ImageFit.None :
                 ImageFit.Contain,
         margin: this.imageProp.margin
-      })
+      });
     }
 
     // 处理video标签样式属性
@@ -157,7 +170,7 @@ class HTMLParser {
       this.assignArtUIStyleObject(node, {
         width: node?.artUIStyleObject?.width || node.attr.width || '100%',
         height: node?.artUIStyleObject?.height || node.attr.height || '100%'
-      })
+      });
     }
 
     // 处理font标签样式属性
@@ -188,8 +201,8 @@ class HTMLParser {
     htmlStyles = setHtmlAttributes(this.baseFontSize, this.baseFontColor, node.tag);
 
     // 整合父标签过滤之后的可继承样式+标签默认样式+自身style样式
-    node.artUIStyleObject = Object.assign({}, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), htmlStyles, node.artUIStyleObject);
-
+    node.artUIStyleObject = Object.assign({
+    }, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), htmlStyles, node.artUIStyleObject);
     if (unary) {
       // if this tag doesn't have end tag
       // like <img src="hoge.png"/>
@@ -215,7 +228,7 @@ class HTMLParser {
     html = trimHtml(html);
     html = replaceBr(html);
     html = strDiscode(html);
-
+    html = px2Any(html, this.basePixelUnit, this.basePixelRatio);
     // 判断字符串是否以 HTML 标签开头，不是的话增加div
     if (!startWithHTMLElement(html)) {
       html = addRootDiv(html);
@@ -338,8 +351,8 @@ class HTMLParser {
 
     // 当有缓存source资源时于于video补上src资源
     if (node?.tag === 'video' && this.results.source) {
-      if(!node.attr) {
-        node.attr = {}
+      if (!node.attr) {
+        node.attr = {};
       }
       node.attr.src = this.results.source;
       delete this.results.source;
@@ -347,7 +360,7 @@ class HTMLParser {
 
     this.customHandler?.end?.(node, this.results);
 
-    if(node) {
+    if (node) {
       if (this.bufArray.length === 0) {
         this.results.nodes.push(node);
       } else {
@@ -396,7 +409,7 @@ class HTMLParser {
 
   private assignArtUIStyleObject<T>(node: NodeInfo, artUIStyleObject: T) {
     if (!node.artUIStyleObject) node.artUIStyleObject = {};
-    Object.assign(node.artUIStyleObject, artUIStyleObject)
+    Object.assign(node.artUIStyleObject, artUIStyleObject);
   }
 }
 

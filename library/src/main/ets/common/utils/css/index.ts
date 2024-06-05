@@ -116,6 +116,7 @@ export function parseStyle(styleStr: string): StyleObject {
 /**
  * @description: 定义标题标签和对应的样式映射对象
  * @param {number} baseFontSize 基准字体大小
+ * @param {string} baseFontColor 基准字体色值
  * @returns {*} HeadingStyle
  */
 export function headingStyles(baseFontSize: number, baseFontColor: string): HeadingStyle {

@@ -77,10 +77,14 @@ export interface fancyTextAreaOptions {
   backgroundColor?: Color | number | string | ResourceColor;
 }
 
+export type PixelUnit = 'vp' | 'px' | 'fp' | 'lpx';
+
 export interface RichTextOption {
   content: string;
   baseFontSize?: number;
   baseFontColor?: string;
+  basePixelUnit?: PixelUnit;
+  basePixelRatio?: number;
   imageProp?: ImageProp;
   customHandler?: CustomHandler;
 }

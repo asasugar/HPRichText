@@ -36,7 +36,7 @@ export interface AttrEnums {
 export interface HeadingStyle {
   [x: string]: {
     fontWeight: number | string;
-    fontSize: number;
+    fontSize: number | string;
     fontColor: string;
     margin: {
       top: number;
@@ -55,7 +55,7 @@ export interface SpecialStyles {
     fontColor: string;
   };
   p: {
-    fontSize: number;
+    fontSize: number | string;
     fontColor: string;
     margin: {
       top: number;
@@ -63,7 +63,7 @@ export interface SpecialStyles {
     };
   };
   div: {
-    fontSize: number;
+    fontSize: number | string;
     fontColor: string;
   };
   i: {
@@ -111,15 +111,15 @@ export interface SpecialStyles {
     fontColor: string;
   };
   big: {
-    fontSize: number;
+    fontSize: number | string;
     fontColor: string;
   };
   small: {
-    fontSize: number;
+    fontSize: number | string;
     fontColor: string;
   };
   sub: {
-    fontSize: number;
+    fontSize: number | string;
     fontColor: string;
     // offset?: {
     //   x?: number
@@ -127,7 +127,7 @@ export interface SpecialStyles {
     // };
   };
   sup: {
-    fontSize: number;
+    fontSize: number | string;
     fontColor: string;
     // offset?: {
     //   x?: number
@@ -198,11 +198,11 @@ export interface SpecialStyles {
     fontColor: string;
   };
   input: {
-    fontSize: number;
+    fontSize: number | string;
     fontColor: string;
   };
   textarea: {
-    fontSize: number;
+    fontSize: number | string;
     fontColor: string;
   };
 }
