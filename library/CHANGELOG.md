@@ -1,11 +1,18 @@
 # Changelog
 
-### [v1.0.6](https://github.com/asasugar/HPRichText/releases/tag/v1.0.3) (2024-05-17)
+### [v1.0.7](https://github.com/asasugar/HPRichText/releases/tag/v1.0.7) (2024-06-05)
 
 ### Features
 
 * 🎸
-  增加baseFontColor配置 [(#11)](https://github.com/asasugar/HPRichText/issues/10) ([170c6bc](https://github.com/asasugar/HPRichText/commit/170c6bcd99d7762e1d4146ca9251e191f1e4a669))
+  新增basePixelRatio和basePixelUnit [(#14)](https://github.com/asasugar/HPRichText/issues/14) ([065e045](https://github.com/asasugar/HPRichText/commit/065e045931955239fc34c93c3a81676a5213d059))
+
+### [v1.0.6](https://github.com/asasugar/HPRichText/releases/tag/v1.0.6) (2024-05-17)
+
+### Features
+
+* 🎸
+  增加baseFontColor配置 [(#11)](https://github.com/asasugar/HPRichText/issues/11) ([170c6bc](https://github.com/asasugar/HPRichText/commit/170c6bcd99d7762e1d4146ca9251e191f1e4a669))
 
 ### [v1.0.5](https://github.com/asasugar/HPRichText/releases/tag/v1.0.5) (2024-05-13)
 
