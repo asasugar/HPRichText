@@ -21,16 +21,40 @@ import HTMLParser from '../../common/utils/html/html-parser';
 
 @Component
 export struct HPRichText {
-  @Link @Watch('onUpdateRichTextOption') richTextOption: RichTextOption;
   @Prop needScroll: boolean;
-  onLinkPress: Nullable<LinkPressMethod> = null;
   @State htmlJson: HtmlParserResult = {
     nodes: []
   };
+  private scroller: Scroller = new Scroller();
+  @Link @Watch('onUpdateRichTextOption') richTextOption: RichTextOption;
+  onLinkPress: Nullable<LinkPressMethod> = null;
 
   getBlockIndex(node?: NodeInfo): number {
-    const index = node?.nodes?.findIndex(n => n.tagType === 'block');
+      const index = node?.nodes?.findIndex(n => n.tagType === 'block');
     return index as number;
+  }
+
+  getScroller() {
+    if (this.needScroll)
+      return this.scroller;
+    return undefined;
+  }
+
+  scrollPage(next:boolean) {
+    if (this.needScroll)
+      this.scroller.scrollPage({ next });
+  }
+
+  currentOffset() {
+    if (this.needScroll)
+      return this.scroller.currentOffset();
+    return undefined;
+  }
+
+  getItemRect(index:number) {
+    if (this.needScroll)
+      return this.scroller.getItemRect(index);
+    return undefined;
   }
 
   /**
@@ -215,7 +239,7 @@ export struct HPRichText {
 
   build() {
     if (this.needScroll) {
-      Scroll() {
+      Scroll(this.scroller) {
         Column() {
           this.nodesBuilder({ nodes: this.htmlJson.nodes });
         }
