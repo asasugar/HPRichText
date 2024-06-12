@@ -25,9 +25,9 @@
 
 ## 更新日志
 
-[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
+#### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-最近更新：[v1.0.8](https://github.com/asasugar/HPRichText/releases/tag/v1.0.8) (2024-06-12)
+#### 最近更新：[v1.0.8](https://github.com/asasugar/HPRichText/releases/tag/v1.0.8) (2024-06-12)
 
 Features
 - [lineHeight配置纯数字时候样式调整](https://github.com/asasugar/HPRichText/commit/ce785d89ba89c8b17cb56e839d7885f93b8973f6)
