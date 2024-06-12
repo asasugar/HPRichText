@@ -203,6 +203,16 @@ class HTMLParser {
     // 整合父标签过滤之后的可继承样式+标签默认样式+自身style样式
     node.artUIStyleObject = Object.assign({
     }, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), htmlStyles, node.artUIStyleObject);
+    // 对纯数字的lineHeight样式特别计算
+    const lh: number = +node.artUIStyleObject?.lineHeight;
+    const reg = /^\d+(\.\d+)?$/g;
+    if (lh && reg.test(`${lh}`)) {
+      // 带单位的 fontSize
+      const originalFs: string = `${node.artUIStyleObject?.fontSize ?? this.baseFontSize}`;
+      // 提取不带单位的fontSize用于lineHeight计算
+      const numberStr = originalFs.replace(this.basePixelUnit, ""); // 提取数字部分
+      Object.assign(node.artUIStyleObject, { 'lineHeight': `${+numberStr * lh}${this.basePixelUnit}` })
+    }
     if (unary) {
       // if this tag doesn't have end tag
       // like <img src="hoge.png"/>
