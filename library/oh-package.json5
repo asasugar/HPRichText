@@ -1,6 +1,6 @@
 {
   "name": "@ohasasugar/hp-richtext",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "hp-richtext, 是一个基于HTML的标签解析，扩展了更多属性和样式的鸿蒙富文本组件，解决了遍历嵌套渲染原生RichText的性能问题。",
   "homepage": "https://github.com/asasugar/HPRichText",
   "repository": "https://github.com/asasugar/HPRichText",
