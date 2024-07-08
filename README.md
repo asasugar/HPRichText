@@ -4,9 +4,9 @@
 
 如果需要直接运行该代码示例，需要
 
-方式一：安装最新的DevEco Studio Next版本的IDE(该版本目前对合作伙伴开放)；
+方式一：安装最新的DevEco Studio从NEXT Developer Beta1；
 
-方式二：
+方式二：老版本运行，切换到[v1.0.8](https://github.com/asasugar/HPRichText/releases/tag/v1.0.8)
 
 - 修改hvigor-config.json5文件的配置为当前IDE对应的版本,如IDE版本3.1：
   ```json
@@ -27,10 +27,10 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v1.0.8](https://github.com/asasugar/HPRichText/releases/tag/v1.0.8) (2024-06-12)
+#### 最近更新：[v2.0.0](https://github.com/asasugar/HPRichText/releases/tag/v2.0.0) (2024-07-08)
 
 Features
-- [lineHeight配置纯数字时候样式调整](https://github.com/asasugar/HPRichText/commit/ce785d89ba89c8b17cb56e839d7885f93b8973f6)
+- [一体化工程迁移NEXT Developer Beta1版本](https://github.com/asasugar/HPRichText/commit/61b7628ae113bf8e04d6cc3a131dd5cef646fbfa)
 
 
 ## 简介

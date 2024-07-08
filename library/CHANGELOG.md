@@ -1,5 +1,13 @@
 # Changelog
 
+
+### [v2.0.0](https://github.com/asasugar/HPRichText/releases/tag/v2.0.0) (2024-07-08)
+
+### Features
+
+* 🎸
+  一体化工程迁移NEXT Developer Beta1版本 ([61b7628](https://github.com/asasugar/HPRichText/commit/61b7628ae113bf8e04d6cc3a131dd5cef646fbfa))
+
 ### [v1.0.8](https://github.com/asasugar/HPRichText/releases/tag/v1.0.8) (2024-06-12)
 
 ### Features
