@@ -62,3 +62,7 @@ export const attrEnums: AttrEnums = {
     }
   }
 }
+
+export const specialAttrsMap = {
+  'writing-mode': 'writingMode', // 通过设置fontSize跟width一致的方式实线，https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-arkui-91-V5
+}

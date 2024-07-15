@@ -114,7 +114,7 @@ class HTMLParser {
       // 优化样式相关属性
       if (name === 'style') {
         const styleObj = parseStyle(value); // parse to object
-        node.artUIStyleObject = parseToArtUI(styleObj);
+        node.artUIStyleObject = parseToArtUI(styleObj, this.baseFontSize);
       } else if (value.match(/ /)) {
         // make it array of attribute
         pre[name] = value.split(' ');
@@ -197,7 +197,6 @@ class HTMLParser {
     }
 
     this.customHandler?.start?.(node, this.results);
-    console.log('33', JSON.stringify(node))
 
     // 子节点继承父节点样式(需要排除不需要继承的样式)
     let htmlStyles = {};

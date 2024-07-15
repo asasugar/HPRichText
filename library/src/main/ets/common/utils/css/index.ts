@@ -1,7 +1,7 @@
 import { Color, FontStyle, FontWeight, TextAlign, TextDecorationType, Visibility } from '../../types/artUIEnum';
 import type { HeadingStyle, SpecialStyles } from '../../types/consants';
 import type { ArtStyleObject, StyleObject } from '../../types/htmlParser';
-import { attrEnums, attrsMap } from './constants';
+import { attrEnums, attrsMap, specialAttrsMap } from './constants';
 
 /**
  * @description: 将首字母转化为大写
@@ -9,7 +9,9 @@ import { attrEnums, attrsMap } from './constants';
  * @returns {*} Asasugar
  */
 export function firstLetterToLowerCase(str: string): string {
-  if (!str) return '';
+  if (!str) {
+    return '';
+  }
   return str.toLowerCase().replace(/( |^)[a-z]/g, (L) => L.toUpperCase());
 }
 
@@ -18,12 +20,15 @@ export function firstLetterToLowerCase(str: string): string {
  * @param {*} composeCss: Web端css样式
  * @returns {*} 鸿蒙样式
  */
-export function parseToArtUI(composeCss: StyleObject): ArtStyleObject {
+export function parseToArtUI(composeCss: StyleObject, baseFontSize?: number): ArtStyleObject {
 
   let obj: ArtStyleObject = {};
-  if (!composeCss) return obj;
+  if (!composeCss) {
+    return obj;
+  }
   for (const attr in composeCss) {
     const harmonyKey: string | Record<string, string[]> = attrsMap[attr];
+    const specialHarmonyKey: string | Record<string, string[]> = specialAttrsMap[attr];
     if (harmonyKey) {
       if (harmonyKey instanceof Object) {
         const transformedStyle = transformObject(composeCss[attr], harmonyKey);
@@ -31,6 +36,16 @@ export function parseToArtUI(composeCss: StyleObject): ArtStyleObject {
       } else {
         obj[harmonyKey] = composeCss[attr];
       }
+    } else if (specialHarmonyKey === 'writingMode' && (
+      composeCss[attr] === 'tb' ||
+        composeCss[attr] === 'tb-rl' ||
+        composeCss[attr] === 'vertical-lr' ||
+        composeCss[attr] === 'vertical-rl')
+    ) {
+      // 通过设置fontSize跟width一致的方式实线，https://developer.huawei.com/consumer/cn/doc/harmonyos-faqs-V5/faqs-arkui-91-V5
+      let fs = composeCss['font-size'] ?? baseFontSize;
+      obj.fontSize = fs;
+      obj.width = fs;
     }
 
   }
@@ -77,7 +92,9 @@ export function transformObject(originalValue: string, map: Record<string, strin
 
 // 过滤和设置一些不需要继承的父级标签样式
 export function excludeExtendsParentArtUIStyle(style?: ArtStyleObject) {
-  if (!style) return {};
+  if (!style) {
+    return {};
+  }
   return {
     ...style,
     border: {}, // 不继承border属性
@@ -96,10 +113,12 @@ export function excludeExtendsParentArtUIStyle(style?: ArtStyleObject) {
  * @returns {*}
  */
 export function setHtmlAttributes(baseFontSize: number, baseFontColor: string, tagName?: string,) {
-  if (!tagName) return {};
+  if (!tagName) {
+    return {};
+  }
   // 使用对象映射查找并返回对应标签的样式
-  const predefinedStyle = (headingStyles(baseFontSize, baseFontColor)[tagName] || specialStyles(baseFontSize, baseFontColor)[tagName]) || {
-  };
+  const predefinedStyle =
+    (headingStyles(baseFontSize, baseFontColor)[tagName] || specialStyles(baseFontSize, baseFontColor)[tagName]) || {};
   return predefinedStyle;
 }
 
