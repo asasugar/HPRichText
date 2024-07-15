@@ -1,5 +1,18 @@
 # Changelog
 
+### [v2.0.1](https://github.com/asasugar/HPRichText/releases/tag/v2.0.1) (2024-07-15)
+
+### Features
+
+* 🎸
+  增加writing-mode属性的支持 [(#25)](https://github.com/asasugar/HPRichText/issues/25) ([a9dcbb2](https://github.com/asasugar/HPRichText/commit/a9dcbb28c60f94ca096c809908dba8cf17d91f0f))
+
+
+### Bug Fixes
+
+* 🐛
+  Update README.md && export ts types [(#24)](https://github.com/asasugar/HPRichText/issues/24) ([fbe1218](https://github.com/asasugar/HPRichText/commit/fbe121874b42ea986b82e8ca5b6d3a6257177e19)
+
 
 ### [v2.0.0](https://github.com/asasugar/HPRichText/releases/tag/v2.0.0) (2024-07-08)
 
@@ -34,17 +47,17 @@
 ### Bug Fixes
 
 * 🐛
-  修复 ForEach循环key更新问题 [(#10)](https://github.com/asasugar/HPRichText/issues/10) ([e962cba](https://github.com/asasugar/HPRichText/commit/e962cba710a15e12ec406ff0140bedeec5bc8e85)
+  修复 ForEach循环key更新问题 [(#10)](https://github.com/asasugar/HPRichText/issues/10) ([e962cba](https://github.com/asasugar/HPRichText/commit/e962cba710a15e12ec406ff0140bedeec5bc8e85))
 
 * 🐛
-修复修改baseFontSize不生效问题 [(#9)](https://github.com/asasugar/HPRichText/issues/9) ([087f1ad](https://github.com/asasugar/HPRichText/commit/087f1adb4bb8d5ee1e32817abfa1df9c31464f60)
+修复修改baseFontSize不生效问题 [(#9)](https://github.com/asasugar/HPRichText/issues/9) ([087f1ad](https://github.com/asasugar/HPRichText/commit/087f1adb4bb8d5ee1e32817abfa1df9c31464f60))
 
 ### [v1.0.4](https://github.com/asasugar/HPRichText/releases/tag/v1.0.4) (2024-04-30)
 
 ### Bug Fixes
 
 * 🐛
-  修复富文本组件参数更新重新渲染问题 [(#7)](https://github.com/asasugar/HPRichText/issues/7) ([05bd28e](https://github.com/asasugar/HPRichText/commit/05bd28e95625ae3b0120879bf28814761e19b17c)
+  修复富文本组件参数更新重新渲染问题 [(#7)](https://github.com/asasugar/HPRichText/issues/7) ([05bd28e](https://github.com/asasugar/HPRichText/commit/05bd28e95625ae3b0120879bf28814761e19b17c))
 
 ### [v1.0.3](https://github.com/asasugar/HPRichText/releases/tag/v1.0.3) (2024-04-23)
 
