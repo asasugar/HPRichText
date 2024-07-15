@@ -11,7 +11,7 @@
 ### Bug Fixes
 
 * 🐛
-  Update README.md && export ts types [(#24)](https://github.com/asasugar/HPRichText/issues/24) ([fbe1218](https://github.com/asasugar/HPRichText/commit/fbe121874b42ea986b82e8ca5b6d3a6257177e19)
+  Update README.md && export ts types [(#24)](https://github.com/asasugar/HPRichText/issues/24) ([fbe1218](https://github.com/asasugar/HPRichText/commit/fbe121874b42ea986b82e8ca5b6d3a6257177e19))
 
 
 ### [v2.0.0](https://github.com/asasugar/HPRichText/releases/tag/v2.0.0) (2024-07-08)
