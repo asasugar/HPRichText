@@ -27,11 +27,18 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v2.0.0](https://github.com/asasugar/HPRichText/releases/tag/v2.0.0) (2024-07-08)
+#### 最近更新：[v2.0.1](https://github.com/asasugar/HPRichText/releases/tag/v2.0.1) (2024-07-15)
 
-Features
+### Features
 
-- [一体化工程迁移NEXT Developer Beta1版本](https://github.com/asasugar/HPRichText/commit/61b7628ae113bf8e04d6cc3a131dd5cef646fbfa)
+* 🎸
+  增加writing-mode属性的支持 [(#25)](https://github.com/asasugar/HPRichText/issues/25) ([a9dcbb2](https://github.com/asasugar/HPRichText/commit/a9dcbb28c60f94ca096c809908dba8cf17d91f0f))
+
+
+### Bug Fixes
+
+* 🐛
+  Update README.md && export ts types [(#24)](https://github.com/asasugar/HPRichText/issues/24) ([fbe1218](https://github.com/asasugar/HPRichText/commit/fbe121874b42ea986b82e8ca5b6d3a6257177e19))
 
 ## 简介
 
