@@ -57,19 +57,19 @@ export interface FancyImageOptions extends ShapeAttr {
   objectFit?: 0 | 1 | 2 | 3 | 4 | 5;
 }
 
-export interface fancyVideoOptions {
+export interface FancyVideoOptions {
   width?: string | number;
   height?: string | number;
 }
 
-export interface fancyTextInputOptions {
+export interface FancyTextInputOptions {
   width?: string | number;
   height?: string | number;
   fontSize?: string | number;
   fontColor?: ResourceColor;
 }
 
-export interface fancyTextAreaOptions {
+export interface FancyTextAreaOptions {
   width?: string | number;
   height?: string | number;
   fontSize?: string | number;

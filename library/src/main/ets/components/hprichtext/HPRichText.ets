@@ -7,10 +7,10 @@ import type { Attr, HtmlParserResult, NodeInfo } from '../../common/types/htmlPa
 import type {
   FancyImageOptions,
   FancySpanOptions,
-  fancyTextAreaOptions,
-  fancyTextInputOptions,
+  FancyTextAreaOptions,
+  FancyTextInputOptions,
   FancyTextOptions,
-  fancyVideoOptions,
+  FancyVideoOptions,
   LabelLevelBuilderOptions,
   LinkPressMethod,
   NodesBuilderOptions,
@@ -281,7 +281,7 @@ function fancyImage($$: FancyImageOptions = {}, attrs: Attr = {}) {
 
 
 @Extend(Video)
-function fancyVideo($$: fancyVideoOptions = {}, attrs: Attr = {}) {
+function fancyVideo($$: FancyVideoOptions = {}, attrs: Attr = {}) {
   .width($$.width)
   .height($$.height)
   .muted(attrs.muted)
@@ -293,7 +293,7 @@ function fancyVideo($$: fancyVideoOptions = {}, attrs: Attr = {}) {
 
 
 @Extend(TextInput)
-function fancyTextInput($$: fancyTextInputOptions = { fontSize: 14, fontColor: Color.Black }, attrs: Attr = {}) {
+function fancyTextInput($$: FancyTextInputOptions = { fontSize: 14, fontColor: Color.Black }, attrs: Attr = {}) {
   .width($$.width)
   .height($$.height)
   .type(
@@ -314,7 +314,7 @@ function fancyTextInput($$: fancyTextInputOptions = { fontSize: 14, fontColor: C
 }
 
 @Extend(TextArea)
-function fancyTextArea($$: fancyTextAreaOptions = {}) {
+function fancyTextArea($$: FancyTextAreaOptions = {}) {
   .width($$.width)
   .height($$.height)
   .placeholderFont({ size: 16, weight: 400 })

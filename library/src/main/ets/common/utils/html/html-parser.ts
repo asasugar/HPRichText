@@ -37,14 +37,12 @@ import Stack from './stack';
 
 // 默认自定义标签匹配处理方法
 const defaultCustomHandler: CustomHandler = {
-  start() {
-    return (node: NodeInfo) => {
-      if (!node.attr) {
-        node.attr = {};
-      }
-      node.attr.class = null;
-      node.attr.style = null;
-    };
+  start(node: NodeInfo) {
+    if (!node.attr) {
+      node.attr = {};
+    }
+    // node.attr.class = null;
+    // node.attr.style = null;
   },
   end: null,
   chars: null
@@ -143,7 +141,9 @@ class HTMLParser {
     // 对img添加额外数据
     if (node.tag === 'img') {
       let imgUrl = node.attr.src;
-      if (!imgUrl) return;
+      if (!imgUrl) {
+        return;
+      }
       imgUrl = urlToHttpUrl(imgUrl);
       // webp替换
       if (this.imageProp.webp) {
@@ -180,7 +180,9 @@ class HTMLParser {
         face: 'fontFamily',
         size: 'fontSize',
       };
-      if (!node.artUIStyleObject) node.artUIStyleObject = {};
+      if (!node.artUIStyleObject) {
+        node.artUIStyleObject = {};
+      }
       for (let [k, v] of Object.entries(styleAttrs)) {
         const value = node.attr[k];
         if (value) {
@@ -195,14 +197,15 @@ class HTMLParser {
     }
 
     this.customHandler?.start?.(node, this.results);
+    console.log('33', JSON.stringify(node))
 
     // 子节点继承父节点样式(需要排除不需要继承的样式)
     let htmlStyles = {};
     htmlStyles = setHtmlAttributes(this.baseFontSize, this.baseFontColor, node.tag);
 
     // 整合父标签过滤之后的可继承样式+标签默认样式+自身style样式
-    node.artUIStyleObject = Object.assign({
-    }, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), htmlStyles, node.artUIStyleObject);
+    node.artUIStyleObject =
+      Object.assign({}, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), htmlStyles, node.artUIStyleObject);
     // 对纯数字的lineHeight样式特别计算
     const lh: number = +node.artUIStyleObject?.lineHeight;
     const reg = /^\d+(\.\d+)?$/g;
@@ -297,7 +300,9 @@ class HTMLParser {
         });
         this.parseEndTag('', this.stack.last());
       }
-      if (html === this.last) throw new Error(`Parse Error: ${html}`);
+      if (html === this.last) {
+        throw new Error(`Parse Error: ${html}`);
+      }
       this.last = html;
     }
 
@@ -332,22 +337,27 @@ class HTMLParser {
 
     unary = empty[tagName] || !!unary;
 
-    if (!unary) this.stack.push(tagName);
+    if (!unary) {
+      this.stack.push(tagName);
+    }
 
     const attrs: Attribute[] = [];
 
     // 使用正则表达式匹配属性并生成属性对象
-    rest.replace(attr, (match, attributeName: string, attributeValueSingleQuote: string = '', attributeValueDoubleQuote: string = '', attributeValueNoQuote: string = '') => {
-      const value = attributeValueSingleQuote || attributeValueDoubleQuote || attributeValueNoQuote || (fillAttrs[attributeName] ? attributeName : '');
-      // 对属性值进行转义
-      const escapedValue = value.replace(/(^|[^\\])"/g, '$1\\"');
-      attrs.push({
-        name: attributeName,
-        value: escapedValue,
-        escaped: escapedValue,
+    rest.replace(attr,
+      (match, attributeName: string, attributeValueSingleQuote: string = '', attributeValueDoubleQuote: string = '',
+        attributeValueNoQuote: string = '') => {
+        const value = attributeValueSingleQuote || attributeValueDoubleQuote || attributeValueNoQuote ||
+          (fillAttrs[attributeName] ? attributeName : '');
+        // 对属性值进行转义
+        const escapedValue = value.replace(/(^|[^\\])"/g, '$1\\"');
+        attrs.push({
+          name: attributeName,
+          value: escapedValue,
+          escaped: escapedValue,
+        });
+        return `${attributeName}="${escapedValue}"`;
       });
-      return `${attributeName}="${escapedValue}"`;
-    });
     this.start(tagName, attrs, unary);
   }
 
@@ -384,7 +394,9 @@ class HTMLParser {
   }
 
   private chars(text: string) {
-    if (!text?.trim()) return;
+    if (!text?.trim()) {
+      return;
+    }
 
     const node: SimpleNode = {
       node: 'text',
@@ -418,7 +430,9 @@ class HTMLParser {
   }
 
   private assignArtUIStyleObject<T>(node: NodeInfo, artUIStyleObject: T) {
-    if (!node.artUIStyleObject) node.artUIStyleObject = {};
+    if (!node.artUIStyleObject) {
+      node.artUIStyleObject = {};
+    }
     Object.assign(node.artUIStyleObject, artUIStyleObject);
   }
 }

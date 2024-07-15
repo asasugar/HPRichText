@@ -30,8 +30,8 @@
 #### 最近更新：[v2.0.0](https://github.com/asasugar/HPRichText/releases/tag/v2.0.0) (2024-07-08)
 
 Features
-- [一体化工程迁移NEXT Developer Beta1版本](https://github.com/asasugar/HPRichText/commit/61b7628ae113bf8e04d6cc3a131dd5cef646fbfa)
 
+- [一体化工程迁移NEXT Developer Beta1版本](https://github.com/asasugar/HPRichText/commit/61b7628ae113bf8e04d6cc3a131dd5cef646fbfa)
 
 ## 简介
 
@@ -73,8 +73,8 @@ ohpm install @ohasasugar/hp-richtext
 ## 使用示例
 
 ```ets
-import { HPRichText, RichTextOption } from '@ohasasugar/hp-richtext';
-
+import { HPRichText } from '@ohasasugar/hp-richtext';
+import type { RichTextOption } from '@ohasasugar/hp-richtext';
 @Entry
 @Component
 struct Index {
@@ -138,15 +138,15 @@ struct Index {
 
 ## richTextOption属性
 
-| 名称             | 类型                   | 必填  | 默认值     | 描述                        |
-|----------------|----------------------|-----|---------|---------------------------|
-| content        | String               | 是   | —       | 渲染内容                      |
-| baseFontSize   | Number               | 否   | 16      | 基准字体大小，以 p 标签为基准          |
-| baseFontColor  | String               | 否   | #000000 | 基准字体色值                    |
-| basePixelUnit  | 'px'/'vp'/'fp'/'lpx' | 否   | vp      | 字符串px转化的像素单位              |
-| basePixelRatio | Number               | 否   | 1       | px转化其他像素单位的像素比=屏幕宽度/设计稿宽度 |
-| customHandler  | Function             | 否   | 见源码     | 自定义 parser 函数             |
-| imageProp      | Object               | 否   | 见下文     | 图片相关参数                    |
+| 名称             | 类型                   | 必填 | 默认值     | 描述                        |
+|----------------|----------------------|----|---------|---------------------------|
+| content        | String               | 是  | —       | 渲染内容                      |
+| baseFontSize   | Number               | 否  | 16      | 基准字体大小，以 p 标签为基准          |
+| baseFontColor  | String               | 否  | #000000 | 基准字体色值                    |
+| basePixelUnit  | 'px'/'vp'/'fp'/'lpx' | 否  | vp      | 字符串px转化的像素单位              |
+| basePixelRatio | Number               | 否  | 1       | px转化其他像素单位的像素比=屏幕宽度/设计稿宽度 |
+| customHandler  | Function             | 否  | 见源码     | 自定义 parser 函数             |
+| imageProp      | Object               | 否  | 见下文     | 图片相关参数                    |
 
 ```ts
 // Good ✅
@@ -172,11 +172,10 @@ Button('改变数据').onClick(() => {
 * 回调参数为当前节点 `node` 对象及解析结果 `results` 对象，例如:
   ```
   const customHandler = {
-    start() {
-      return (node) => {
-        node.attr.class = null;
-        node.attr.style = null;
-      };
+    start(node:NodeInfo) {
+      if(!node.attr) node.attr = {};
+      node.attr.class = null;
+      node.attr.style = null;
     },
     end: null,
     chars: null
@@ -194,15 +193,15 @@ Button('改变数据').onClick(() => {
 
 ## needScroll属性
 
-| 名称         | 类型      | 必填  | 默认值   | 描述                       |
-|------------|---------|-----|-------|--------------------------|
-| needScroll | Boolean | 否   | false | 富文本内容超过一屏幕是否使用Scroll组件包裹 |
+| 名称         | 类型      | 必填 | 默认值   | 描述                       |
+|------------|---------|----|-------|--------------------------|
+| needScroll | Boolean | 否  | false | 富文本内容超过一屏幕是否使用Scroll组件包裹 |
 
 ## onLinkPress属性
 
-| 名称          | 类型            | 必填  | 默认值  | 描述                |
-|-------------|---------------|-----|------|-------------------|
-| onLinkPress | Function/Null | 否   | null | 点击标签事件回调（目前支持a标签） |
+| 名称          | 类型            | 必填 | 默认值  | 描述                |
+|-------------|---------------|----|------|-------------------|
+| onLinkPress | Function/Null | 否  | null | 点击标签事件回调（目前支持a标签） |
 
 ## 注意点
 
@@ -215,6 +214,36 @@ Button('改变数据').onClick(() => {
 - 支持 `行内style`
 - 块级标签嵌套块级标签且最外层设置 `border` 边框属性，样式不是预期（ps: 由于性能问题，不打算修复）
   ![20240423161457](https://raw.githubusercontent.com/asasugar/pic-bed/master/imgs/20240423161457.png)
+
+## 已导出的ts类型声明
+
+- RichTextOption
+- TextBuilderOptions
+- LabelLevelBuilderOptions
+- NodesBuilderOptions
+- FancySpanOptions
+- FancyTextOptions
+- FancyImageOptions
+- FancyVideoOptions
+- FancyTextInputOptions
+- FancyTextAreaOptions
+- PixelUnit
+- LinkPressParame
+- LinkPressMethod
+- Attribute
+- SimpleNode
+- NodeInfo
+- ImageProp
+- CustomHandler
+- HtmlParserResult
+- Attr
+- StyleObject
+- ArtStyleObject
+- AttrsMap
+- AttrEnums
+- HeadingStyle
+- SpecialStyles
+- Nullable
 
 ## 支持的标签列表
 
