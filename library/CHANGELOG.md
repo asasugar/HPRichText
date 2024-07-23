@@ -1,5 +1,12 @@
 # Changelog
 
+### [v2.1.0](https://github.com/asasugar/HPRichText/releases/tag/v2.1.0) (2024-07-23)
+
+### Features
+
+* 🎸
+  开放点击事件 [(#26)](https://github.com/asasugar/HPRichText/issues/26) ([1e955d3](https://github.com/asasugar/HPRichText/commit/1e955d3565b68097ab8bb8b9f38863d0306c5f41))
+
 ### [v2.0.1](https://github.com/asasugar/HPRichText/releases/tag/v2.0.1) (2024-07-15)
 
 ### Features
