@@ -42,11 +42,18 @@ export struct HPRichText {
     Span($$.node.text)
       .fancySpan($$.parentNode?.artUIStyleObject)
       .onClick(() => {
-        if ($$.parentNode?.tag !== 'a') return;
-
-        // a标签增加回调事件
+        // a标签不管是否有标识都触发点击事件
+        // 其他标签判断是否有onClick属性
+        if ($$.parentNode?.tag !== 'a' && !$$.parentNode?.attr?.onClick) {
+          return;
+        }
+        // 增加回调事件
         try {
-          this.onLinkPress?.({ text: $$.node.text, link: $$.parentNode?.attr?.href });
+          this.onLinkPress?.({
+            text: $$.node.text,
+            link: $$.parentNode?.attr?.href,
+            eventFnName: $$.parentNode?.attr?.onClick
+          });
         } catch (error) {
           console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
         }

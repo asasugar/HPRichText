@@ -91,7 +91,8 @@ export interface RichTextOption {
 
 export interface LinkPressParame {
   text?: string;
-  link: string;
+  link?: string;
+  eventFnName?: string;
 }
 
 export interface LinkPressMethod<T = LinkPressParame> {

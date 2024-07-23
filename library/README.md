@@ -208,7 +208,7 @@ Button('改变数据').onClick(() => {
 
 | 名称          | 类型            | 必填 | 默认值  | 描述                |
 |-------------|---------------|----|------|-------------------|
-| onLinkPress | Function/Null | 否  | null | 点击标签事件回调（目前支持a标签） |
+| onLinkPress | Function/Null | 否  | null | { text?: string; link?: string; eventFnName?: string }点击标签事件回调（除了a标签以外其他标签需要增加onClick属性，并且回调会返回事件名，需要使用方自己在鸿蒙代码中根据事件名来匹配事件处理） |
 
 ## 注意点
 
