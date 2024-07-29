@@ -44,6 +44,17 @@ export function startWithHTMLElement(html: string) {
   return reg.test(html.replace(/\n/g, ""));
 }
 
+export function startWithBlockTag(str) {
+  const blockTags = Object.keys(block);
+  // 将标签数组转换为正则表达式的一部分
+  const tagPattern = blockTags.join('|');
+  // 正则表达式用于确保字符串的开头是 block 类型的 HTML 标签
+  const regex = new RegExp(`^\\s*<\\s*(${tagPattern})\\b[^>]*>`, 'i');
+  // 使用 test 方法检查字符串是否符合要求
+  return regex.test(str);
+}
+
+
 export const startTag =
   /^<([-A-Za-z0-9_]+)((?:\s+[a-zA-Z0-9_:][-a-zA-Z0-9_:.]*(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)>/;
 

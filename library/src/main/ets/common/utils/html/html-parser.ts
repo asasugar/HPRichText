@@ -29,6 +29,7 @@ import {
   replaceWebpPic,
   special,
   startTag,
+  startWithBlockTag,
   startWithHTMLElement,
   trimHtml
 } from './index';
@@ -239,8 +240,8 @@ class HTMLParser {
     html = replaceEscapeSymbol(html);
     html = strDiscode(html);
     html = px2Any(html, this.basePixelUnit, this.basePixelRatio);
-    // 判断字符串是否以 HTML 标签开头，不是的话增加div
-    if (!startWithHTMLElement(html)) {
+    // 判断字符串不是以 HTML 标签开头，则最外层增加div
+    if (!startWithHTMLElement(html) || !startWithBlockTag(html)) {
       html = addRootDiv(html);
     }
     return html;
