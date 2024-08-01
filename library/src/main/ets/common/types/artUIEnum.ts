@@ -52,12 +52,12 @@ export const enum Visibility {
 }
 
 export const enum FontWeight {
-  Lighter,
-  Normal,
-  Regular,
-  Medium,
-  Bold,
-  Bolder
+  Lighter = 300,
+  Normal = 400,
+  Regular = 400,
+  Medium = 400,
+  Bold = 700,
+  Bolder = 800
 }
 
 export const enum ImageFit {
