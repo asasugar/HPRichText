@@ -24,12 +24,10 @@ import {
   filterAttrs,
   inline,
   removeDOCTYPE,
-  replaceBr,
   replaceEscapeSymbol,
   replaceWebpPic,
   special,
   startTag,
-  startWithBlockTag,
   startWithHTMLElement,
   trimHtml
 } from './index';
@@ -225,10 +223,8 @@ class HTMLParser {
       if (!parent.nodes) {
         parent.nodes = [];
       }
-
       parent.nodes.push(node);
     } else {
-
       this.bufArray.unshift(node);
     }
   }
@@ -236,12 +232,12 @@ class HTMLParser {
   _dealHtmlJson(html: string = this.html): string {
     html = removeDOCTYPE(html);
     html = trimHtml(html);
-    html = replaceBr(html);
+    // html = replaceBr(html);
     html = replaceEscapeSymbol(html);
     html = strDiscode(html);
     html = px2Any(html, this.basePixelUnit, this.basePixelRatio);
     // 判断字符串不是以 HTML 标签开头，则最外层增加div
-    if (!startWithHTMLElement(html) || !startWithBlockTag(html)) {
+    if (!startWithHTMLElement(html)) {
       html = addRootDiv(html);
     }
     return html;
@@ -386,14 +382,74 @@ class HTMLParser {
     this.customHandler?.end?.(node, this.results);
 
     if (node) {
+      // html第一个节点
       if (this.bufArray.length === 0) {
-        this.results.nodes.push(node);
+        // 先判断当前第一个节点是block&&子节点不存在block节点，则添加标识
+        // 然后判断当前子节点列表nodes第一项如果是纯文本||子节点列表不存在block节点则添加标识
+        const hasBlockNode = node.nodes?.some(i => i.tagType === 'block');
+        if (node.tagType === 'block') {
+          if (!hasBlockNode) {
+            node.addHarmonyTextTag = true;
+          }
+        } else if (node.nodes?.[0]?.node === 'text') {
+          node.addHarmonyTextTag = true;
+        } else if (!hasBlockNode) {
+          node.addHarmonyTextTag = true;
+        }
+
+        const firstNodes = this.results.nodes;
+        const firstNodesLength = firstNodes.length;
+        // 判断如果一级节点存在多个子节点&&当前节点不是block&&上一个节点也不是block节点，则将当前节点插入上级节点的子节点nodes下
+        if (firstNodesLength && node.tagType !== 'block' &&
+          firstNodes[firstNodesLength-1]?.tagType !== 'block') {
+          firstNodes[firstNodesLength-1].nodes.push(node);
+        } else {
+          firstNodes.push(node);
+        }
       } else {
+        // 第二个节点往后
         const parent = this.bufArray[0];
         if (!parent.nodes) {
           parent.nodes = [];
         }
-        parent.nodes.push(node);
+        // ①：当前节点tagType === 'block'，则添加标识
+        // ②：当前节点tagType === 'inline'：
+        // a.判断当前父级nodes长度为 1 && 前一个节点是inline && 父节点!==block，则上一个节点添加标识；
+        // b.判断当前父级nodes长度为 1 && 前一个节点是block，则当前节点节点添加标识；
+        // c.判断当前父级nodes大于 1 && 前一个节点是block，则当前节点节点添加标识；
+
+        const parentNodes = parent.nodes;
+        const parentNodesLength = parentNodes.length;
+        if (node.tagType === 'block') {
+          node.addHarmonyTextTag = true;
+        } else if (node.tagType === 'inline') {
+          if (parentNodesLength === 1) {
+            // a.判断当前父级nodes长度为 1 && 前一个节点是inline && 父节点!==block，则上一个节点添加标识；
+            if (parentNodes[parentNodesLength-1]?.tagType === 'inline' && parent?.tagType !== 'block') {
+              parentNodes[parentNodesLength-1].addHarmonyTextTag = true;
+            } else if (parentNodes[parentNodesLength-1]?.tagType === 'block') {
+              // b.判断当前父级nodes长度为 1 && 前一个节点是block，则当前节点节点添加标识；
+              node.addHarmonyTextTag = true;
+            }
+          } else if (parentNodesLength > 1) {
+            // c.判断当前父级nodes大于 1 && 前一个节点是block，则当前节点节点添加标识；
+            if (parentNodes[parentNodesLength-1]?.tagType === 'block') {
+              node.addHarmonyTextTag = true;
+            }
+          } else {
+            //   当前父级nodes长度等于0
+            console.log('777', JSON.stringify(parent))
+            node.addHarmonyTextTag = true;
+          }
+        }
+
+        // 当前节点是inline且上一级也是inline，则将当前节点push到上一级节点的子节点nodes下；即[{节点 1}，{节点 2}]，若节点 1 跟 2 都是inline=>[{节点 1, nodes: [节点 2]}]
+        if (node.tagType === 'inline' && parentNodes[parentNodesLength-1]?.tagType === 'inline') {
+          node.isInlinePushNode = true;
+          parentNodes[parentNodesLength-1]?.nodes?.push(node);
+        } else {
+          parent.nodes.push(node);
+        }
       }
     }
   }
@@ -402,12 +458,10 @@ class HTMLParser {
     if (!text?.trim()) {
       return;
     }
-
     const node: SimpleNode = {
       node: 'text',
-      text,
+      text: text.includes('\t') ? text : text.trim(), // 制表符特殊判断
     };
-
     this.customHandler?.chars?.(node, this.results);
 
     if (this.bufArray.length === 0) {
@@ -417,7 +471,14 @@ class HTMLParser {
       if (!parent.nodes) {
         parent.nodes = [];
       }
-      parent.nodes.push(node);
+      if (parent.nodes.length && parent.nodes[parent.nodes.length-1]?.tagType === 'inline' &&
+        parent.nodes[parent.nodes.length-1]?.nodes) {
+        console.log(JSON.stringify(node) + '1' + JSON.stringify(parent))
+        parent.nodes[parent.nodes.length-1].isInlinePushNode = true;
+        parent.nodes[parent.nodes.length-1]?.nodes?.push(node);
+      } else {
+        parent.nodes.push(node);
+      }
     }
   }
 

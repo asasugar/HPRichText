@@ -5,14 +5,10 @@ import { HPRichText, RichTextOption } from '@ohasasugar/hp-richtext';
 struct Index {
   @State richTextOption: RichTextOption = {
     content: `
-    <div>
-      <p>我是 P1</p>
-      <span>我是span1</span>
-      <span>我是span2</span>
-      <p>我是 P2</p>
-      <span>我是span3</span>
-      <span>我是span4</span>
-    </div>
+    <div><font color="red">兑换说明</font><br>赠送12.0%；<br></div>
+    <div><font color="red">兑换说明</font><br><font color="blue">赠送12.0%；</font><br></div>
+    <font color="red">兑换说明</font><br><font color="blue">赠送12.0%；</font><br>
+    <font color="red">兑换说明</font><font color="blue">赠送12.0%；</font><br>
        `,
     imageProp: {
       webp: true,

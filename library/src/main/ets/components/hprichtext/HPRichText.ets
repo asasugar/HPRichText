@@ -11,7 +11,6 @@ import type {
   FancyTextInputOptions,
   FancyTextOptions,
   FancyVideoOptions,
-  LabelLevelBuilderOptions,
   LinkPressMethod,
   NodesBuilderOptions,
   RichTextOption,
@@ -61,103 +60,6 @@ export struct HPRichText {
   }
 
   /**
-   * @description: 块级、行内标签拆分构造器
-   * @returns {*}
-   */
-  @Builder
-  labelLevelBuilder($$: LabelLevelBuilderOptions) {
-    if ($$.node) {
-      // 若找到块级标签
-      if ($$.node.nodes && this.getBlockIndex($$.node) > -1) {
-        // 块级标签不是第一项，则将行内标签元素统一处理
-        if (this.getBlockIndex($$.node) > 0) {
-          if (!$$.parentNode) {
-            Text() {
-              this.nodesBuilder({
-                nodes: $$.node.nodes.slice(0, this.getBlockIndex($$.node)),
-                parentNode: $$.node,
-                isInlineBlockNesting: $$.isInlineBlockNesting
-              });
-            }
-            .fancyText($$.node?.artUIStyleObject)
-          } else {
-            this.nodesBuilder({
-              nodes: $$.node.nodes.slice(0, this.getBlockIndex($$.node)),
-              parentNode: $$.node,
-              isInlineBlockNesting: $$.isInlineBlockNesting
-            });
-          }
-        }
-        // 中间一项为单独的块级标签
-        if (!$$.parentNode) {
-          Text() {
-            this.nodesBuilder({
-              nodes: [$$.node.nodes[this.getBlockIndex($$.node)]],
-              parentNode: $$.node,
-            });
-          }
-          .fancyText($$.node.nodes[this.getBlockIndex($$.node)]?.artUIStyleObject)
-        } else {
-
-          this.nodesBuilder({
-            nodes: [$$.node.nodes[this.getBlockIndex($$.node)]],
-            parentNode: $$.node,
-          });
-        }
-
-        // 第三项中判断还有剩余元素则递归处理
-        // 可能还存在block
-        if ($$.node.nodes.length - 1 > this.getBlockIndex($$.node)) {
-          if (!$$.parentNode) {
-            Text() {
-              this.nodesBuilder({
-                nodes: $$.node.nodes.slice(this.getBlockIndex($$.node) + 1),
-                parentNode: $$.node,
-              });
-            }
-            .border($$.node?.artUIStyleObject?.border)
-            .fancyText($$.node?.artUIStyleObject)
-          } else {
-            this.nodesBuilder({
-              nodes: $$.node.nodes.slice(this.getBlockIndex($$.node) + 1),
-              parentNode: $$.node,
-            });
-          }
-        }
-      } else {
-        // 长度为 1 直接渲染，降低复杂度
-        if ($$.node.nodes?.length === 1 && $$.node.nodes[0].node === 'text') {
-          if (!$$.parentNode) {
-            Text() {
-              this.textBuilder({ node: $$.node.nodes[0], parentNode: $$.node })
-            }
-            .fancyText($$.node?.artUIStyleObject)
-          } else {
-            this.textBuilder({ node: $$.node.nodes[0], parentNode: $$.node })
-          }
-        } else {
-          if (!$$.parentNode) {
-            Text() {
-              this.nodesBuilder({
-                nodes: $$.node.nodes,
-                parentNode: $$.node,
-                isInlineBlockNesting: $$.isInlineBlockNesting
-              });
-            }
-            .fancyText($$.node?.artUIStyleObject)
-          } else {
-            this.nodesBuilder({
-              nodes: $$.node.nodes,
-              parentNode: $$.node,
-              isInlineBlockNesting: $$.isInlineBlockNesting
-            });
-          }
-        }
-      }
-    }
-  }
-
-  /**
    * @description: 节点构造器函数
    * @returns {*}
    */
@@ -186,18 +88,29 @@ export struct HPRichText {
               text: item?.nodes?.[0]?.text
             })
               .fancyTextArea(item?.artUIStyleObject);
-          } else {
-            this.labelLevelBuilder({
-              node: item,
-              parentNode: $$.parentNode,
-              isInlineBlockNesting: true
-            });
+          } else if (item.nodes?.length) {
+            if (item.addHarmonyTextTag && !$$.parentNode?.addHarmonyTextTag) {
+              Text() {
+                this.nodesBuilder({
+                  nodes: item.nodes,
+                  parentNode: item,
+                })
+              }
+              .fancyText(item?.artUIStyleObject)
+            } else {
+              this.nodesBuilder({
+                nodes: item.nodes,
+                parentNode: item
+              })
+            }
           }
         } else if (item.node === 'text') {
-          if (!$$.parentNode) {
+          // 兜底如果无标签包裹的纯文本渲染
+          if (!$$.parentNode || (!$$.parentNode.addHarmonyTextTag && $$.parentNode.tagType === 'block')) {
             Text() {
               this.textBuilder({ node: item, parentNode: $$.parentNode });
             }
+            .fancyText(item?.artUIStyleObject || $$.parentNode?.artUIStyleObject)
           } else {
             this.textBuilder({ node: item, parentNode: $$.parentNode });
           }
@@ -210,7 +123,7 @@ export struct HPRichText {
   onUpdateRichTextOption() {
     const htmlParser = new HTMLParser(this.richTextOption);
     this.htmlJson = htmlParser.html2json();
-    // console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
+    console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
 
   // 初始化更新

@@ -1,5 +1,5 @@
-import type { FontAttr, OtherAttr, PositionAttr, ShapeAttr } from "./artUIBase";
-import type { Nullable } from "./common";
+import type { FontAttr, OtherAttr, PositionAttr, ShapeAttr } from './artUIBase';
+import type { Nullable } from './common';
 
 export interface Attribute {
   name: string;
@@ -10,6 +10,7 @@ export interface Attribute {
 export interface SimpleNode {
   node: 'element' | 'text' | 'comment';
   text?: string;
+  isInlinePushNode?: boolean;
 }
 
 export interface NodeInfo extends SimpleNode {
@@ -18,6 +19,7 @@ export interface NodeInfo extends SimpleNode {
   attr?: Attr;
   artUIStyleObject?: ArtStyleObject;
   nodes?: NodeInfo[];
+  addHarmonyTextTag?: boolean;
 }
 
 export interface ImageProp {

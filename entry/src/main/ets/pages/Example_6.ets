@@ -16,9 +16,6 @@ struct Index {
 
   build() {
     Column() {
-      Text('1').fontSize(80).onClick((event: ClickEvent) => {
-        console.log(JSON.stringify(event))
-      })
       HPRichText({
         richTextOption: $richTextOption,
         needScroll: true,

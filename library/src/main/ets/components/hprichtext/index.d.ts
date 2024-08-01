@@ -9,14 +9,10 @@ export interface TextBuilderOptions {
   parentNode?: NodeInfo;
 }
 
-export interface LabelLevelBuilderOptions extends TextBuilderOptions {
-  isInlineBlockNesting: boolean;
-}
 
 export interface NodesBuilderOptions {
   nodes?: NodeInfo[];
   parentNode?: NodeInfo;
-  isInlineBlockNesting?: boolean;
 }
 
 export interface FancySpanOptions extends FontAttr {

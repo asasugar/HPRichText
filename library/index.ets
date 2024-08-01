@@ -5,7 +5,6 @@ import type {
   FancyTextInputOptions,
   FancyTextOptions,
   FancyVideoOptions,
-  LabelLevelBuilderOptions,
   LinkPressMethod,
   LinkPressParame,
   NodesBuilderOptions,
@@ -35,7 +34,6 @@ import type {
 export type {
   RichTextOption,
   TextBuilderOptions,
-  LabelLevelBuilderOptions,
   NodesBuilderOptions,
   FancySpanOptions,
   FancyTextOptions,
