@@ -37,6 +37,9 @@
 ### Bug Fixes
 
 * 🐛
+  修复字体加粗渲染异常问题 [(#33)](https://github.com/asasugar/HPRichText/issues/33)、[(#34)](https://github.com/asasugar/HPRichText/issues/34) ([dc2c32b](https://github.com/asasugar/HPRichText/commit/dc2c32b4f53de915a17269fde0945828632bc27b))
+
+* 🐛
   支持\t转义符号 [(#28)](https://github.com/asasugar/HPRichText/issues/28) ([c05b513](https://github.com/asasugar/HPRichText/commit/c05b513d98803f2530636876d14efb8d5e4c18d2))
 
 ## 简介
