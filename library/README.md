@@ -27,12 +27,17 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v2.1.0](https://github.com/asasugar/HPRichText/releases/tag/v2.1.0) (2024-07-23)
+#### 最近更新：[v2.2.0](https://github.com/asasugar/HPRichText/releases/tag/v2.2.0) (2024-08-01) 【强烈建议升级该版本】
 
-### Features
+### Refactor
 
-* 🎸
-  开放点击事件 [(#26)](https://github.com/asasugar/HPRichText/issues/26) ([1e955d3](https://github.com/asasugar/HPRichText/commit/1e955d3565b68097ab8bb8b9f38863d0306c5f41))
+* 💡
+  遍历算法优化,修复已知部分场景渲染层级异常问题 [(#31)](https://github.com/asasugar/HPRichText/issues/31) ([56d7400](https://github.com/asasugar/HPRichText/commit/56d7400aea26f54f5cfe0e33abd3ae6a5f6f92f6))
+
+### Bug Fixes
+
+* 🐛
+  支持\t转义符号 [(#28)](https://github.com/asasugar/HPRichText/issues/28) ([c05b513](https://github.com/asasugar/HPRichText/commit/c05b513d98803f2530636876d14efb8d5e4c18d2))
 
 ## 简介
 
