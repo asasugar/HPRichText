@@ -32,7 +32,7 @@
 ### Refactor
 
 * 💡
-  遍历算法优化,修复已知部分场景渲染层级异常问题 [(#31)](https://github.com/asasugar/HPRichText/issues/31) ([56d7400](https://github.com/asasugar/HPRichText/commit/56d7400aea26f54f5cfe0e33abd3ae6a5f6f92f6))
+  遍历算法优化,修复已知部分场景渲染层级异常问题 [(#31)](https://github.com/asasugar/HPRichText/issues/31) ([9447cbc](https://github.com/asasugar/HPRichText/commit/9447cbcc8f0bdf1a263756ea137b5affbcc21989))
 
 ### Bug Fixes
 
