@@ -127,7 +127,7 @@ class HTMLParser {
           (pre[name] as string[]).push(value);
         } else {
           // single value, make it array
-          pre[name] = [pre[name] as string[], value];
+          pre[name] = [pre[name] as unknown as string[], value];
         }
       } else {
         // 过滤属性
@@ -206,7 +206,7 @@ class HTMLParser {
     node.artUIStyleObject =
       Object.assign({}, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), htmlStyles, node.artUIStyleObject);
     // 对纯数字的lineHeight样式特别计算
-    const lh: number = +node.artUIStyleObject?.lineHeight;
+    const lh: number = +(node.artUIStyleObject?.lineHeight ?? 0);
     const reg = /^\d+(\.\d+)?$/g;
     if (lh && reg.test(`${lh}`)) {
       // 带单位的 fontSize
@@ -402,7 +402,7 @@ class HTMLParser {
         // 判断如果一级节点存在多个子节点&&当前节点不是block&&上一个节点也不是block节点，则将当前节点插入上级节点的子节点nodes下
         if (firstNodesLength && node.tagType !== 'block' &&
           firstNodes[firstNodesLength-1]?.tagType !== 'block') {
-          firstNodes[firstNodesLength-1].nodes.push(node);
+          firstNodes[firstNodesLength-1]?.nodes?.push(node);
         } else {
           firstNodes.push(node);
         }
