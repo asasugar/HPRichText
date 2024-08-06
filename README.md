@@ -19,7 +19,7 @@
   ```
 - 点击构建-清理项目/重新建构项目/鼠标选中library文件，构建library
 
-## OpenHarmony三方库中心仓链接（假如中心仓与tag版本不一致，则代表中心仓包正在审核中）
+## OpenHarmony三方库中心仓链接
 
 [@ohasasugar/hp-richtext](https://ohpm.openharmony.cn/#/cn/detail/@ohasasugar%2Fhp-richtext)
 
@@ -27,20 +27,25 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v2.2.0](https://github.com/asasugar/HPRichText/releases/tag/v2.2.0) (2024-08-01) 【强烈建议升级该版本】
-
-### Refactor
-
-* 💡
-  遍历算法优化,修复已知部分场景渲染层级异常问题 [(#31)](https://github.com/asasugar/HPRichText/issues/31) ([9447cbc](https://github.com/asasugar/HPRichText/commit/9447cbcc8f0bdf1a263756ea137b5affbcc21989))
+#### 最近更新：[v2.2.1](https://github.com/asasugar/HPRichText/releases/tag/v2.2.1) (2024-08-06)
 
 ### Bug Fixes
 
 * 🐛
-  修复字体加粗渲染异常问题 [(#33)](https://github.com/asasugar/HPRichText/issues/33)、[(#34)](https://github.com/asasugar/HPRichText/issues/34) ([dc2c32b](https://github.com/asasugar/HPRichText/commit/dc2c32b4f53de915a17269fde0945828632bc27b))
+  修复ts报错 [(#41)](https://github.com/asasugar/HPRichText/issues/41) ([8209144](https://github.com/asasugar/HPRichText/commit/8209144ceaa430384aeadedf9be33cf6db58e576))
 
 * 🐛
-  支持\t转义符号 [(#28)](https://github.com/asasugar/HPRichText/issues/28) ([c05b513](https://github.com/asasugar/HPRichText/commit/c05b513d98803f2530636876d14efb8d5e4c18d2))
+  修复样式继承覆盖问题 [(#38)](https://github.com/asasugar/HPRichText/issues/38) ([fc64343](https://github.com/asasugar/HPRichText/commit/fc643432f137ecbe5a3e63fb9e6f4517df7d868b))
+
+* 🐛
+  修复ts报错 [(#36)](https://github.com/asasugar/HPRichText/issues/36) ([8ad85b8](https://github.com/asasugar/HPRichText/commit/8ad85b85b542a69a5d3d5099bc249805cb11a00f))
+
+
+### Features
+
+* 🎸
+  新增css颜色样式非十六进制时的匹配 [(#32)](https://github.com/asasugar/HPRichText/issues/32) ([54a8841](https://github.com/asasugar/HPRichText/commit/54a884127d1cae615e254cdf1e20fbc2afebc199))
+
 
 ## 简介
 

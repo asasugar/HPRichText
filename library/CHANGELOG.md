@@ -1,5 +1,27 @@
 # Changelog
 
+### [v2.2.1](https://github.com/asasugar/HPRichText/releases/tag/v2.2.1) (2024-08-06)
+
+
+### Bug Fixes
+
+* 🐛
+  修复ts报错 [(#41)](https://github.com/asasugar/HPRichText/issues/41) ([8209144](https://github.com/asasugar/HPRichText/commit/8209144ceaa430384aeadedf9be33cf6db58e576))
+
+* 🐛
+  修复样式继承覆盖问题 [(#38)](https://github.com/asasugar/HPRichText/issues/38) ([fc64343](https://github.com/asasugar/HPRichText/commit/fc643432f137ecbe5a3e63fb9e6f4517df7d868b))
+
+* 🐛
+  修复ts报错 [(#36)](https://github.com/asasugar/HPRichText/issues/36) ([8ad85b8](https://github.com/asasugar/HPRichText/commit/8ad85b85b542a69a5d3d5099bc249805cb11a00f))
+
+
+
+### Features
+
+* 🎸
+  新增css颜色样式非十六进制时的匹配 [(#32)](https://github.com/asasugar/HPRichText/issues/32) ([54a8841](https://github.com/asasugar/HPRichText/commit/54a884127d1cae615e254cdf1e20fbc2afebc199))
+
+
 ### [v2.2.0](https://github.com/asasugar/HPRichText/releases/tag/v2.2.0) (2024-08-01)
 
 ### Refactor
