@@ -39,7 +39,8 @@ export struct HPRichText {
   @Builder
   textBuilder($$: TextBuilderOptions) {
     Span($$.node.text)
-      .fancySpan($$.parentNode?.artUIStyleObject)
+      .fancySpan(!$$.parentNode?.isInlinePushNode || ($$.parentNode?.isInlinePushNode && $$.index === 0) ?
+        $$.parentNode?.artUIStyleObject : undefined)
       .onClick(() => {
         // a标签不管是否有标识都触发点击事件
         // 其他标签判断是否有onClick属性
@@ -66,7 +67,7 @@ export struct HPRichText {
   @Builder
   nodesBuilder($$: NodesBuilderOptions) {
     if ($$.nodes?.length) {
-      ForEach($$.nodes, (item: NodeInfo) => {
+      ForEach($$.nodes, (item: NodeInfo, i: number) => {
         // 标签
         if (item.node === 'element') {
           // video
@@ -108,11 +109,11 @@ export struct HPRichText {
           // 兜底如果无标签包裹的纯文本渲染
           if (!$$.parentNode || (!$$.parentNode.addHarmonyTextTag && $$.parentNode.tagType === 'block')) {
             Text() {
-              this.textBuilder({ node: item, parentNode: $$.parentNode });
+              this.textBuilder({ node: item, index: i, parentNode: $$.parentNode });
             }
             .fancyText(item?.artUIStyleObject || $$.parentNode?.artUIStyleObject)
           } else {
-            this.textBuilder({ node: item, parentNode: $$.parentNode });
+            this.textBuilder({ node: item, index: i, parentNode: $$.parentNode });
           }
         }
       }, (item: NodeInfo, index: number) => Math.random().toFixed(3) + item.node + item.tag + item.tagType + index)

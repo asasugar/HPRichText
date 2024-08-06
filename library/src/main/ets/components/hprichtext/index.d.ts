@@ -6,6 +6,7 @@ import type { CustomHandler, ImageProp, NodeInfo } from '../../common/types/html
 
 export interface TextBuilderOptions {
   node: NodeInfo;
+  index: number;
   parentNode?: NodeInfo;
 }
 
