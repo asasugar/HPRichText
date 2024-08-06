@@ -467,10 +467,18 @@ class HTMLParser {
     this.customHandler?.chars?.(node, this.results);
 
     if (this.bufArray.length === 0) {
-      if(this.results.nodes[0].nodes) {
-        this.results.nodes[0].nodes.push(node);
+
+      const firstNodes = this.results.nodes;
+      const firstNodesLength = firstNodes.length;
+      // 判断如果一级节点存在多个子节点&&当前节点不是block&&上一个节点也不是block节点&&上一个节点存在nodes字段，则将当前节点插入上级节点的子节点nodes下
+      if (firstNodesLength &&
+        firstNodes[firstNodesLength-1]?.tagType !== 'block' && firstNodes[firstNodesLength-1]?.nodes) {
+        firstNodes[firstNodesLength-1].isInlinePushNode = true;
+        firstNodes[firstNodesLength-1].nodes?.push(node);
+      } else if (firstNodesLength === 0 && firstNodes[0]?.nodes) {
+        firstNodes[0].nodes.push(node);
       } else {
-        this.results.nodes.push(node);
+        firstNodes.push(node);
       }
     } else {
       const parent = this.bufArray[0];
