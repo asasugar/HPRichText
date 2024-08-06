@@ -29,6 +29,7 @@ export function parseToArtUI(composeCss: StyleObject, baseFontSize?: number): Ar
   for (const attr in composeCss) {
     const harmonyKey: string | Record<string, string[]> = attrsMap[attr];
     const specialHarmonyKey: string | Record<string, string[]> = specialAttrsMap[attr];
+    composeCss[attr] = formatColor(attr, composeCss[attr]);
     if (harmonyKey) {
       if (harmonyKey instanceof Object) {
         const transformedStyle = transformObject(composeCss[attr], harmonyKey);
@@ -52,6 +53,34 @@ export function parseToArtUI(composeCss: StyleObject, baseFontSize?: number): Ar
   return obj;
 }
 
+/**
+ * @description: 格式化传入的颜色
+ * @param {*} attrKey: css属性key
+ * @param {string} attrValue: css属性value
+ * @returns {*} 返回鸿蒙系统定义的十六进制颜色代码
+ */
+export function formatColor(attrKey, attrValue: string) {
+  const colorKeys = ['color', 'background-color', 'font-color', 'border-color'];
+  if (!colorKeys.includes(attrKey)) {
+    return attrValue
+  }
+  const color = firstLetterToLowerCase(attrValue);
+  const colorMap = {
+    White: '#ffffffff',
+    Black: '#ff000000',
+    Blue: '#ff0000ff',
+    Brown: '#ffa52a2a',
+    Gray: '#ff808080',
+    Green: '#ff008000',
+    Grey: '#ff808080',
+    Orange: '#ffffa500',
+    Pink: '#ffffc0cb',
+    Red: '#ffff0000',
+    Yellow: '#ffffff00',
+    Transparent: '#00000000'
+  };
+  return colorMap[color] ?? attrValue;
+}
 
 /**
  * @description: 转化单个鸿蒙样式的辅助方法
