@@ -399,10 +399,13 @@ class HTMLParser {
 
         const firstNodes = this.results.nodes;
         const firstNodesLength = firstNodes.length;
-        // 判断如果一级节点存在多个子节点&&当前节点不是block&&上一个节点也不是block节点，则将当前节点插入上级节点的子节点nodes下
+        // 判断如果一级节点存在多个子节点&&当前节点不是block&&上一个节点也不是block节点&&上一个节点存在nodes字段，则将当前节点插入上级节点的子节点nodes下
         if (firstNodesLength && node.tagType !== 'block' &&
-          firstNodes[firstNodesLength-1]?.tagType !== 'block') {
-          firstNodes[firstNodesLength-1]?.nodes?.push(node);
+          firstNodes[firstNodesLength-1]?.tagType !== 'block' && firstNodes[firstNodesLength-1]?.nodes) {
+          firstNodes[firstNodesLength-1].nodes?.push(node);
+        } else if (firstNodesLength === 0 && firstNodes[0]?.nodes) {
+          // 说明是非block节点，如果this.results.nodes[0].nodes存在，则push进去
+          firstNodes[0]?.nodes?.push(node);
         } else {
           firstNodes.push(node);
         }
@@ -438,7 +441,6 @@ class HTMLParser {
             }
           } else {
             //   当前父级nodes长度等于0
-            console.log('777', JSON.stringify(parent))
             node.addHarmonyTextTag = true;
           }
         }
@@ -465,7 +467,11 @@ class HTMLParser {
     this.customHandler?.chars?.(node, this.results);
 
     if (this.bufArray.length === 0) {
-      this.results.nodes.push(node);
+      if(this.results.nodes[0].nodes) {
+        this.results.nodes[0].nodes.push(node);
+      } else {
+        this.results.nodes.push(node);
+      }
     } else {
       const parent = this.bufArray[0];
       if (!parent.nodes) {
@@ -473,7 +479,6 @@ class HTMLParser {
       }
       if (parent.nodes.length && parent.nodes[parent.nodes.length-1]?.tagType === 'inline' &&
         parent.nodes[parent.nodes.length-1]?.nodes) {
-        console.log(JSON.stringify(node) + '1' + JSON.stringify(parent))
         parent.nodes[parent.nodes.length-1].isInlinePushNode = true;
         parent.nodes[parent.nodes.length-1]?.nodes?.push(node);
       } else {
