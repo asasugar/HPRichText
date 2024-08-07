@@ -19,7 +19,7 @@
   ```
 - 点击构建-清理项目/重新建构项目/鼠标选中library文件，构建library
 
-## OpenHarmony三方库中心仓链接
+## OpenHarmony三方库中心仓链接（假如中心仓与tag版本不一致，则代表中心仓包正在审核中）
 
 [@ohasasugar/hp-richtext](https://ohpm.openharmony.cn/#/cn/detail/@ohasasugar%2Fhp-richtext)
 
