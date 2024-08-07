@@ -28,6 +28,7 @@ import type {
   SpecialStyles,
   StyleObject
 } from './src/main/ets/common/types';
+import HTMLParser from './src/main/ets/common/utils/html/html-parser';
 
 // 导出ts声明
 // 不支持 export * from 'xx'
@@ -62,3 +63,6 @@ export type {
 
 // 导出组件
 export { HPRichText } from './src/main/ets/components/hprichtext/HPRichText';
+
+// 导出方法
+export { HTMLParser };
