@@ -1,7 +1,15 @@
 # Changelog
 
-### [v2.2.1](https://github.com/asasugar/HPRichText/releases/tag/v2.2.1) (2024-08-06)
 
+### [v2.2.2](https://github.com/asasugar/HPRichText/releases/tag/v2.2.2) (2024-08-07)
+
+### Bug Fixes
+
+* 🐛
+  修复span标签设置baseFontSize失效问题 [(#42)](https://github.com/asasugar/HPRichText/issues/42) ([5282277](https://github.com/asasugar/HPRichText/commit/52822771613dbbf02fb1515bae9358e3485ed3d6))
+
+
+### [v2.2.1](https://github.com/asasugar/HPRichText/releases/tag/v2.2.1) (2024-08-06)
 
 ### Bug Fixes
 

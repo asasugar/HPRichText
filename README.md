@@ -27,28 +27,12 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v2.2.1](https://github.com/asasugar/HPRichText/releases/tag/v2.2.1) (2024-08-06)
+#### 最近更新：[v2.2.2](https://github.com/asasugar/HPRichText/releases/tag/v2.2.2) (2024-08-07)
 
 ### Bug Fixes
 
 * 🐛
-  修复ts报错 [(#41)](https://github.com/asasugar/HPRichText/issues/41) ([8209144](https://github.com/asasugar/HPRichText/commit/8209144ceaa430384aeadedf9be33cf6db58e576))
-
-* 🐛
-  修复样式继承覆盖问题 [(#38)](https://github.com/asasugar/HPRichText/issues/38) ([fc64343](https://github.com/asasugar/HPRichText/commit/fc643432f137ecbe5a3e63fb9e6f4517df7d868b))
-
-* 🐛
-  修复text-align属性不生效问题 [(#37)](https://github.com/asasugar/HPRichText/issues/37) ([11472b2](https://github.com/asasugar/HPRichText/commit/11472b23cacfd636f1510e55f5481abfd2b151ac))
-
-* 🐛
-  修复ts报错 [(#36)](https://github.com/asasugar/HPRichText/issues/36) ([8ad85b8](https://github.com/asasugar/HPRichText/commit/8ad85b85b542a69a5d3d5099bc249805cb11a00f))
-
-
-### Features
-
-* 🎸
-  新增css颜色样式非十六进制时的匹配 [(#32)](https://github.com/asasugar/HPRichText/issues/32) ([54a8841](https://github.com/asasugar/HPRichText/commit/54a884127d1cae615e254cdf1e20fbc2afebc199))
-
+  修复span标签设置baseFontSize失效问题 [(#42)](https://github.com/asasugar/HPRichText/issues/42) ([5282277](https://github.com/asasugar/HPRichText/commit/52822771613dbbf02fb1515bae9358e3485ed3d6))
 
 ## 简介
 
