@@ -29,6 +29,11 @@
 
 #### 最近更新：[v2.2.2](https://github.com/asasugar/HPRichText/releases/tag/v2.2.2) (2024-08-07)
 
+### Features
+
+* 🎸
+  导出HTMLParser类 [(#40)](https://github.com/asasugar/HPRichText/issues/40) ([b6cad1d](https://github.com/asasugar/HPRichText/commit/b6cad1dcbc065ee9e9ef20c02c90490b9ec63d9d))
+
 ### Bug Fixes
 
 * 🐛
