@@ -4,8 +4,9 @@ import { HPRichText, RichTextOption } from '@ohasasugar/hp-richtext';
 @Component
 struct Index {
   @State richTextOption: RichTextOption = {
+    baseFontSize: 50,
     content: `
-    您好, 现在会员促销期间<font color='red'>打6折</font>哟~错过<font color='red'>时间</font>恢复原价哈!
+    <span style=\"color:#999999;\">该手机实名人需与我的我的为<\span><span style=\"color:#E53333;\">同一人<\span><span style=\"color:#999999;\">，否则请更换<\span>
        `,
     imageProp: {
       webp: true,

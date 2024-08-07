@@ -181,7 +181,7 @@ function fancySpan($$: FancySpanOptions = {}) {
   .fontWeight($$.fontWeight)
   .fontFamily($$.fontFamily)
   .letterSpacing($$.letterSpacing)
-  .decoration($$.decoration)
+  .decoration($$.decoration ?? { type: TextDecorationType.None }) // 避免push到子节点的时候，继承 Text 的属性
 }
 
 @Extend(Text)

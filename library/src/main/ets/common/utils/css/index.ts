@@ -21,7 +21,6 @@ export function firstLetterToLowerCase(str: string): string {
  * @returns {*} 鸿蒙样式
  */
 export function parseToArtUI(composeCss: StyleObject, baseFontSize?: number): ArtStyleObject {
-
   let obj: ArtStyleObject = {};
   if (!composeCss) {
     return obj;
@@ -154,7 +153,8 @@ export function setHtmlAttributes(baseFontSize: number, baseFontColor: string, t
   }
   // 使用对象映射查找并返回对应标签的样式
   const predefinedStyle =
-    (headingStyles(baseFontSize, baseFontColor)[tagName] || specialStyles(baseFontSize, baseFontColor)[tagName]) || {};
+    (headingStyles(baseFontSize, baseFontColor)[tagName] || specialStyles(baseFontSize, baseFontColor)[tagName]) ||
+      { fontSize: baseFontSize, fontColor: baseFontColor };
   return predefinedStyle;
 }
 

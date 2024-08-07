@@ -440,8 +440,10 @@ class HTMLParser {
               node.addHarmonyTextTag = true;
             }
           } else {
-            //   当前父级nodes长度等于0
-            node.addHarmonyTextTag = true;
+            // 进入这个判断则代表“父节点的子节点中存在混合inline跟block的节点，并且父节点没有设置过标识”，且当前父级nodes长度等于0，即第一个插入的当前节点是inline，则需要设置标识
+            if (parent.tagType === 'block') {
+              node.addHarmonyTextTag = true;
+            }
           }
         }
 
