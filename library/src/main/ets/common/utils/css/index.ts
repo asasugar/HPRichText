@@ -31,10 +31,12 @@ export function parseToArtUI(composeCss: StyleObject, baseFontSize?: number): Ar
     const specialHarmonyKey: string | Record<string, string[]> = specialAttrsMap[attr];
     composeCss[attr] = formatColor(attr, composeCss[attr]);
     if (harmonyKey) {
-      if (harmonyKey instanceof Object) {
+      // 需要特殊处理的样式属性
+      if ((harmonyKey instanceof Object) || attrEnums[harmonyKey]) {
         const transformedStyle = transformObject(composeCss[attr], harmonyKey);
         Object.assign(obj, transformedStyle);
       } else {
+        // 兜底直接赋值css属性
         obj[harmonyKey] = composeCss[attr];
       }
     } else if (specialHarmonyKey === 'writingMode' && (
@@ -88,32 +90,37 @@ export function formatColor(attrKey, attrValue: string) {
  * @param {Record<string,string[]>} map: {"border": ['width', 'style', 'color']}
  * @returns {*} {width: '10px', style: TextDecorationType.Dashed, color: '#0000FF'}
  */
-export function transformObject(originalValue: string, map: Record<string, string[]>) {
+export function transformObject(originalValue: string, map: Record<string, string[]> | string) {
   const transformedObject: ArtStyleObject = {};
 
-  for (const harmonyKey in map) {
-    if (map.hasOwnProperty(harmonyKey)) {
+  if (typeof map === 'string') {
+    transformedObject[map] = attrEnums?.[map]?.[originalValue];
+  } else {
+    for (const harmonyKey in map) {
+      if (map.hasOwnProperty(harmonyKey)) {
 
-      const newValue = (originalValue as string).split(' ');
-      const mappedObject = {};
-      let lastValue;
-      for (let i = 0; i < map[harmonyKey].length; i++) {
-        const childKey = map[harmonyKey][i];
+        const newValue = (originalValue as string).split(' ');
+        const mappedObject = {};
+        let lastValue;
+        for (let i = 0; i < map[harmonyKey].length; i++) {
+          const childKey = map[harmonyKey][i];
 
-        const value = newValue[i]; // 如：padding/margin 设置 一个值，则newValue[i]只有i=0的时候有值
-        const attrEnum = attrEnums?.[harmonyKey]?.[childKey]?.[value];
-        // 匹配鸿蒙属性枚举值
-        if (attrEnum !== undefined) {
-          mappedObject[childKey] = attrEnum;
-        } else {
-          mappedObject[childKey] = value || lastValue;
-          if (value) {
-            lastValue = value;
+          const value = newValue[i]; // 如：padding/margin 设置 一个值，则newValue[i]只有i=0的时候有值
+          const attrEnum = attrEnums?.[harmonyKey]?.[childKey]?.[value];
+          // 匹配鸿蒙属性枚举值
+          if (attrEnum !== undefined) {
+            mappedObject[childKey] = attrEnum;
+          } else {
+            mappedObject[childKey] = value || lastValue;
+            if (value) {
+              lastValue = value;
+            }
           }
         }
+        transformedObject[harmonyKey] = mappedObject;
       }
-      transformedObject[harmonyKey] = mappedObject;
     }
+
   }
   return transformedObject;
 }

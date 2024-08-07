@@ -12,8 +12,8 @@ export const enum TextDecorationType {
 }
 
 export const enum TextAlign {
-  Center,
   Start,
+  Center,
   End,
   JUSTIFY
 }
