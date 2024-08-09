@@ -7,7 +7,7 @@ export default class Node {
   attr?: Attr = {};
   tagType?: 'block' | 'inline' | 'closeSelf';
   artUIStyleObject?: ArtStyleObject;
-
+  fixedNewLine:boolean = false;
   constructor(tag: string) {
     this.tag = tag;
   }

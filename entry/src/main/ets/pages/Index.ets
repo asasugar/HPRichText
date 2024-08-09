@@ -1,4 +1,4 @@
-import { HPRichText, RichTextOption } from '@ohasasugar/hp-richtext';
+import { HPRichText, RichTextOption, StyledStringParser } from '@ohasasugar/hp-richtext';
 
 @Entry
 @Component
@@ -47,6 +47,7 @@ struct Index {
     }
   };
 
+  textController:TextController = new TextController()
   build() {
     Column() {
       Button('改变数据').onClick(() => {
@@ -56,13 +57,18 @@ struct Index {
           content: '我是改变之后的数据，如通过ajax请求返回的数据'
         }
       })
-      HPRichText({
-        richTextOption: $richTextOption,
-        needScroll: true,
-        onLinkPress: (e) => {
-          return e;
-        }
-      })
+      Text(undefined,{controller:this.textController})
+        .onAttach(()=>{
+          let res = new StyledStringParser(this.richTextOption.content).getResult()
+          this.textController.setStyledString(res.styledString)
+        })
+      // HPRichText({
+      //   richTextOption: $richTextOption,
+      //   needScroll: true,
+      //   onLinkPress: (e) => {
+      //     return e;
+      //   }
+      // })
     }
   }
 }
