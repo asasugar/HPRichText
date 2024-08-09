@@ -1,6 +1,14 @@
 # Changelog
 
 
+### [v2.2.3](https://github.com/asasugar/HPRichText/releases/tag/v2.2.3) (2024-08-09)
+
+
+### Bug Fixes
+
+* 🐛
+  push子节点默认样式丢失问题 [(#47)](https://github.com/asasugar/HPRichText/issues/47) ([0435bb8](https://github.com/asasugar/HPRichText/commit/0435bb869427afe4765462239153ab832dd1a503))
+
 ### [v2.2.2](https://github.com/asasugar/HPRichText/releases/tag/v2.2.2) (2024-08-07)
 
 ### Features

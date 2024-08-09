@@ -27,17 +27,12 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v2.2.2](https://github.com/asasugar/HPRichText/releases/tag/v2.2.2) (2024-08-07)
-
-### Features
-
-* 🎸
-  导出HTMLParser类 [(#40)](https://github.com/asasugar/HPRichText/issues/40) ([b6cad1d](https://github.com/asasugar/HPRichText/commit/b6cad1dcbc065ee9e9ef20c02c90490b9ec63d9d))
+#### 最近更新：[v2.2.3](https://github.com/asasugar/HPRichText/releases/tag/v2.2.3) (2024-08-09)
 
 ### Bug Fixes
 
 * 🐛
-  修复span标签设置baseFontSize失效问题 [(#42)](https://github.com/asasugar/HPRichText/issues/42) ([5282277](https://github.com/asasugar/HPRichText/commit/52822771613dbbf02fb1515bae9358e3485ed3d6))
+  push子节点默认样式丢失问题 [(#47)](https://github.com/asasugar/HPRichText/issues/47) ([0435bb8](https://github.com/asasugar/HPRichText/commit/0435bb869427afe4765462239153ab832dd1a503))
 
 ## 简介
 
