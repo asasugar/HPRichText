@@ -26,10 +26,23 @@ export struct HPRichText {
   @State htmlJson: HtmlParserResult = {
     nodes: []
   };
+  @State defaultArtUI: FancySpanOptions = {};
 
-  getBlockIndex(node?: NodeInfo): number {
-    const index = node?.nodes?.findIndex(n => n.tagType === 'block');
-    return index as number;
+  // getBlockIndex(node?: NodeInfo): number {
+  //   const index = node?.nodes?.findIndex(n => n.tagType === 'block');
+  //   return index as number;
+  // }
+
+  /**
+   * @description: 生成默认样式为push的子节点添加默认样式
+   * @returns {*}
+   */
+  _setDefaultArtUI() {
+    return {
+      fontSize: `${parseInt(String(this.richTextOption.baseFontSize), 10) *
+        (this.richTextOption.basePixelRatio ?? 1)}${this.richTextOption.basePixelUnit ?? 'vp'}`,
+      fontColor: this.richTextOption.baseFontColor ?? '#000000'
+    } as FancySpanOptions
   }
 
   /**
@@ -40,7 +53,8 @@ export struct HPRichText {
   textBuilder($$: TextBuilderOptions) {
     Span($$.node.text)
       .fancySpan(!$$.parentNode?.isInlinePushNode || ($$.parentNode?.isInlinePushNode && $$.index === 0) ?
-        $$.parentNode?.artUIStyleObject : undefined)
+        $$.parentNode?.artUIStyleObject : this.defaultArtUI
+      )
       .onClick(() => {
         // 不触发点击事件的场景：
         // 判断父级是否为isInlinePushNode的结构：
@@ -144,6 +158,7 @@ export struct HPRichText {
   // 监听到richTextOption参数变化则重新触发 HTML转化函数
   onUpdateRichTextOption() {
     const htmlParser = new HTMLParser(this.richTextOption);
+    this.defaultArtUI = this._setDefaultArtUI(); // 生成默认样式
     this.htmlJson = htmlParser.html2json();
     console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
