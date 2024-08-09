@@ -8,6 +8,7 @@ export interface FontAttr {
   fontStyle?: 0 | 1;
   fontWeight?: FontWeight;
   fontFamily?: string;
+  textIndent?:number|string;
 }
 
 export interface ShapeAttr {

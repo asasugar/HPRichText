@@ -1,4 +1,4 @@
-import { HPRichText, RichTextOption } from '@ohasasugar/hp-richtext';
+import { HPRichText, RichTextOption, StyledStringParser } from '@ohasasugar/hp-richtext';
 
 @Entry
 @Component
@@ -75,15 +75,21 @@ struct Index {
     }
   };
 
+  textController:TextController = new TextController()
   build() {
     Column() {
-      HPRichText({
-        richTextOption: $richTextOption,
-        needScroll: true,
-        onLinkPress: (e) => {
-          return e;
-        }
-      })
+      // HPRichText({
+      //   richTextOption: $richTextOption,
+      //   needScroll: true,
+      //   onLinkPress: (e) => {
+      //     return e;
+      //   }
+      // })
+      Text(undefined,{controller:this.textController})
+        .onAttach(()=>{
+          let res = new StyledStringParser(this.richTextOption.content).getResult()
+          this.textController.setStyledString(res.styledString)
+        })
     }
   }
 }

@@ -75,6 +75,10 @@ export const block =
 export const inline =
   makeMap('a,abbr,acronym,b,basefont,bdo,big,button,cite,del,dfn,em,font,i,iframe,ins,kbd,label,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,tt,u,var');
 
+
+// 支持超链接点击事件的标签
+export const hrefTag = makeMap('a,at,file,action');
+
 // Elements that you can, intentionally, leave open
 // (and which close themselves)
 export const closeSelf = makeMap('colgroup,dd,dt,li,options,p,td,tfoot,th,thead,tr');

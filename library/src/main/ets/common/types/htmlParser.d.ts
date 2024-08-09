@@ -20,6 +20,7 @@ export interface NodeInfo extends SimpleNode {
   artUIStyleObject?: ArtStyleObject;
   nodes?: NodeInfo[];
   addHarmonyTextTag?: boolean;
+  fixedNewLine?:boolean//当前节点是否已经新增换行符号.仅StyledStringParser生效
 }
 
 export interface ImageProp {

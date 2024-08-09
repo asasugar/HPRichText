@@ -64,5 +64,10 @@ export type {
 // 导出组件
 export { HPRichText } from './src/main/ets/components/hprichtext/HPRichText';
 
+export * from './src/main/ets/StyledString/EmojiSpan';
+export {IRichTextParseResult} from './src/main/ets/StyledString/IStyledStringProtocols';
+export * from './src/main/ets/StyledString/StyledStringParser';
+
 // 导出方法
 export { HTMLParser };
+

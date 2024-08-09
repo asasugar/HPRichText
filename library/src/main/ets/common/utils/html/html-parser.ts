@@ -462,7 +462,7 @@ class HTMLParser {
     if (!text?.trim()) {
       return;
     }
-    const node: SimpleNode = {
+    const node: NodeInfo = {
       node: 'text',
       text: text.includes('\t') ? text : text.trim(), // 制表符特殊判断
     };
