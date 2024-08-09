@@ -277,3 +277,9 @@ Button('改变数据').onClick(() => {
 ![20240319094531](https://raw.githubusercontent.com/asasugar/pic-bed/master/imgs/20240319094531.png)
 
 ![20240513154129](https://raw.githubusercontent.com/asasugar/pic-bed/master/imgs/20240513154129.png)
+
+## 贡献者
+
+<a href="https://github.com/asasugar/HPRichText/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=asasugar/HPRichText" />
+</a>
