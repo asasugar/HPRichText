@@ -1,5 +1,22 @@
 # Changelog
 
+### [v2.2.4](https://github.com/asasugar/HPRichText/releases/tag/v2.2.4) (2024-09-11)
+
+### Features
+
+* 🎸
+  img跟video标签增加点击事件支持&回调参数调整 ([740e5bf](https://github.com/asasugar/HPRichText/commit/740e5bfed11dd6879e09839dd04b724cf551b3c9))
+* 🎸
+  baseFontSize、baseFontColor属性支持Resource类型暴露css中utils方法 ([655fee6](https://github.com/asasugar/HPRichText/commit/655fee65fba77b48c2f28b5631bff318d32eef81))
+
+### Bug Fixes
+
+* 🐛
+  修复嵌套text导致的渲染异常问题 [(#55)](https://github.com/asasugar/HPRichText/issues/55) ([bc83328](https://github.com/asasugar/HPRichText/commit/bc83328588268e13ef8cf5282fcd83e57d13423c))
+
+* 🐛
+  修复嵌套子节点样式丢失问题 [(#52)](https://github.com/asasugar/HPRichText/issues/52) ([429222e](https://github.com/asasugar/HPRichText/commit/429222eaa2d4a28909ffca4e7efdade1ca72f62b))
+
 
 ### [v2.2.3](https://github.com/asasugar/HPRichText/releases/tag/v2.2.3) (2024-08-09)
 
