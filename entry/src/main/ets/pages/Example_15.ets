@@ -12,14 +12,9 @@ struct Index {
     </span>
     `,
   };
-  @State text: string = ''
-  @State handlePopup: boolean = false
-  @State customPopup: boolean = false
 
   build() {
     Column() {
-      Text('Hello')
-        .fontColor($r('app.color.start_window_background'))
       HPRichText({
         richTextOption: $richTextOption,
         needScroll: true,

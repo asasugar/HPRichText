@@ -12,9 +12,6 @@ struct Index {
     </span>
     `,
   };
-  @State text: string = ''
-  @State handlePopup: boolean = false
-  @State customPopup: boolean = false
 
   build() {
     Column() {

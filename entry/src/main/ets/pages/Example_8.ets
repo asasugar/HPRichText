@@ -18,7 +18,6 @@ struct Index {
       webp: true,
     }
   };
-  @State text: string = ''
 
   build() {
     Column() {
