@@ -12,11 +12,13 @@ import type {
   FancyTextOptions,
   FancyVideoOptions,
   LinkPressMethod,
+  LinkPressParame,
   NodesBuilderOptions,
   RichTextOption,
   TextBuilderOptions
 } from './index';
 import HTMLParser from '../../common/utils/html/html-parser';
+import { assign } from './helperful';
 
 @Component
 export struct HPRichText {
@@ -45,6 +47,21 @@ export struct HPRichText {
     } as FancySpanOptions
   }
 
+  _commonClick(node: NodeInfo, event: ClickEvent, other: LinkPressParame) {
+    if (!node?.attr?.onClick) {
+      return;
+    }
+    // 增加回调事件
+    try {
+      this.onLinkPress?.(assign(other, {
+        eventFnName: node?.attr?.onClick,
+        clickEvent: event
+      }));
+    } catch (error) {
+      console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
+    }
+  }
+
   /**
    * @description: Span文本样式构造器
    * @returns {*}
@@ -56,7 +73,7 @@ export struct HPRichText {
         (!$$.parentNode?.isInlinePushNode || ($$.parentNode?.isInlinePushNode && $$.index === 0) ?
           $$.parentNode?.artUIStyleObject : this.defaultArtUI)
       )
-      .onClick(() => {
+      .onClick((event) => {
         // 不触发点击事件的场景：
         // 判断父级是否为isInlinePushNode的结构：
         // 是：
@@ -88,7 +105,8 @@ export struct HPRichText {
           this.onLinkPress?.({
             text: $$.node.text,
             link: $$.parentNode?.attr?.href,
-            eventFnName: $$.parentNode?.attr?.onClick
+            eventFnName: $$.parentNode?.attr?.onClick,
+            clickEvent: event
           });
         } catch (error) {
           console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
@@ -111,11 +129,17 @@ export struct HPRichText {
             Video({
               src: item.attr?.src
             })
-              .fancyVideo(item?.artUIStyleObject, item?.attr);
+              .fancyVideo(item?.artUIStyleObject, item?.attr)
+              .onClick((event) => {
+                this._commonClick(item, event, { resourceSrc: item.attr?.src })
+              });
           } else if (item.tag === 'img') {
             // img
             Image(item.attr?.src)
-              .fancyImage(item?.artUIStyleObject, item?.attr);
+              .fancyImage(item?.artUIStyleObject, item?.attr)
+              .onClick((event) => {
+                this._commonClick(item, event, { resourceSrc: item.attr?.src })
+              });
           } else if (item.tag === 'input') {
             TextInput({ text: item?.attr?.value, placeholder: item?.attr?.placeholder })
               .fancyTextInput(item?.artUIStyleObject, item?.attr);

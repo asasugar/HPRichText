@@ -89,7 +89,9 @@ export interface RichTextOption {
 
 export interface LinkPressParame {
   text?: string;
+  resourceSrc?: string;
   link?: string;
+  clickEvent?: {[x:string]: any};
   eventFnName?: string;
 }
 
