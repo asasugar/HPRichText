@@ -10,6 +10,7 @@ export interface Attribute {
 export interface SimpleNode {
   node: 'element' | 'text' | 'comment';
   text?: string;
+  artUIStyleObject?: ArtStyleObject; // 用于继承父级样式
   isInlinePushNode?: boolean;
 }
 
@@ -17,7 +18,6 @@ export interface NodeInfo extends SimpleNode {
   tag?: string;
   tagType?: 'block' | 'inline' | 'closeSelf';
   attr?: Attr;
-  artUIStyleObject?: ArtStyleObject;
   nodes?: NodeInfo[];
   addHarmonyTextTag?: boolean;
 }

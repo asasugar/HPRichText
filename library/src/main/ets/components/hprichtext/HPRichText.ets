@@ -52,8 +52,9 @@ export struct HPRichText {
   @Builder
   textBuilder($$: TextBuilderOptions) {
     Span($$.node.text)
-      .fancySpan(!$$.parentNode?.isInlinePushNode || ($$.parentNode?.isInlinePushNode && $$.index === 0) ?
-        $$.parentNode?.artUIStyleObject : this.defaultArtUI
+      .fancySpan($$.node?.artUIStyleObject ||
+        (!$$.parentNode?.isInlinePushNode || ($$.parentNode?.isInlinePushNode && $$.index === 0) ?
+          $$.parentNode?.artUIStyleObject : this.defaultArtUI)
       )
       .onClick(() => {
         // 不触发点击事件的场景：
@@ -141,7 +142,7 @@ export struct HPRichText {
             }
           }
         } else if (item.node === 'text') {
-          // 兜底如果无标签包裹的纯文本渲染
+          // 兜底如果无标签包裹的纯文本渲染,样式需要继承上一个同级节点样式
           if (!$$.parentNode || (!$$.parentNode.addHarmonyTextTag && $$.parentNode.tagType === 'block')) {
             Text() {
               this.textBuilder({ node: item, index: i, parentNode: $$.parentNode });
@@ -201,7 +202,7 @@ function fancySpan($$: FancySpanOptions = {}) {
 
 @Extend(Text)
 function fancyText($$: FancyTextOptions = {}) {
-  .width($$.width)
+  .width($$.width ?? '100%') // 默认设置 Text 长度100%
   .height($$.height)
   .margin($$.margin)
   .padding($$.padding)
