@@ -2,6 +2,7 @@
  * htmlParser改造自: https://github.com/blowsie/Pure-JavaScript-HTML5-Parser
  */
 import type { PixelUnit, RichTextOption } from '../../../components/hprichtext/index';
+import type { Resource } from '../../types/artUIBase';
 import { ImageFit } from '../../types/artUIEnum';
 import type {
   Attribute,
@@ -63,10 +64,10 @@ class HTMLParser {
   private customHandler: CustomHandler = defaultCustomHandler;
   private imageProp: ImageProp = defaultImageProp;
   private html: string = '';
-  private baseFontSize: number = 16;
+  private baseFontSize: number | Resource = 16;
   private basePixelUnit: PixelUnit = 'vp';
-  private basePixelRatio: number = 1;
-  private baseFontColor: string = '#000000';
+  private basePixelRatio: number | Resource = 1;
+  private baseFontColor: string | Resource = '#000000';
   private last: string = '';
 
   constructor(
@@ -92,7 +93,7 @@ class HTMLParser {
     // node for this element
     const node: NodeInfo = new Node(tag);
 
-    let parent: NodeInfo;
+    let parent: NodeInfo = {};
     if (this.bufArray.length !== 0) {
       parent = this.bufArray[0];
       if (!parent.nodes) {
@@ -114,7 +115,7 @@ class HTMLParser {
       // 优化样式相关属性
       if (name === 'style') {
         const styleObj = parseStyle(value); // parse to object
-        node.artUIStyleObject = parseToArtUI(styleObj, this.baseFontSize);
+        node.artUIStyleObject = parseToArtUI(styleObj, this.baseFontSize as number);
       } else if (value.match(/ /)) {
         // make it array of attribute
         pre[name] = value.split(' ');
@@ -200,7 +201,7 @@ class HTMLParser {
 
     // 子节点继承父节点样式(需要排除不需要继承的样式)
     let htmlStyles = {};
-    htmlStyles = setHtmlAttributes(this.baseFontSize, this.baseFontColor, node.tag);
+    htmlStyles = setHtmlAttributes(this.baseFontSize as number, this.baseFontColor as string, node.tag);
 
     // 整合父标签过滤之后的可继承样式+标签默认样式+自身style样式
     node.artUIStyleObject =
@@ -235,7 +236,7 @@ class HTMLParser {
     // html = replaceBr(html);
     html = replaceEscapeSymbol(html);
     html = strDiscode(html);
-    html = px2Any(html, this.basePixelUnit, this.basePixelRatio);
+    html = px2Any(html, this.basePixelUnit, this.basePixelRatio as number);
     // 判断字符串不是以 HTML 标签开头，则最外层增加div
     if (!startWithHTMLElement(html)) {
       html = addRootDiv(html);

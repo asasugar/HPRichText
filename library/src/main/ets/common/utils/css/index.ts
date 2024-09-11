@@ -153,7 +153,7 @@ export function setHtmlAttributes(baseFontSize: number, baseFontColor: string, t
   }
   // 使用对象映射查找并返回对应标签的样式
   const predefinedStyle =
-    (headingStyles(baseFontSize, baseFontColor)[tagName] || specialStyles(baseFontSize, baseFontColor)[tagName]) ||
+    (headingStyles(baseFontSize as number, baseFontColor as string)[tagName] || specialStyles(baseFontSize as number, baseFontColor as string)[tagName]) ||
       { fontSize: baseFontSize, fontColor: baseFontColor };
   return predefinedStyle;
 }

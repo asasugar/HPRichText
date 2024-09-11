@@ -3,6 +3,10 @@
     {
       "name": "start_window_background",
       "value": "#FFFFFF"
+    },
+    {
+      "name": "base_font_color",
+      "value": "#0211ee"
     }
   ]
 }

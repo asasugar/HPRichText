@@ -1,4 +1,4 @@
-import type { FontAttr, PositionAttr, ResourceColor, ShapeAttr, } from '../../common/types/artUIBase';
+import type { FontAttr, PositionAttr, Resource, ResourceColor, ShapeAttr, } from '../../common/types/artUIBase';
 import { Color } from '../../common/types/artUIEnum';
 
 import type { CustomHandler, ImageProp, NodeInfo } from '../../common/types/htmlParser';
@@ -78,10 +78,10 @@ export type PixelUnit = 'vp' | 'px' | 'fp' | 'lpx';
 
 export interface RichTextOption {
   content: string;
-  baseFontSize?: number;
-  baseFontColor?: string;
+  baseFontSize?: number | Resource;
+  baseFontColor?: string | Resource;
   basePixelUnit?: PixelUnit;
-  basePixelRatio?: number;
+  basePixelRatio?: number | Resource;
   imageProp?: ImageProp;
   customHandler?: CustomHandler;
 }

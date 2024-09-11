@@ -8,7 +8,7 @@ export interface Attribute {
 }
 
 export interface SimpleNode {
-  node: 'element' | 'text' | 'comment';
+  node?: 'element' | 'text' | 'comment';
   text?: string;
   artUIStyleObject?: ArtStyleObject; // 用于继承父级样式
   isInlinePushNode?: boolean;

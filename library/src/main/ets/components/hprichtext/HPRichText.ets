@@ -40,7 +40,7 @@ export struct HPRichText {
   _setDefaultArtUI() {
     return {
       fontSize: `${parseInt(String(this.richTextOption.baseFontSize), 10) *
-        (this.richTextOption.basePixelRatio ?? 1)}${this.richTextOption.basePixelUnit ?? 'vp'}`,
+        (this.richTextOption.basePixelRatio as number ?? 1)}${this.richTextOption.basePixelUnit ?? 'vp'}`,
       fontColor: this.richTextOption.baseFontColor ?? '#000000'
     } as FancySpanOptions
   }

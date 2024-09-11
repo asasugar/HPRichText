@@ -11,6 +11,10 @@
     {
       "name": "EntryAbility_label",
       "value": "label"
+    },
+    {
+      "name": "base_font_size",
+      "value": "30"
     }
   ]
 }
