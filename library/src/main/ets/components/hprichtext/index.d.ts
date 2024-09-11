@@ -14,6 +14,7 @@ export interface TextBuilderOptions {
 export interface NodesBuilderOptions {
   nodes?: NodeInfo[];
   parentNode?: NodeInfo;
+  alreadyAddText?: boolean;
 }
 
 export interface FancySpanOptions extends FontAttr {

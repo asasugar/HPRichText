@@ -481,8 +481,10 @@ class HTMLParser {
       } else if (firstNodesLength === 0 && firstNodes[0]?.nodes) {
         firstNodes[0].nodes.push(node);
       } else {
-        // 进入这个判断代表：这个节点内容是子节点，所以需要继承父级的样式
-        node.artUIStyleObject = firstNodes[0].artUIStyleObject;
+        // 进入这个判断代表：这个节点内容是子节点，所以父级不是isInlinePushNode则需要继承父级的样式
+        if (!firstNodes[0]?.isInlinePushNode) {
+          node.artUIStyleObject = firstNodes[0].artUIStyleObject;
+        }
         firstNodes.push(node);
       }
     } else {

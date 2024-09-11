@@ -131,19 +131,22 @@ export struct HPRichText {
                 this.nodesBuilder({
                   nodes: item.nodes,
                   parentNode: item,
+                  alreadyAddText: true // 避免重复添加Text标签，导致敲套 Text 造成渲染失效问题
                 })
               }
               .fancyText(item?.artUIStyleObject)
             } else {
               this.nodesBuilder({
                 nodes: item.nodes,
-                parentNode: item
+                parentNode: item,
+                alreadyAddText: $$.alreadyAddText
               })
             }
           }
         } else if (item.node === 'text') {
           // 兜底如果无标签包裹的纯文本渲染,样式需要继承上一个同级节点样式
-          if (!$$.parentNode || (!$$.parentNode.addHarmonyTextTag && $$.parentNode.tagType === 'block')) {
+          if (!$$.alreadyAddText &&
+            (!$$.parentNode || (!$$.parentNode.addHarmonyTextTag && !$$.parentNode.isInlinePushNode))) {
             Text() {
               this.textBuilder({ node: item, index: i, parentNode: $$.parentNode });
             }

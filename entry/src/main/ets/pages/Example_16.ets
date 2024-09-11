@@ -4,13 +4,9 @@ import { HPRichText, RichTextOption } from '@ohasasugar/hp-richtext';
 @Component
 struct Index {
   @State richTextOption: RichTextOption = {
-    baseFontSize: 50,
     content: `
-    <span style=\"color:#999999;\">该手机实名人需与我的我的为<\span><span style=\"color:#E53333;\">同一人<\span><span style=\"color:#000;\">，否则请更换<\span>
-       `,
-    imageProp: {
-      webp: true,
-    }
+    你好<p>p标签</p> 文本 <a href=\"http://www.baidu.com\">AAAA 标签</a>
+    `,
   };
 
   build() {
@@ -19,6 +15,7 @@ struct Index {
         richTextOption: $richTextOption,
         needScroll: true,
         onLinkPress: (e) => {
+          console.log(JSON.stringify(e))
           return e;
         }
       })
