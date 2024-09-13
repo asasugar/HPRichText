@@ -13,6 +13,10 @@ export interface FontAttr {
 export interface ShapeAttr {
   width?: string | number;
   height?: string | number;
+  maxWidth?: string | number;
+  maxHeight?: string | number;
+  minWidth?: string | number;
+  minHeight?: string | number;
   margin?: {
     top?: string | number;
     bottom?: string | number;
