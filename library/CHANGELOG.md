@@ -1,5 +1,12 @@
 # Changelog
 
+### [v2.2.6](https://github.com/asasugar/HPRichText/releases/tag/v2.2.6) (2024-09-14)
+
+### Features
+
+* 🎸
+  更新 API12 SDK重新编译发包 ([3f90518](https://github.com/asasugar/HPRichText/commit/3f905189faa9307aa5ef82e1316918350e9b3fec))
+
 ### [v2.2.5](https://github.com/asasugar/HPRichText/releases/tag/v2.2.5) (2024-09-14)
 
 ### Features
