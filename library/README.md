@@ -27,23 +27,13 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v2.2.4](https://github.com/asasugar/HPRichText/releases/tag/v2.2.4) (2024-09-11)
+#### 最近更新：[v2.2.5](https://github.com/asasugar/HPRichText/releases/tag/v2.2.5) (2024-09-14)
 
 ### Features
 
 * 🎸
-  img跟video标签增加点击事件支持&回调参数调整 ([740e5bf](https://github.com/asasugar/HPRichText/commit/740e5bfed11dd6879e09839dd04b724cf551b3c9))
-* 🎸
-  baseFontSize、baseFontColor属性支持Resource类型暴露css中utils方法 ([655fee6](https://github.com/asasugar/HPRichText/commit/655fee65fba77b48c2f28b5631bff318d32eef81))
-
-### Bug Fixes
-
-* 🐛
-  修复嵌套text导致的渲染异常问题 [(#55)](https://github.com/asasugar/HPRichText/issues/55) ([bc83328](https://github.com/asasugar/HPRichText/commit/bc83328588268e13ef8cf5282fcd83e57d13423c))
-
-* 🐛
-  修复嵌套子节点样式丢失问题 [(#52)](https://github.com/asasugar/HPRichText/issues/52) ([429222e](https://github.com/asasugar/HPRichText/commit/429222eaa2d4a28909ffca4e7efdade1ca72f62b))
-
+  新增 ObservedHPRichText
+  组件支持动态生成richTextOption参数 ([0d35d86](https://github.com/asasugar/HPRichText/commit/0d35d862d3d5610285d632c9aeddbb41f9b6a7b4))
 
 ## 简介
 
@@ -148,6 +138,54 @@ struct Index {
 }
 ```
 
+## 增加 ObservedHPRichText 组件，支持动态生成 richTextOption 参数 ([#58](https://github.com/asasugar/HPRichText/issues/58))
+
+```ts
+import { ObservedHPRichText, RichTextOptionModel } from '@ohasasugar/hp-richtext';
+
+
+@Entry
+@Component
+struct Index {
+  @State arr: RichTextOptionModel[] = []
+
+  // 模拟请求接口数据
+  aboutToAppear(): void {
+    for (let i = 0; i < 4; i++) {
+      let o = new RichTextOptionModel();
+      o.content = `<span style="color: #fff">我是 ObservedHPRichText 组件${i}</span>`;
+      this.arr.push(o)
+    }
+  }
+
+  build() {
+    Column() {
+      List({ space: 10 }) {
+        ForEach(this.arr, (item: RichTextOptionModel) => {
+          ListItem() {
+            ObservedHPRichText({
+              observedRichTextOption: item,
+              needScroll: true,
+              onLinkPress: (e) => {
+                console.log(JSON.stringify(e))
+                return e;
+              }
+            })
+              .width('100%')
+              .height(100)
+              .borderRadius(10)
+              .backgroundColor(0x007DFF)
+          }
+        }, (item: number) => JSON.stringify(item))
+      }
+    }
+    .padding(12)
+    .height('100%')
+    .backgroundColor(0xF1F3F5)
+  }
+}
+```
+
 ## richTextOption属性
 
 | 名称             | 类型                   | 必填 | 默认值     | 描述                        |
@@ -211,8 +249,8 @@ Button('改变数据').onClick(() => {
 
 ## onLinkPress属性
 
-| 名称          | 类型            | 必填 | 默认值  | 描述                |
-|-------------|---------------|----|------|-------------------|
+| 名称          | 类型            | 必填 | 默认值  | 描述                                                                                                                            |
+|-------------|---------------|----|------|-------------------------------------------------------------------------------------------------------------------------------|
 | onLinkPress | Function/Null | 否  | null | { text?: string; link?: string; eventFnName?: string }点击标签事件回调（除了a标签以外其他标签需要增加onClick属性，并且回调会返回事件名，需要使用方自己在鸿蒙代码中根据事件名来匹配事件处理） |
 
 ## 注意点

@@ -1,5 +1,13 @@
 # Changelog
 
+### [v2.2.5](https://github.com/asasugar/HPRichText/releases/tag/v2.2.5) (2024-09-14)
+
+### Features
+
+* 🎸
+  新增 ObservedHPRichText 组件支持动态生成richTextOption参数 ([0d35d86](https://github.com/asasugar/HPRichText/commit/0d35d862d3d5610285d632c9aeddbb41f9b6a7b4))
+
+
 ### [v2.2.4](https://github.com/asasugar/HPRichText/releases/tag/v2.2.4) (2024-09-11)
 
 ### Features
