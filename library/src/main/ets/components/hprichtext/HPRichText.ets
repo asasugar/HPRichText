@@ -47,6 +47,10 @@ export struct HPRichText {
     } as FancySpanOptions
   }
 
+  /**
+   * @description: 公共点击事件处理
+   * @returns {*}
+   */
   _commonClick(node: NodeInfo, event: ClickEvent, other: LinkPressParame) {
     if (!node?.attr?.onClick) {
       return;
@@ -60,6 +64,15 @@ export struct HPRichText {
     } catch (error) {
       console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
     }
+  }
+
+  /**
+   * @description: 判断是否需要包裹 Text 标签
+   * @returns {*}
+   */
+  _isNeedRenderText($$: NodesBuilderOptions) {
+    const parentCanAddText = $$.parentNode?.addHarmonyTextTag;
+    return !$$.alreadyAddText && (!$$.parentNode || !parentCanAddText);
   }
 
   /**
@@ -169,8 +182,7 @@ export struct HPRichText {
           }
         } else if (item.node === 'text') {
           // 兜底如果无标签包裹的纯文本渲染,样式需要继承上一个同级节点样式
-          if (!$$.alreadyAddText &&
-            (!$$.parentNode || (!$$.parentNode.addHarmonyTextTag && !$$.parentNode.isInlinePushNode))) {
+          if (this._isNeedRenderText($$)) {
             Text() {
               this.textBuilder({ node: item, index: i, parentNode: $$.parentNode });
             }
