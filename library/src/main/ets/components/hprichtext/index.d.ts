@@ -77,6 +77,8 @@ export interface FancyTextAreaOptions {
 
 export type PixelUnit = 'vp' | 'px' | 'fp' | 'lpx';
 
+
+
 export interface RichTextOption {
   content: string;
   baseFontSize?: number | Resource;
@@ -91,7 +93,7 @@ export interface LinkPressParame {
   text?: string;
   resourceSrc?: string;
   link?: string;
-  clickEvent?: {[x:string]: any};
+  clickEvent?: { [x: string]: any };
   eventFnName?: string;
 }
 

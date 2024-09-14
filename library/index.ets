@@ -1,4 +1,8 @@
-import type {
+import HTMLParser from './src/main/ets/common/utils/html/html-parser';
+
+// 导出ts声明
+// 不支持 export * from 'xx'
+export type {
   ArtStyleObject,
   Attr,
   AttrEnums,
@@ -14,9 +18,8 @@ import type {
   SpecialStyles,
   StyleObject
 } from './src/main/ets/common/types';
-import { excludeExtendsParentArtUIStyle, firstLetterToLowerCase, formatColor, headingStyles, parseStyle, parseToArtUI, setHtmlAttributes, specialStyles, transformObject } from './src/main/ets/common/utils/css/index';
-import HTMLParser from './src/main/ets/common/utils/html/html-parser';
-import type {
+
+export type {
   FancyImageOptions,
   FancySpanOptions,
   FancyTextAreaOptions,
@@ -30,14 +33,26 @@ import type {
   RichTextOption,
   TextBuilderOptions
 } from './src/main/ets/components/hprichtext/index';
-// 导出ts声明
-// 不支持 export * from 'xx'
-export type {
-  ArtStyleObject, Attr, AttrEnums, Attribute, AttrsMap, CustomHandler, FancyImageOptions, FancySpanOptions, FancyTextAreaOptions, FancyTextInputOptions, FancyTextOptions, FancyVideoOptions, HeadingStyle, HtmlParserResult, ImageProp, LinkPressMethod, LinkPressParame, NodeInfo, NodesBuilderOptions, Nullable, PixelUnit, RichTextOption, SimpleNode, SpecialStyles, StyleObject, TextBuilderOptions
-};
 
 // 导出组件
-  export { HPRichText } from './src/main/ets/components/hprichtext/HPRichText';
+export { HPRichText } from './src/main/ets/components/hprichtext/HPRichText';
+
+export { ObservedHPRichText } from './src/main/ets/components/hprichtext/ObservedHPRichText';
 
 // 导出方法
-export { excludeExtendsParentArtUIStyle, firstLetterToLowerCase, formatColor, headingStyles, HTMLParser, parseStyle, parseToArtUI, setHtmlAttributes, specialStyles, transformObject };
+export {
+  excludeExtendsParentArtUIStyle,
+  firstLetterToLowerCase,
+  formatColor,
+  headingStyles,
+  parseStyle,
+  parseToArtUI,
+  setHtmlAttributes,
+  specialStyles,
+  transformObject
+} from './src/main/ets/common/utils/css/index';
+
+// 导出model
+export { RichTextOptionModel } from './src/main/ets/components/hprichtext/model/RichTextOptionModel';
+
+export { HTMLParser };

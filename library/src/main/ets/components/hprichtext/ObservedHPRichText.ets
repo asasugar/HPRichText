@@ -14,15 +14,15 @@ import type {
   LinkPressMethod,
   LinkPressParame,
   NodesBuilderOptions,
-  RichTextOption,
   TextBuilderOptions
 } from './index';
 import HTMLParser from '../../common/utils/html/html-parser';
 import { assign } from '../../common/utils/helperful';
+import { RichTextOptionModel } from './model/RichTextOptionModel';
 
 @Component
-export struct HPRichText {
-  @Link @Watch('onUpdateRichTextOption') richTextOption: RichTextOption;
+export struct ObservedHPRichText {
+  @ObjectLink @Watch('onUpdateRichTextOption') observedRichTextOption: RichTextOptionModel;
   @Prop needScroll: boolean;
   onLinkPress: Nullable<LinkPressMethod> = null;
   @State htmlJson: HtmlParserResult = {
@@ -30,20 +30,16 @@ export struct HPRichText {
   };
   @State defaultArtUI: FancySpanOptions = {};
 
-  // getBlockIndex(node?: NodeInfo): number {
-  //   const index = node?.nodes?.findIndex(n => n.tagType === 'block');
-  //   return index as number;
-  // }
-
   /**
    * @description: 生成默认样式为push的子节点添加默认样式
    * @returns {*}
    */
   _setDefaultArtUI() {
     return {
-      fontSize: `${parseInt(String(this.richTextOption.baseFontSize), 10) *
-        (this.richTextOption.basePixelRatio as number ?? 1)}${this.richTextOption.basePixelUnit ?? 'vp'}`,
-      fontColor: this.richTextOption.baseFontColor ?? '#000000'
+      fontSize: `${parseInt(String(this.observedRichTextOption?.baseFontSize), 10) *
+        (this.observedRichTextOption?.basePixelRatio as number ?? 1)}${this.observedRichTextOption?.basePixelUnit ??
+        'vp'}`,
+      fontColor: this.observedRichTextOption?.baseFontColor ?? '#000000'
     } as FancySpanOptions
   }
 
@@ -185,7 +181,7 @@ export struct HPRichText {
 
   // 监听到richTextOption参数变化则重新触发 HTML转化函数
   onUpdateRichTextOption() {
-    const htmlParser = new HTMLParser(this.richTextOption);
+    const htmlParser = new HTMLParser(this.observedRichTextOption || new RichTextOptionModel());
     this.defaultArtUI = this._setDefaultArtUI(); // 生成默认样式
     this.htmlJson = htmlParser.html2json();
     // console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
@@ -193,7 +189,7 @@ export struct HPRichText {
 
   // 初始化更新
   aboutToAppear() {
-    if (this.richTextOption.content) {
+    if (this.observedRichTextOption?.content) {
       this.onUpdateRichTextOption();
     }
   }
