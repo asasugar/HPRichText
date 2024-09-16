@@ -153,6 +153,7 @@ export struct HPRichText {
               .onClick((event) => {
                 this._commonClick(item, event, { resourceSrc: item.attr?.src })
               });
+
           } else if (item.tag === 'input') {
             TextInput({ text: item?.attr?.value, placeholder: item?.attr?.placeholder })
               .fancyTextInput(item?.artUIStyleObject, item?.attr);
@@ -269,6 +270,12 @@ function fancyText($$: FancyTextOptions = {}) {
 function fancyImage($$: FancyImageOptions = {}, attrs: Attr = {}) {
   .width($$.width)
   .height($$.height)
+  .constraintSize({
+    maxWidth: $$.maxWidth,
+    maxHeight: $$.maxHeight,
+    minWidth: $$.minWidth,
+    minHeight: $$.minHeight,
+  })
   .margin($$.margin)
   .padding($$.padding)
   .alt(attrs.alt)

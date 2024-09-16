@@ -35,6 +35,7 @@ import {
 import Node from './node';
 import { px2Any } from './pixelUnit';
 import Stack from './stack';
+import { JSON } from '@kit.ArkTS';
 
 // 默认自定义标签匹配处理方法
 const defaultCustomHandler: CustomHandler = {
@@ -116,6 +117,7 @@ class HTMLParser {
       if (name === 'style') {
         const styleObj = parseStyle(value); // parse to object
         node.artUIStyleObject = parseToArtUI(styleObj, this.baseFontSize as number);
+        // console.log('run styleObj', JSON.stringify(styleObj), JSON.stringify(node.artUIStyleObject))
       } else if (value.match(/ /)) {
         // make it array of attribute
         pre[name] = value.split(' ');
@@ -155,6 +157,11 @@ class HTMLParser {
       this.assignArtUIStyleObject(node, {
         width: node?.artUIStyleObject?.width || node.attr.width,
         height: node?.artUIStyleObject?.height || node.attr.height,
+        maxWidth: node?.artUIStyleObject?.maxWidth,
+        maxHeight: node?.artUIStyleObject?.maxHeight,
+        minWidth: node?.artUIStyleObject?.minWidth,
+        minHeight: node?.artUIStyleObject?.minHeight,
+
         objectFit:
         this.imageProp.objectFit === 'Cover' ? ImageFit.Cover :
           this.imageProp.objectFit === 'Auto' ? ImageFit.Auto :

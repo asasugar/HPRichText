@@ -5,6 +5,10 @@ import type { AttrEnums, AttrsMap } from '../../types/consants';
 export const attrsMap: AttrsMap = {
   'width': 'width',
   'height': 'height',
+  'max-width': 'maxWidth',
+  'max-height': 'maxHeight',
+  'min-width': 'minWidth',
+  'min-height': 'minHeight',
   'z-index': 'zIndex',
   'margin': { margin: ['top', 'right', 'bottom', 'left'] },
   'padding': { padding: ['top', 'right', 'bottom', 'left'] },
