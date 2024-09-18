@@ -1,10 +1,39 @@
 # hp-richtext 是一个适用于 Harmony 的富文本解析组件。
 
+## ComponentV2 API升级，需要使用请升级v3.0.0版本(对V1版本向下兼容)
+
+1. 参数变更 {richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}} => richTextModel: {richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}}
+
+2. 用法参考，Example可参照：[V2用法示例](https://github.com/asasugar/HPRichText/blob/master/entry/src/main/ets/pages/V2/Index.ets)
+  ```ets
+    import { HPRichTextV2, RichTextOptionModelV2 } from '@ohasasugar/hp-richtext';
+    @Entry
+    @Component
+    struct Index {
+      optionModel: RichTextOptionModelV2 = new RichTextOptionModelV2();
+      aboutToAppear() {
+        this.optionModel.richTextOption = {
+          content: '我是 ComponentV2 的 HPRichText 组件',
+          imageProp: {
+            webp: true,
+          }
+        }
+      }
+      build() {
+        Column() {
+          HPRichTextV2({
+            richTextModel: this.optionModel
+          })
+        }
+      }
+    }
+  ```
+
 ## 别忘了帮我点一个小星星鼓励一下🌟🌟～
 
 如果需要直接运行该代码示例，需要
 
-方式一：安装最新的DevEco Studio从NEXT Developer Beta1；
+方式一：安装最新的DevEco Studio从 NEXT Developer Beta1；
 
 方式二：老版本运行，切换到[v1.0.8](https://github.com/asasugar/HPRichText/releases/tag/v1.0.8)
 
@@ -27,20 +56,13 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v2.2.6](https://github.com/asasugar/HPRichText/releases/tag/v2.2.6) (2024-09-14)
+
+#### 最近更新：[v3.0.0](https://github.com/asasugar/HPRichText/releases/tag/v3.0.0) (2024-09-18)
 
 ### Features
 
 * 🎸
-  更新 API12 SDK重新编译发包 ([3f90518](https://github.com/asasugar/HPRichText/commit/3f905189faa9307aa5ef82e1316918350e9b3fec))
-
-#### 最近更新：[v2.2.5](https://github.com/asasugar/HPRichText/releases/tag/v2.2.5) (2024-09-14)
-
-### Features
-
-* 🎸
-  新增 ObservedHPRichText
-  组件支持动态生成richTextOption参数 ([0d35d86](https://github.com/asasugar/HPRichText/commit/0d35d862d3d5610285d632c9aeddbb41f9b6a7b4))
+  升级 @ComponentV2装饰器 组件 [#60](https://github.com/asasugar/HPRichText/issues/60)([be583b6](https://github.com/asasugar/HPRichText/commit/be583b60c0ecf4a88b607dbd96f6cfca899c4e1d))
 
 ## 简介
 

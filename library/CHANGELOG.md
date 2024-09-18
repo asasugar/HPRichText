@@ -1,5 +1,12 @@
 # Changelog
 
+### [v3.0.0](https://github.com/asasugar/HPRichText/releases/tag/v3.0.0) (2024-09-18)
+
+### Features
+
+- 🎸
+  升级 @ComponentV2装饰器 组件 [#60](https://github.com/asasugar/HPRichText/issues/60)([be583b6](https://github.com/asasugar/HPRichText/commit/be583b60c0ecf4a88b607dbd96f6cfca899c4e1d))
+
 ### [v2.2.6](https://github.com/asasugar/HPRichText/releases/tag/v2.2.6) (2024-09-14)
 
 ### Features
