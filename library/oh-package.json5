@@ -9,8 +9,8 @@
     "rich-text",
     "harmony",
     "harmony-rich-text",
-    "@Component",
-    "@ComponentV2"
+    "Component",
+    "ComponentV2"
   ],
   "main": "index.ets",
   "author": "asasugar",
