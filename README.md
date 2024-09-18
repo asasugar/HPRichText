@@ -2,7 +2,7 @@
 
 ## ComponentV2 API升级，需要使用请升级v3.0.0版本(对V1版本向下兼容)
 
-1. 参数变更 {richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}} => richTextModel: {richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}}
+1. 参数变更 `{richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}}` 变更至 `{richTextModel: {richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}}}`
 
 2. 用法参考，Example可参照：[V2用法示例](https://github.com/asasugar/HPRichText/blob/master/entry/src/main/ets/pages/V2/Index.ets)
 
@@ -11,9 +11,9 @@
     @Entry
     @Component
     struct Index {
-      optionModel: RichTextOptionModelV2 = new RichTextOptionModelV2();
+      richTextModel: RichTextOptionModelV2 = new RichTextOptionModelV2();
       aboutToAppear() {
-        this.optionModel.richTextOption = {
+        this.richTextModel.richTextOption = {
           content: '我是 ComponentV2 的 HPRichText 组件',
           imageProp: {
             webp: true,
@@ -23,7 +23,7 @@
       build() {
         Column() {
           HPRichTextV2({
-            richTextModel: this.optionModel
+            richTextModel: this.richTextModel
           })
         }
       }

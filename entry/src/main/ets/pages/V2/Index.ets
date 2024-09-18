@@ -4,10 +4,10 @@ import { imgUrl } from '../constant';
 @Entry
 @Component
 struct Index {
-  optionModel: RichTextOptionModelV2 = new RichTextOptionModelV2();
+  richTextModel: RichTextOptionModelV2 = new RichTextOptionModelV2();
 
   aboutToAppear() {
-    this.optionModel.richTextOption = {
+    this.richTextModel.richTextOption = {
       content: `
       <h1 style="text-indent: 200px">h1标签</h1>
       <h2>h2标签</h2>
@@ -49,8 +49,8 @@ struct Index {
         webp: true,
       },
     }
-    this.optionModel.needScroll = true;
-    this.optionModel.onLinkPress = (e) => {
+    this.richTextModel.needScroll = true;
+    this.richTextModel.onLinkPress = (e) => {
       return e;
     };
   }
@@ -58,14 +58,14 @@ struct Index {
   build() {
     Column() {
       Button('改变数据').onClick(() => {
-        this.optionModel.richTextOption = {
+        this.richTextModel.richTextOption = {
           baseFontSize: 50,
           baseFontColor: '#ecd88d',
           content: '我是改变之后的数据，如通过ajax请求返回的数据'
         }
       })
       HPRichTextV2({
-        richTextModel: this.optionModel
+        richTextModel: this.richTextModel
       })
     }
   }
