@@ -200,7 +200,7 @@ export struct HPRichText {
     const htmlParser = new HTMLParser(this.richTextOption);
     this.defaultArtUI = this._setDefaultArtUI(); // 生成默认样式
     this.htmlJson = htmlParser.html2json();
-    console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
+    // console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
 
   // 初始化更新
