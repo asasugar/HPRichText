@@ -35,9 +35,11 @@ export type {
 } from './src/main/ets/components/hprichtext/index';
 
 // 导出组件
-export { HPRichText } from './src/main/ets/components/hprichtext/HPRichText';
+export { HPRichText } from './src/main/ets/components/hprichtext/HPRichText'; // v1基础组件
 
-export { ObservedHPRichText } from './src/main/ets/components/hprichtext/ObservedHPRichText';
+export { ObservedHPRichText } from './src/main/ets/components/hprichtext/ObservedHPRichText'; // v1 observed组件
+
+export { HPRichTextV2 } from './src/main/ets/components/hprichtext/HPRichTextV2'; // v2组件
 
 // 导出方法
 export {
@@ -54,5 +56,7 @@ export {
 
 // 导出model
 export { RichTextOptionModel } from './src/main/ets/components/hprichtext/model/RichTextOptionModel';
+
+export { RichTextOptionModelV2 } from './src/main/ets/components/hprichtext/model/RichTextOptionModelV2';
 
 export { HTMLParser };

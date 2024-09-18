@@ -1,8 +1,11 @@
 /**
  * HPRichText: https://github.com/asasugar/HPRichText
  * @Author: asasugar<xxj95719@gmail.com>
+ * 在@ComponentV2装饰的自定义组件中，开发者仅可以使用全新的状态变量装饰器，包括@Local、@Param、@Once、@Event、@Provider、@Consumer等。
+ * @ComponentV2装饰的自定义组件暂不支持组件复用、LocalStorage等现有自定义组件的能力。
+ * 无法同时使用@ComponentV2与@Component装饰同一个struct结构。
+ * @ComponentV2支持一个可选的boolean类型参数freezeWhenInactive，来实现组件冻结功能。
  */
-import type { Nullable } from '../../common/types/common';
 import type { Attr, HtmlParserResult, NodeInfo } from '../../common/types/htmlParser';
 import type {
   FancyImageOptions,
@@ -11,29 +14,29 @@ import type {
   FancyTextInputOptions,
   FancyTextOptions,
   FancyVideoOptions,
-  LinkPressMethod,
   LinkPressParame,
   NodesBuilderOptions,
-  RichTextOption,
   TextBuilderOptions
 } from './index';
 import HTMLParser from '../../common/utils/html/html-parser';
 import { assign } from '../../common/utils/helperful';
+import { RichTextOptionModelV2 } from './model/RichTextOptionModelV2';
 
-@Component
-export struct HPRichText {
-  @Link @Watch('onUpdateRichTextOption') richTextOption: RichTextOption;
-  @Prop needScroll: boolean;
-  onLinkPress: Nullable<LinkPressMethod> = null;
-  @State htmlJson: HtmlParserResult = {
-    nodes: []
+@ComponentV2
+export struct HPRichTextV2 {
+  @Param
+  richTextModel: RichTextOptionModelV2 = new RichTextOptionModelV2();
+  @Local
+  defaultArtUI: FancySpanOptions = {};
+
+  @Computed
+  get htmlJson(): HtmlParserResult {
+    const htmlParser = new HTMLParser(this.richTextModel.richTextOption);
+    this.defaultArtUI = this._setDefaultArtUI(); // 生成默认样式
+    const htmlJson = htmlParser.html2json();
+    // console.log('转化之后的html', JSON.stringify?.(htmlJson.nodes));
+    return htmlJson;
   };
-  @State defaultArtUI: FancySpanOptions = {};
-
-  // getBlockIndex(node?: NodeInfo): number {
-  //   const index = node?.nodes?.findIndex(n => n.tagType === 'block');
-  //   return index as number;
-  // }
 
   /**
    * @description: 生成默认样式为push的子节点添加默认样式
@@ -41,38 +44,27 @@ export struct HPRichText {
    */
   _setDefaultArtUI() {
     return {
-      fontSize: `${parseInt(String(this.richTextOption.baseFontSize), 10) *
-        (this.richTextOption.basePixelRatio as number ?? 1)}${this.richTextOption.basePixelUnit ?? 'vp'}`,
-      fontColor: this.richTextOption.baseFontColor ?? '#000000'
+      fontSize: `${parseInt(String(this.richTextModel.richTextOption?.baseFontSize), 10) *
+        (this.richTextModel.richTextOption?.basePixelRatio as number ??
+          1)}${this.richTextModel.richTextOption?.basePixelUnit ??
+        'vp'}`,
+      fontColor: this.richTextModel.richTextOption?.baseFontColor ?? '#000000'
     } as FancySpanOptions
   }
 
-  /**
-   * @description: 公共点击事件处理
-   * @returns {*}
-   */
   _commonClick(node: NodeInfo, event: ClickEvent, other: LinkPressParame) {
     if (!node?.attr?.onClick) {
       return;
     }
     // 增加回调事件
     try {
-      this.onLinkPress?.(assign(other, {
+      this.richTextModel.onLinkPress?.(assign(other, {
         eventFnName: node?.attr?.onClick,
         clickEvent: event
       }));
     } catch (error) {
       console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
     }
-  }
-
-  /**
-   * @description: 判断是否需要包裹 Text 标签
-   * @returns {*}
-   */
-  _isNeedRenderText($$: NodesBuilderOptions) {
-    const parentCanAddText = $$.parentNode?.addHarmonyTextTag;
-    return !$$.alreadyAddText && (!$$.parentNode || !parentCanAddText);
   }
 
   /**
@@ -115,7 +107,7 @@ export struct HPRichText {
         }
         // 增加回调事件
         try {
-          this.onLinkPress?.({
+          this.richTextModel.onLinkPress?.({
             text: $$.node.text,
             link: $$.parentNode?.attr?.href,
             eventFnName: $$.parentNode?.attr?.onClick,
@@ -182,7 +174,8 @@ export struct HPRichText {
           }
         } else if (item.node === 'text') {
           // 兜底如果无标签包裹的纯文本渲染,样式需要继承上一个同级节点样式
-          if (this._isNeedRenderText($$)) {
+          if (!$$.alreadyAddText &&
+            (!$$.parentNode || (!$$.parentNode.addHarmonyTextTag && !$$.parentNode.isInlinePushNode))) {
             Text() {
               this.textBuilder({ node: item, index: i, parentNode: $$.parentNode });
             }
@@ -195,23 +188,8 @@ export struct HPRichText {
     }
   }
 
-  // 监听到richTextOption参数变化则重新触发 HTML转化函数
-  onUpdateRichTextOption() {
-    const htmlParser = new HTMLParser(this.richTextOption);
-    this.defaultArtUI = this._setDefaultArtUI(); // 生成默认样式
-    this.htmlJson = htmlParser.html2json();
-    console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
-  }
-
-  // 初始化更新
-  aboutToAppear() {
-    if (this.richTextOption.content) {
-      this.onUpdateRichTextOption();
-    }
-  }
-
   build() {
-    if (this.needScroll) {
+    if (this.richTextModel.needScroll) {
       Scroll() {
         Column() {
           this.nodesBuilder({ nodes: this.htmlJson.nodes });
