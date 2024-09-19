@@ -26,6 +26,11 @@ export interface FancySpanOptions extends FontAttr {
   letterSpacing?: string;
 }
 
+export interface FancyContainerSpanOptions {
+  backgroundColor?: Color | number | string | ResourceColor;
+  borderRadius?: string;
+}
+
 export interface FancyTextOptions extends FontAttr, ShapeAttr, PositionAttr {
   zIndex?: number;
   opacity?: number;
@@ -78,7 +83,6 @@ export interface FancyTextAreaOptions {
 export type PixelUnit = 'vp' | 'px' | 'fp' | 'lpx';
 
 
-
 export interface RichTextOption {
   content: string;
   baseFontSize?: number | Resource;
@@ -99,4 +103,10 @@ export interface LinkPressParame {
 
 export interface LinkPressMethod<T = LinkPressParame> {
   (arg: T): T | void
+}
+
+
+export interface SpanBuilderInstall {
+  defaultArtUI?: FancySpanOptions;
+  onLinkPress?: LinkPressMethod
 }

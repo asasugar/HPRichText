@@ -20,6 +20,6 @@ export class RichTextOptionModelV2 {
   }
   // needScroll变化时自动刷新组件
   @Trace
-  needScroll: boolean = true;
-  onLinkPress: Nullable<LinkPressMethod>;
+  needScroll?: boolean = true;
+  onLinkPress?: LinkPressMethod;
 }
