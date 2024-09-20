@@ -3,7 +3,7 @@
  */
 import type { PixelUnit, RichTextOption } from '../../../components/hprichtext/index';
 import type { Resource } from '../../types/artUIBase';
-import { ImageFit } from '../../types/artUIEnum';
+import { Color, ImageFit } from '../../types/artUIEnum';
 import type {
   Attribute,
   CustomHandler,
@@ -484,7 +484,7 @@ class HTMLParser {
         firstNodes[firstNodesLength-1]?.tagType !== 'block' && firstNodes[firstNodesLength-1]?.nodes) {
         firstNodes[firstNodesLength-1].isInlinePushNode = true;
         if (!this.bufArray.length) {
-          node.artUIStyleObject = {}
+          node.artUIStyleObject = this.defaultArtUI();
         }
         firstNodes[firstNodesLength-1].nodes?.push(node);
       } else if (firstNodesLength === 0 && firstNodes[0]?.nodes) {
@@ -530,6 +530,14 @@ class HTMLParser {
       node.artUIStyleObject = {};
     }
     Object.assign(node.artUIStyleObject, artUIStyleObject);
+  }
+
+  private defaultArtUI() {
+    return {
+      fontSize: `${parseInt(String(this?.baseFontSize), 10) *
+        (this.basePixelRatio as number)}${this.basePixelUnit}`,
+      fontColor: this.baseFontColor as Color
+    }
   }
 }
 

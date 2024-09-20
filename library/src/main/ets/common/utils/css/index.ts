@@ -232,60 +232,65 @@ export function headingStyles(baseFontSize: number, baseFontColor: string): Head
  */
 export function specialStyles(baseFontSize: number, baseFontColor: string): SpecialStyles {
   const baseStyles: SpecialStyles = {
-    b: { fontWeight: FontWeight.Bold, fontColor: baseFontColor },
-    strong: { fontWeight: FontWeight.Bold, fontColor: baseFontColor },
+    b: { fontWeight: FontWeight.Bold, fontColor: baseFontColor, fontSize: baseFontSize  },
+    strong: { fontWeight: FontWeight.Bold, fontColor: baseFontColor, fontSize: baseFontSize  },
     p: {
       fontSize: baseFontSize,
       fontColor: baseFontColor,
       margin: { top: 0.625 * baseFontSize, bottom: 0.625 * baseFontSize }
     },
     div: { fontSize: baseFontSize, fontColor: baseFontColor },
-    i: { fontStyle: FontStyle.Italic, fontColor: baseFontColor },
-    cite: { fontStyle: FontStyle.Italic, fontColor: baseFontColor },
-    em: { fontStyle: FontStyle.Italic, fontColor: baseFontColor },
-    var: { fontStyle: FontStyle.Italic, fontColor: baseFontColor },
-    address: { fontStyle: FontStyle.Italic, fontColor: baseFontColor },
+    i: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize  },
+    cite: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize  },
+    em: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize  },
+    var: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize  },
+    address: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize  },
     pre: {
       fontFamily: 'monospace',
       fontColor: baseFontColor,
       backgroundColor: '#f5f5f5',
       padding: 0.625 * baseFontSize,
-      margin: { top: 0.625 * baseFontSize, bottom: 0.625 * baseFontSize }
+      margin: { top: 0.625 * baseFontSize, bottom: 0.625 * baseFontSize },
+      fontSize: baseFontSize
     },
-    code: { fontColor: baseFontColor, fontFamily: 'monospace', backgroundColor: '#f5f5f5' },
-    tt: { fontFamily: 'monospace', fontColor: baseFontColor },
-    kbd: { fontFamily: 'monospace', fontColor: baseFontColor },
-    samp: { fontFamily: 'monospace', fontColor: baseFontColor },
+    code: { fontColor: baseFontColor, fontFamily: 'monospace', backgroundColor: '#f5f5f5', fontSize: baseFontSize  },
+    tt: { fontFamily: 'monospace', fontColor: baseFontColor, fontSize: baseFontSize  },
+    kbd: { fontFamily: 'monospace', fontColor: baseFontColor, fontSize: baseFontSize  },
+    samp: { fontFamily: 'monospace', fontColor: baseFontColor, fontSize: baseFontSize  },
     big: { fontSize: 1.75 * baseFontSize, fontColor: baseFontColor },
     small: { fontSize: 0.9 * baseFontSize, fontColor: baseFontColor },
     sub: { fontSize: 0.75 * baseFontSize, fontColor: baseFontColor }, // 0.625 * baseFontSize
     sup: { fontSize: 0.75 * baseFontSize, fontColor: baseFontColor }, // -0.625 * baseFontSize
-    s: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor },
-    strike: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor },
-    del: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor },
-    a: { fontColor: Color.Blue, decoration: { type: TextDecorationType.Underline, color: Color.Blue } },
+    s: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor, fontSize: baseFontSize  },
+    strike: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor, fontSize: baseFontSize  },
+    del: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor, fontSize: baseFontSize  },
+    a: { fontColor: Color.Blue, decoration: { type: TextDecorationType.Underline, color: Color.Blue }, fontSize: baseFontSize },
     video: {
       textAlign: TextAlign.Center,
       margin: { top: 0.75 * baseFontSize, bottom: 0.75 * baseFontSize },
+      fontSize: baseFontSize,
       fontColor: baseFontColor
     },
     blockquote: {
       fontColor: baseFontColor,
+      fontSize: baseFontSize,
       margin: { top: 0.75 * baseFontSize, bottom: 0.75 * baseFontSize },
       padding: { top: 1.5 * baseFontSize, bottom: 1.5 * baseFontSize, left: 1.5 * baseFontSize }
     },
     ol: {
       margin: { top: 1.25 * baseFontSize, bottom: 1.25 * baseFontSize },
       padding: { left: 2.125 * baseFontSize },
-      fontColor: baseFontColor
+      fontColor: baseFontColor,
+      fontSize: baseFontSize,
     },
     ul: {
       margin: { top: 1.25 * baseFontSize, bottom: 1.25 * baseFontSize },
       padding: { left: 2.125 * baseFontSize },
-      fontColor: baseFontColor
+      fontColor: baseFontColor,
+      fontSize: baseFontSize,
     },
-    u: { decoration: { type: TextDecorationType.Underline }, fontColor: baseFontColor },
-    hide: { visibility: Visibility.None, fontColor: baseFontColor },
+    u: { decoration: { type: TextDecorationType.Underline }, fontColor: baseFontColor, fontSize: baseFontSize },
+    hide: { visibility: Visibility.None, fontColor: baseFontColor, fontSize: baseFontSize },
     input: { fontSize: baseFontSize, fontColor: baseFontColor },
     textarea: { fontSize: baseFontSize, fontColor: baseFontColor },
   };

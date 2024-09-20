@@ -7,6 +7,7 @@ struct Index {
 
   aboutToAppear() {
     this.richTextModel.richTextOption = {
+      baseFontSize: 30,
       content: `
     <a href='https://u.jd.com/R8nDgYF'>点击链接1 </a> 测试链接1<br><a href='https://jingfen.jd.com/item'>点击链接2 </a> 测试链接2<br>测试链接2<br><a href='https://jingfen.jd.com/item.html'>购买 </a>
     `,

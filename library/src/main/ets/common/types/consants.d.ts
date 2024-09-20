@@ -2,6 +2,22 @@ import { BorderStyle, Color, FontStyle, TextAlign, TextDecorationType, TextOverf
 
 export type AttrsMap = Record<string, string | Record<string, string[]>>;
 
+export interface BaseFontAttrs {
+  fontColor: string;
+  fontSize: number | string;
+}
+
+export interface BaseFontAttrsWithStyle extends BaseFontAttrs{
+  fontStyle: FontStyle;
+}
+
+export interface BaseFontAttrsWithWeight extends BaseFontAttrs{
+  fontWeight: number | string;
+}
+
+export interface BaseFontAttrsWithFamily extends BaseFontAttrs{
+  fontFamily: string;
+}
 
 export interface AttrEnums {
   'border': {
@@ -46,123 +62,58 @@ export interface HeadingStyle {
 }
 
 export interface SpecialStyles {
-  b: {
-    fontWeight: number | string;
-    fontColor: string;
-  };
-  strong: {
-    fontWeight: number | string;
-    fontColor: string;
-  };
+  b: BaseFontAttrsWithWeight;
+  strong: BaseFontAttrsWithWeight;
   p: {
-    fontSize: number | string;
-    fontColor: string;
     margin: {
       top: number;
       bottom: number;
     };
-  };
-  div: {
-    fontSize: number | string;
-    fontColor: string;
-  };
-  i: {
-    fontStyle: FontStyle;
-    fontColor: string;
-  };
-  cite: {
-    fontStyle: FontStyle;
-    fontColor: string;
-  };
-  em: {
-    fontStyle: FontStyle;
-    fontColor: string;
-  };
-  var: {
-    fontStyle: FontStyle;
-    fontColor: string;
-  };
-  address: {
-    fontStyle: FontStyle;
-    fontColor: string;
-  };
+  } & BaseFontAttrs;
+  div: BaseFontAttrs;
+  i: BaseFontAttrsWithStyle;
+  cite: BaseFontAttrsWithStyle;
+  em: BaseFontAttrsWithStyle;
+  var: BaseFontAttrsWithStyle;
+  address: BaseFontAttrsWithStyle;
   pre: {
-    fontFamily: string;
-    fontColor: string;
     backgroundColor: string;
     padding: number;
     margin: {};
-  };
+  } & BaseFontAttrsWithFamily;
   code: {
-    fontFamily: string;
-    fontColor: string;
     backgroundColor: string;
-  };
-  tt: {
-    fontFamily: string;
-    fontColor: string;
-  };
-  kbd: {
-    fontFamily: string;
-    fontColor: string;
-  };
-  samp: {
-    fontFamily: string;
-    fontColor: string;
-  };
-  big: {
-    fontSize: number | string;
-    fontColor: string;
-  };
-  small: {
-    fontSize: number | string;
-    fontColor: string;
-  };
-  sub: {
-    fontSize: number | string;
-    fontColor: string;
-    // offset?: {
-    //   x?: number
-    //   y?: number;
-    // };
-  };
-  sup: {
-    fontSize: number | string;
-    fontColor: string;
-    // offset?: {
-    //   x?: number
-    //   y?: number;
-    // };
-  };
+  } & BaseFontAttrsWithFamily;
+  tt: BaseFontAttrsWithFamily;
+  kbd: BaseFontAttrsWithFamily;
+  samp: BaseFontAttrsWithFamily;
+  big: BaseFontAttrs;
+  small: BaseFontAttrs;
+  sub: BaseFontAttrs;
+  sup: BaseFontAttrs;
   s: {
     decoration: { type: TextDecorationType; };
-    fontColor: string;
-  };
+  } & BaseFontAttrs;
   strike: {
     decoration: { type: TextDecorationType; };
-    fontColor: string;
-  };
+  } & BaseFontAttrs;
   del: {
     decoration: { type: TextDecorationType; };
-    fontColor: string;
-  };
+  } & BaseFontAttrs;
   a: {
-    fontColor: Color;
     decoration: {
       type: TextDecorationType;
       color: Color;
     };
-  };
+  } & BaseFontAttrs;
   video: {
     textAlign: TextAlign;
-    fontColor: string;
     margin: {
       top: number;
       bottom: number;
     };
-  };
+  } & BaseFontAttrs;
   blockquote: {
-    fontColor: string;
     margin: {
       top: number;
       bottom: number;
@@ -172,37 +123,27 @@ export interface SpecialStyles {
       bottom: number;
       left: number;
     };
-  };
+  } & BaseFontAttrs;
   ol: {
-    fontColor: string;
     margin: {
       top: number;
       bottom: number;
     };
     padding: { left: number; };
-  };
+  } & BaseFontAttrs;
   ul: {
-    fontColor: string;
     margin: {
       top: number;
       bottom: number;
     };
     padding: { left: number; };
-  };
+  } & BaseFontAttrs;
   u: {
     decoration: { type: TextDecorationType; };
-    fontColor: string;
-  };
+  } & BaseFontAttrs;
   hide: {
     visibility: Visibility;
-    fontColor: string;
-  };
-  input: {
-    fontSize: number | string;
-    fontColor: string;
-  };
-  textarea: {
-    fontSize: number | string;
-    fontColor: string;
-  };
+  } & BaseFontAttrs;
+  input: BaseFontAttrs;
+  textarea: BaseFontAttrs;
 }
