@@ -1,17 +1,14 @@
 import { HPRichTextV2, RichTextOptionModelV2 } from '@ohasasugar/hp-richtext';
 
-// import { imgUrl } from '../constant';
-
 @Entry
 @Component
 struct Index {
   richTextModel: RichTextOptionModelV2 = new RichTextOptionModelV2();
 
-  // <img width="500px" src="${imgUrl}" />
   aboutToAppear() {
     this.richTextModel.richTextOption = {
       content: `
-      <div style="background-color: blue">我是带<span style="background-color: red">背景色的span标签<i>ddddddd</i>777777777</span>111<p>222</p></div>
+    <a href='https://u.jd.com/R8nDgYF'>点击链接1 </a> 测试链接1<br><a href='https://jingfen.jd.com/item'>点击链接2 </a> 测试链接2<br>测试链接2<br><a href='https://jingfen.jd.com/item.html'>购买 </a>
     `,
       imageProp: {
         webp: true,
@@ -19,19 +16,13 @@ struct Index {
     }
     this.richTextModel.needScroll = true;
     this.richTextModel.onLinkPress = (e) => {
+      console.log("点击：", JSON.stringify(e))
       return e;
     };
   }
 
   build() {
     Column() {
-      Button('改变数据').onClick(() => {
-        this.richTextModel.richTextOption = {
-          baseFontSize: 50,
-          baseFontColor: '#ecd88d',
-          content: '我是改变之后的数据，如通过ajax请求返回的数据'
-        }
-      })
       HPRichTextV2({
         richTextModel: this.richTextModel
       })

@@ -3,10 +3,7 @@ import type { FancySpanOptions, SpanBuilderInstall, TextBuilderOptions } from '.
 @Builder
 export function spanBuilder($$: TextBuilderOptions, install: SpanBuilderInstall) {
   Span($$.node.text)
-    .fancySpan($$.node?.artUIStyleObject ||
-      (!$$.parentNode?.isInlinePushNode || ($$.parentNode?.isInlinePushNode && $$.index === 0) ?
-        $$.parentNode?.artUIStyleObject : install.defaultArtUI)
-    )
+    .fancySpan($$.node?.artUIStyleObject || $$.parentNode?.artUIStyleObject || install.defaultArtUI)
     .onClick((event) => {
       // 不触发点击事件的场景：
       // 判断父级是否为isInlinePushNode的结构：

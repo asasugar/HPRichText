@@ -20,7 +20,7 @@ struct Index {
         richTextOption: $richTextOption,
         needScroll: true,
         onLinkPress: (e) => {
-          console.log('6', JSON.stringify(e))
+          console.log('点击：', JSON.stringify(e))
           return e;
         }
       })

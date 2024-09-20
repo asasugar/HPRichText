@@ -7,17 +7,18 @@
  * @ComponentV2支持一个可选的boolean类型参数freezeWhenInactive，来实现组件冻结功能。
  */
 import type { HtmlParserResult, NodeInfo } from '../../common/types/htmlParser';
-import type {
-  FancyContainerSpanOptions,
-  FancySpanOptions,
-  FancyTextOptions,
-  NodesBuilderOptions,
-  SpanBuilderInstall
-} from './index';
+import type { FancySpanOptions, FancyTextOptions, NodesBuilderOptions, SpanBuilderInstall } from './index';
 import HTMLParser from '../../common/utils/html/html-parser';
 import { assign } from '../../common/utils/helperful';
 import { RichTextOptionModelV2 } from './model/RichTextOptionModelV2';
-import { imageBuilder, spanBuilder, textAreaBuilder, textInputBuilder, videoBuilder } from './builder/index';
+import {
+  containerSpanBuilder,
+  imageBuilder,
+  spanBuilder,
+  textAreaBuilder,
+  textInputBuilder,
+  videoBuilder
+} from './builder/index';
 import { _isNeedRenderText, _setDefaultArtUI, getRandomKey } from './common';
 
 @ComponentV2
@@ -29,7 +30,7 @@ export struct HPRichTextV2 {
   get htmlJson(): HtmlParserResult {
     const htmlParser = new HTMLParser(this.richTextModel.richTextOption);
     const htmlJson = htmlParser.html2json();
-    console.log('转化之后的html', JSON.stringify?.(htmlJson.nodes));
+    // console.log('转化之后的html', JSON.stringify?.(htmlJson.nodes));
     return htmlJson;
   };
 
@@ -70,7 +71,7 @@ export struct HPRichTextV2 {
             // textarea
             textAreaBuilder(item)
           } else if (item.nodes?.length) {
-            if (item.addHarmonyTextTag && !$$.parentNode?.addHarmonyTextTag) {
+            if (item.addHarmonyTextTag && !$$.parentNode?.addHarmonyTextTag && !$$.alreadyAddText) {
               Text() {
                 this.nodesBuilder({
                   nodes: item.nodes,
@@ -100,19 +101,16 @@ export struct HPRichTextV2 {
             }
             .fancyText(item?.artUIStyleObject || $$.parentNode?.artUIStyleObject)
           } else {
-            // isInlinePushNode的nodes则首位需要单独处理背景色值跟边框radios
-            if ($$.parentNode?.isInlinePushNode && i === 0) {
-              ContainerSpan() {
-                spanBuilder(
-                  {
-                    node: item,
-                    index: i,
-                    parentNode: $$.parentNode
-                  },
-                  this.spanBuilderInstall
-                );
-              }
-              .fancyContainerSpan($$.parentNode.artUIStyleObject)
+            // isInlinePushNode的nodes则首位需要使用 ContainerSpan 单独处理背景色值跟边框radios
+            if (item.artUIStyleObject?.backgroundColor || $$.parentNode?.artUIStyleObject?.backgroundColor) {
+              containerSpanBuilder(
+                {
+                  node: item,
+                  index: i,
+                  parentNode: $$.parentNode
+                },
+                this.spanBuilderInstall
+              )
             } else {
               spanBuilder(
                 {
@@ -144,11 +142,6 @@ export struct HPRichTextV2 {
       .alignItems(HorizontalAlign?.Start)
     }
   }
-}
-
-@Extend(ContainerSpan)
-function fancyContainerSpan($$: FancyContainerSpanOptions = {}) {
-  .textBackgroundStyle({ color: $$.backgroundColor, radius: $$.borderRadius as Dimension | BorderRadiuses })
 }
 
 @Extend(Text)

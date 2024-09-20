@@ -203,9 +203,9 @@ class HTMLParser {
     let htmlStyles = {};
     htmlStyles = setHtmlAttributes(this.baseFontSize as number, this.baseFontColor as string, node.tag);
 
-    // 整合父标签过滤之后的可继承样式+标签默认样式+自身style样式
+    // 整合父标签过滤之后的标签默认样式+可继承样式+自身style样式【顺序很重要】
     node.artUIStyleObject =
-      Object.assign({}, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), htmlStyles, node.artUIStyleObject);
+      Object.assign({}, htmlStyles, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), node.artUIStyleObject);
     // 对纯数字的lineHeight样式特别计算
     const lh: number = +(node.artUIStyleObject?.lineHeight ?? 0);
     const reg = /^\d+(\.\d+)?$/g;
@@ -383,21 +383,19 @@ class HTMLParser {
     this.customHandler?.end?.(node, this.results);
 
     if (node) {
+      const hasBlockNode = node.nodes?.some(i => i.tagType === 'block');
+
       // html第一个节点
       if (this.bufArray.length === 0) {
         // 先判断当前第一个节点是block&&子节点不存在block节点，则添加标识
         // 然后判断当前子节点列表nodes第一项如果是纯文本||子节点列表不存在block节点则添加标识
-        const hasBlockNode = node.nodes?.some(i => i.tagType === 'block');
-        if (node.tagType === 'block') {
-          if (!hasBlockNode) {
-            node.addHarmonyTextTag = true;
-          }
-        } else if (node.nodes?.[0]?.node === 'text') {
+        if (node.tagType === 'block' && !hasBlockNode) {
+          node.addHarmonyTextTag = true;
+        } else if (node.nodes?.length === 1 && node.nodes[0]?.node === 'text') {
           node.addHarmonyTextTag = true;
         } else if (!hasBlockNode) {
           node.addHarmonyTextTag = true;
         }
-
         const firstNodes = this.results.nodes;
         const firstNodesLength = firstNodes.length;
         // 判断如果一级节点存在多个子节点&&当前节点不是block&&上一个节点也不是block节点&&上一个节点存在nodes字段，则将当前节点插入上级节点的子节点nodes下
@@ -416,27 +414,35 @@ class HTMLParser {
         if (!parent.nodes) {
           parent.nodes = [];
         }
-        // ①：当前节点tagType === 'block'，则添加标识
+        // ①：当前节点tagType === 'block' && 子节点不存在block，则添加标识
         // ②：当前节点tagType === 'inline'：
         // a.判断当前父级nodes长度为 1 && 前一个节点是inline && 父节点!==block，则上一个节点添加标识；
         // b.判断当前父级nodes长度为 1 && 前一个节点是block，则当前节点节点添加标识；
-        // c.判断当前父级nodes大于 1 && 前一个节点是block，则当前节点节点添加标识；
+        // c.判断当前父级nodes的最后一个子节点是text节点 && 当前节点存在nodes子节点，则将 text 节点插入到当前节点的nodes数组首位并且当前节点添加标识+父节点中删除插入的节点；
+        // d.判断当前父级nodes大于 1 && 前一个节点是block，则当前节点节点添加标识；
 
         const parentNodes = parent.nodes;
         const parentNodesLength = parentNodes.length;
-        if (node.tagType === 'block') {
+        if (node.tagType === 'block' && !hasBlockNode) {
           node.addHarmonyTextTag = true;
         } else if (node.tagType === 'inline') {
           if (parentNodesLength === 1) {
+
             // a.判断当前父级nodes长度为 1 && 前一个节点是inline && 父节点!==block，则上一个节点添加标识；
             if (parentNodes[parentNodesLength-1]?.tagType === 'inline' && parent?.tagType !== 'block') {
               parentNodes[parentNodesLength-1].addHarmonyTextTag = true;
             } else if (parentNodes[parentNodesLength-1]?.tagType === 'block') {
               // b.判断当前父级nodes长度为 1 && 前一个节点是block，则当前节点节点添加标识；
               node.addHarmonyTextTag = true;
+            } else if (parentNodes[parentNodesLength-1]?.node === 'text' && node.nodes?.length) {
+              // c.判断当前父级nodes的最后一个子节点是text节点&&当前节点存在nodes子节点，则将 text 节点插入到当前节点的nodes数组首位并且当前节点添加标识+父节点中删除插入的节点；
+              parentNodes[parentNodesLength-1].artUIStyleObject = parent.artUIStyleObject;
+              node.nodes.unshift(parentNodes[parentNodesLength-1]);
+              parentNodes.pop();
+              node.addHarmonyTextTag = true;
             }
           } else if (parentNodesLength > 1) {
-            // c.判断当前父级nodes大于 1 && 前一个节点是block，则当前节点节点添加标识；
+            // d.判断当前父级nodes大于 1 && 前一个节点是block，则当前节点节点添加标识；
             if (parentNodes[parentNodesLength-1]?.tagType === 'block') {
               node.addHarmonyTextTag = true;
             }
@@ -477,6 +483,9 @@ class HTMLParser {
       if (firstNodesLength &&
         firstNodes[firstNodesLength-1]?.tagType !== 'block' && firstNodes[firstNodesLength-1]?.nodes) {
         firstNodes[firstNodesLength-1].isInlinePushNode = true;
+        if (!this.bufArray.length) {
+          node.artUIStyleObject = {}
+        }
         firstNodes[firstNodesLength-1].nodes?.push(node);
       } else if (firstNodesLength === 0 && firstNodes[0]?.nodes) {
         firstNodes[0].nodes.push(node);
@@ -494,6 +503,7 @@ class HTMLParser {
       }
       if (parent.nodes.length && parent.nodes[parent.nodes.length-1]?.tagType === 'inline' &&
         parent.nodes[parent.nodes.length-1]?.nodes) {
+        node.artUIStyleObject = parent.artUIStyleObject;
         parent.nodes[parent.nodes.length-1].isInlinePushNode = true;
         parent.nodes[parent.nodes.length-1]?.nodes?.push(node);
       } else {

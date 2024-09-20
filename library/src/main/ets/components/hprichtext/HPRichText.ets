@@ -4,7 +4,6 @@
  */
 import type { HtmlParserResult, NodeInfo } from '../../common/types/htmlParser';
 import type {
-  FancyContainerSpanOptions,
   FancySpanOptions,
   FancyTextOptions,
   LinkPressMethod,
@@ -12,7 +11,15 @@ import type {
   RichTextOption
 } from './index';
 import HTMLParser from '../../common/utils/html/html-parser';
-import { imageBuilder, spanBuilder, textAreaBuilder, textInputBuilder, videoBuilder } from './builder/index';
+import { assign } from '../../common/utils/helperful';
+import {
+  containerSpanBuilder,
+  imageBuilder,
+  spanBuilder,
+  textAreaBuilder,
+  textInputBuilder,
+  videoBuilder
+} from './builder/index';
 import { _isNeedRenderText, _setDefaultArtUI, getRandomKey } from './common';
 
 @Component
@@ -48,7 +55,7 @@ export struct HPRichText {
             // textarea
             textAreaBuilder(item)
           } else if (item.nodes?.length) {
-            if (item.addHarmonyTextTag && !$$.parentNode?.addHarmonyTextTag) {
+            if (item.addHarmonyTextTag && !$$.parentNode?.addHarmonyTextTag && !$$.alreadyAddText) {
               Text() {
                 this.nodesBuilder({
                   nodes: item.nodes,
@@ -56,7 +63,12 @@ export struct HPRichText {
                   alreadyAddText: true // 避免重复添加Text标签，导致敲套 Text 造成渲染失效问题
                 })
               }
-              .fancyText(item?.artUIStyleObject)
+              .fancyText(
+                // 如果isInlinePushNode的节点则Text过滤掉背景色值跟borderRadius，交到第一个 ContainerSpan 节点处理
+                item?.isInlinePushNode ?
+                assign({}, item?.artUIStyleObject, { backgroundColor: null, borderRadius: null }) :
+                  item?.artUIStyleObject
+              )
             } else {
               this.nodesBuilder({
                 nodes: item.nodes,
@@ -83,23 +95,19 @@ export struct HPRichText {
             }
             .fancyText(item?.artUIStyleObject || $$.parentNode?.artUIStyleObject)
           } else {
-
-            // isInlinePushNode的nodes则首位需要单独处理背景色值跟边框radios
-            if ($$.parentNode?.isInlinePushNode && i === 0) {
-              ContainerSpan() {
-                spanBuilder(
-                  {
-                    node: item,
-                    index: i,
-                    parentNode: $$.parentNode
-                  },
-                  {
-                    defaultArtUI: this.defaultArtUI,
-                    onLinkPress: this.onLinkPress
-                  }
-                );
-              }
-              .fancyContainerSpan($$.parentNode.artUIStyleObject)
+            // isInlinePushNode的nodes则首位需要使用 ContainerSpan 单独处理背景色值跟边框radios
+            if (item.artUIStyleObject?.backgroundColor || $$.parentNode?.artUIStyleObject?.backgroundColor) {
+              containerSpanBuilder(
+                {
+                  node: item,
+                  index: i,
+                  parentNode: $$.parentNode
+                },
+                {
+                  defaultArtUI: this.defaultArtUI,
+                  onLinkPress: this.onLinkPress
+                }
+              );
             } else {
               spanBuilder(
                 {
@@ -122,6 +130,7 @@ export struct HPRichText {
   // 监听到richTextOption参数变化则重新触发 HTML转化函数
   onUpdateRichTextOption() {
     const htmlParser = new HTMLParser(this.richTextOption);
+    this.defaultArtUI = _setDefaultArtUI(this.richTextOption); // 生成默认样式
     this.htmlJson = htmlParser.html2json();
     // console.log('转化之后的html', JSON.stringify?.(this.htmlJson.nodes));
   }
@@ -129,7 +138,6 @@ export struct HPRichText {
   // 初始化更新
   aboutToAppear() {
     if (this.richTextOption.content) {
-      this.defaultArtUI = _setDefaultArtUI(this.richTextOption); // 生成默认样式
       this.onUpdateRichTextOption();
     }
   }
@@ -149,11 +157,6 @@ export struct HPRichText {
       .alignItems(HorizontalAlign?.Start)
     }
   }
-}
-
-@Extend(ContainerSpan)
-function fancyContainerSpan($$: FancyContainerSpanOptions = {}) {
-  .textBackgroundStyle({ color: $$.backgroundColor, radius: $$.borderRadius as Dimension | BorderRadiuses })
 }
 
 @Extend(Text)

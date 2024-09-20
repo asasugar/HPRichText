@@ -130,16 +130,24 @@ export function excludeExtendsParentArtUIStyle(style?: ArtStyleObject) {
   if (!style) {
     return {};
   }
-  return {
-    ...style,
-    border: {}, // 不继承border属性
-    margin: {
-      right: style?.margin?.right, left: style?.margin?.left
-    },
-    padding: {
-      right: style?.padding?.right, left: style?.padding?.left
+  // 不继承border属性
+  if (style?.border) {
+    delete style.border;
+  }
+  // margin和padding只继承左右边距
+  if (style?.margin?.right || style?.margin?.left) {
+    style.margin = {
+      right: style?.margin?.right,
+      left: style?.margin?.left
     }
   }
+  if (style?.padding?.right || style?.padding?.left) {
+    style.padding = {
+      right: style?.padding?.right,
+      left: style?.padding?.left
+    }
+  }
+  return style;
 }
 
 /**
@@ -153,7 +161,8 @@ export function setHtmlAttributes(baseFontSize: number, baseFontColor: string, t
   }
   // 使用对象映射查找并返回对应标签的样式
   const predefinedStyle =
-    (headingStyles(baseFontSize as number, baseFontColor as string)[tagName] || specialStyles(baseFontSize as number, baseFontColor as string)[tagName]) ||
+    (headingStyles(baseFontSize as number, baseFontColor as string)[tagName] ||
+    specialStyles(baseFontSize as number, baseFontColor as string)[tagName]) ||
       { fontSize: baseFontSize, fontColor: baseFontColor };
   return predefinedStyle;
 }

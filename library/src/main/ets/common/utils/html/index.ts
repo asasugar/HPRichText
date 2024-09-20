@@ -44,6 +44,23 @@ export function startWithHTMLElement(html: string) {
   return reg.test(html.replace(/\n/g, ""));
 }
 
+export function firstTextWrapInlineTag(html: string): string {
+
+  // 找到第一个文本节点的位置
+  const textStart = html.search(/(?<=<[^>]*>)[^<]+/);
+
+  if (textStart !== -1) {
+    const text = html.substring(textStart).trim();
+    const firstChar = text.charAt(0);
+    const restText = text.slice(1);
+    // 添加内联标签
+    const wrappedText = `<span>${firstChar}</span>${restText}`;
+
+    return html.substring(0, textStart) + wrappedText;
+  }
+  return html;
+}
+
 export function startWithBlockTag(str) {
   const blockTags = Object.keys(block);
   // 将标签数组转换为正则表达式的一部分

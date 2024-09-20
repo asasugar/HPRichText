@@ -1,17 +1,24 @@
 import { HPRichTextV2, RichTextOptionModelV2 } from '@ohasasugar/hp-richtext';
 
-// import { imgUrl } from '../constant';
-
 @Entry
 @Component
 struct Index {
   richTextModel: RichTextOptionModelV2 = new RichTextOptionModelV2();
 
-  // <img width="500px" src="${imgUrl}" />
   aboutToAppear() {
     this.richTextModel.richTextOption = {
       content: `
-      <div style="background-color: blue">我是带<span style="background-color: red">背景色的span标签<i>ddddddd</i>777777777</span>111<p>222</p></div>
+        <div>
+        <p>aaaaaaaaaaaaaaaaaaaaaaaaa<span></span></p>
+        <p>aaaaaaaaaaaaaaaaa<span></span></p>
+        <p>bbbbbbbbbb<span></span></p>
+        <p>ccccccccccccccccccc<span></span></p>
+        <p>dddddddddddddddddddddd<span></span></p>
+        <p>eeeeeeeeeeeeeeeeeeeeeee<span></span></p>
+        <p>fffffffffffffffffff</p>
+        <p><span></span><br /></p>
+        <p><span></span><strong>eeeeeeeeeeeee</strong></p>
+        </div>
     `,
       imageProp: {
         webp: true,
@@ -25,13 +32,6 @@ struct Index {
 
   build() {
     Column() {
-      Button('改变数据').onClick(() => {
-        this.richTextModel.richTextOption = {
-          baseFontSize: 50,
-          baseFontColor: '#ecd88d',
-          content: '我是改变之后的数据，如通过ajax请求返回的数据'
-        }
-      })
       HPRichTextV2({
         richTextModel: this.richTextModel
       })
