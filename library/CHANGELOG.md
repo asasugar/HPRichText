@@ -1,10 +1,18 @@
 # Changelog
 
+### [v3.0.2](https://github.com/asasugar/HPRichText/releases/tag/v3.0.2) (2024-09-20)
+
+### Bug Fixes
+
+- 🐛
+  更多标签继承baseFontSize等基础样式属性
+  ([d9f01df](https://github.com/asasugar/HPRichText/commit/d9f01dfbec2004b2945bbfb7306706127c1bf8c4))
+
 ### [v3.0.1](https://github.com/asasugar/HPRichText/releases/tag/v3.0.1) (2024-09-20)
 
 ### Refactor
 
-- 🎸
+- 💡
   优化组件&样式
   [#63](https://github.com/asasugar/HPRichText/issues/63)([93928c8](https://github.com/asasugar/HPRichText/commit/93928c8815f3eff65082ab82351ae5beb4a2ad2b))
 
