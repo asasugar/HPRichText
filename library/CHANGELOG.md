@@ -1,26 +1,36 @@
 # Changelog
 
+### [v3.0.1](https://github.com/asasugar/HPRichText/releases/tag/v3.0.1) (2024-09-20)
+
+### Refactor
+
+- 🎸
+  优化组件&样式
+  [#63](https://github.com/asasugar/HPRichText/issues/63)([93928c8](https://github.com/asasugar/HPRichText/commit/93928c8815f3eff65082ab82351ae5beb4a2ad2b))
+
 ### [v3.0.0](https://github.com/asasugar/HPRichText/releases/tag/v3.0.0) (2024-09-18)
 
 ### Features
 
 - 🎸
-  升级 @ComponentV2装饰器 组件 [#60](https://github.com/asasugar/HPRichText/issues/60)([be583b6](https://github.com/asasugar/HPRichText/commit/be583b60c0ecf4a88b607dbd96f6cfca899c4e1d))
+  升级 @ComponentV2装饰器
+  组件 [#60](https://github.com/asasugar/HPRichText/issues/60)([be583b6](https://github.com/asasugar/HPRichText/commit/be583b60c0ecf4a88b607dbd96f6cfca899c4e1d))
 
 ### [v2.2.6](https://github.com/asasugar/HPRichText/releases/tag/v2.2.6) (2024-09-14)
 
 ### Features
 
 * 🎸
-  更新 API12 SDK重新编译发包 ([3f90518](https://github.com/asasugar/HPRichText/commit/3f905189faa9307aa5ef82e1316918350e9b3fec))
+  更新 API12
+  SDK重新编译发包 ([3f90518](https://github.com/asasugar/HPRichText/commit/3f905189faa9307aa5ef82e1316918350e9b3fec))
 
 ### [v2.2.5](https://github.com/asasugar/HPRichText/releases/tag/v2.2.5) (2024-09-14)
 
 ### Features
 
 * 🎸
-  新增 ObservedHPRichText 组件支持动态生成richTextOption参数 ([0d35d86](https://github.com/asasugar/HPRichText/commit/0d35d862d3d5610285d632c9aeddbb41f9b6a7b4))
-
+  新增 ObservedHPRichText
+  组件支持动态生成richTextOption参数 ([0d35d86](https://github.com/asasugar/HPRichText/commit/0d35d862d3d5610285d632c9aeddbb41f9b6a7b4))
 
 ### [v2.2.4](https://github.com/asasugar/HPRichText/releases/tag/v2.2.4) (2024-09-11)
 
@@ -39,9 +49,7 @@
 * 🐛
   修复嵌套子节点样式丢失问题 [(#52)](https://github.com/asasugar/HPRichText/issues/52) ([429222e](https://github.com/asasugar/HPRichText/commit/429222eaa2d4a28909ffca4e7efdade1ca72f62b))
 
-
 ### [v2.2.3](https://github.com/asasugar/HPRichText/releases/tag/v2.2.3) (2024-08-09)
-
 
 ### Bug Fixes
 
@@ -55,12 +63,10 @@
 * 🎸
   导出HTMLParser类 [(#40)](https://github.com/asasugar/HPRichText/issues/40) ([b6cad1d](https://github.com/asasugar/HPRichText/commit/b6cad1dcbc065ee9e9ef20c02c90490b9ec63d9d))
 
-
 ### Bug Fixes
 
 * 🐛
   修复span标签设置baseFontSize失效问题 [(#42)](https://github.com/asasugar/HPRichText/issues/42) ([5282277](https://github.com/asasugar/HPRichText/commit/52822771613dbbf02fb1515bae9358e3485ed3d6))
-
 
 ### [v2.2.1](https://github.com/asasugar/HPRichText/releases/tag/v2.2.1) (2024-08-06)
 
@@ -78,13 +84,10 @@
 * 🐛
   修复ts报错 [(#36)](https://github.com/asasugar/HPRichText/issues/36) ([8ad85b8](https://github.com/asasugar/HPRichText/commit/8ad85b85b542a69a5d3d5099bc249805cb11a00f))
 
-
-
 ### Features
 
 * 🎸
   新增css颜色样式非十六进制时的匹配 [(#32)](https://github.com/asasugar/HPRichText/issues/32) ([54a8841](https://github.com/asasugar/HPRichText/commit/54a884127d1cae615e254cdf1e20fbc2afebc199))
-
 
 ### [v2.2.0](https://github.com/asasugar/HPRichText/releases/tag/v2.2.0) (2024-08-01)
 
@@ -92,7 +95,6 @@
 
 * 💡
   遍历算法优化,修复已知部分场景渲染层级异常问题 [(#31)](https://github.com/asasugar/HPRichText/issues/31) ([9447cbc](https://github.com/asasugar/HPRichText/commit/9447cbcc8f0bdf1a263756ea137b5affbcc21989))
-
 
 ### Bug Fixes
 
@@ -116,19 +118,19 @@
 * 🎸
   增加writing-mode属性的支持 [(#25)](https://github.com/asasugar/HPRichText/issues/25) ([a9dcbb2](https://github.com/asasugar/HPRichText/commit/a9dcbb28c60f94ca096c809908dba8cf17d91f0f))
 
-
 ### Bug Fixes
 
 * 🐛
-  Update README.md && export ts types [(#24)](https://github.com/asasugar/HPRichText/issues/24) ([fbe1218](https://github.com/asasugar/HPRichText/commit/fbe121874b42ea986b82e8ca5b6d3a6257177e19))
-
+  Update README.md && export ts
+  types [(#24)](https://github.com/asasugar/HPRichText/issues/24) ([fbe1218](https://github.com/asasugar/HPRichText/commit/fbe121874b42ea986b82e8ca5b6d3a6257177e19))
 
 ### [v2.0.0](https://github.com/asasugar/HPRichText/releases/tag/v2.0.0) (2024-07-08)
 
 ### Features
 
 * 🎸
-  一体化工程迁移NEXT Developer Beta1版本 ([61b7628](https://github.com/asasugar/HPRichText/commit/61b7628ae113bf8e04d6cc3a131dd5cef646fbfa))
+  一体化工程迁移NEXT Developer
+  Beta1版本 ([61b7628](https://github.com/asasugar/HPRichText/commit/61b7628ae113bf8e04d6cc3a131dd5cef646fbfa))
 
 ### [v1.0.8](https://github.com/asasugar/HPRichText/releases/tag/v1.0.8) (2024-06-12)
 
@@ -156,10 +158,11 @@
 ### Bug Fixes
 
 * 🐛
-  修复 ForEach循环key更新问题 [(#10)](https://github.com/asasugar/HPRichText/issues/10) ([e962cba](https://github.com/asasugar/HPRichText/commit/e962cba710a15e12ec406ff0140bedeec5bc8e85))
+  修复
+  ForEach循环key更新问题 [(#10)](https://github.com/asasugar/HPRichText/issues/10) ([e962cba](https://github.com/asasugar/HPRichText/commit/e962cba710a15e12ec406ff0140bedeec5bc8e85))
 
 * 🐛
-修复修改baseFontSize不生效问题 [(#9)](https://github.com/asasugar/HPRichText/issues/9) ([087f1ad](https://github.com/asasugar/HPRichText/commit/087f1adb4bb8d5ee1e32817abfa1df9c31464f60))
+  修复修改baseFontSize不生效问题 [(#9)](https://github.com/asasugar/HPRichText/issues/9) ([087f1ad](https://github.com/asasugar/HPRichText/commit/087f1adb4bb8d5ee1e32817abfa1df9c31464f60))
 
 ### [v1.0.4](https://github.com/asasugar/HPRichText/releases/tag/v1.0.4) (2024-04-30)
 

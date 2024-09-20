@@ -1,34 +1,36 @@
 # hp-richtext 是一个适用于 Harmony 的富文本解析组件
 
-## ComponentV2 API升级，需要使用请升级v3.0.0版本(对V1版本向下兼容)
+## ComponentV2 API升级，需要使用请升级v3最新版本(对V1版本向下兼容)
 
-1. 参数变更 `{richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}}` 变更至 `{richTextModel: {richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}}}`
+- 参数变更 `{richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}}`
+  变更至 `{richTextModel: {richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}}}`
+-
 
-2. 用法参考，Example可参照：[V2用法示例](https://github.com/asasugar/HPRichText/blob/master/entry/src/main/ets/pages/V2/Index.ets)
+用法参考，Example可参照：[V2用法示例](https://github.com/asasugar/HPRichText/blob/master/entry/src/main/ets/pages/V2/Index.ets)
 
-  ```ets
-    import { HPRichTextV2, RichTextOptionModelV2 } from '@ohasasugar/hp-richtext';
-    @Entry
-    @Component
-    struct Index {
-      richTextModel: RichTextOptionModelV2 = new RichTextOptionModelV2();
-      aboutToAppear() {
-        this.richTextModel.richTextOption = {
-          content: '我是 ComponentV2 的 HPRichText 组件',
-          imageProp: {
-            webp: true,
-          }
-        }
-      }
-      build() {
-        Column() {
-          HPRichTextV2({
-            richTextModel: this.richTextModel
-          })
+```ets
+  import { HPRichTextV2, RichTextOptionModelV2 } from '@ohasasugar/hp-richtext';
+  @Entry
+  @Component
+  struct Index {
+    richTextModel: RichTextOptionModelV2 = new RichTextOptionModelV2();
+    aboutToAppear() {
+      this.richTextModel.richTextOption = {
+        content: '我是 ComponentV2 的 HPRichText 组件',
+        imageProp: {
+          webp: true,
         }
       }
     }
-  ```
+    build() {
+      Column() {
+        HPRichTextV2({
+          richTextModel: this.richTextModel
+        })
+      }
+    }
+  }
+```
 
 ## 别忘了帮我点一个小星星鼓励一下🌟🌟～
 
@@ -59,12 +61,13 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v3.0.0](https://github.com/asasugar/HPRichText/releases/tag/v3.0.0) (2024-09-18)
+#### 最近更新：[v3.0.1](https://github.com/asasugar/HPRichText/releases/tag/v3.0.1) (2024-09-20)
 
-### Features
+### Refactor
 
 - 🎸
-  升级 @ComponentV2装饰器 组件 [#60](https://github.com/asasugar/HPRichText/issues/60)([be583b6](https://github.com/asasugar/HPRichText/commit/be583b60c0ecf4a88b607dbd96f6cfca899c4e1d))
+  优化组件&样式
+  [#63](https://github.com/asasugar/HPRichText/issues/63)([93928c8](https://github.com/asasugar/HPRichText/commit/93928c8815f3eff65082ab82351ae5beb4a2ad2b))
 
 ## 简介
 
@@ -295,6 +298,7 @@ Button('改变数据').onClick(() => {
 - `sub` 、`sup` 渲染为小字号的文本
 - `table`、`li`、`外部style` 和 `外部script` 标签暂不支持，
 - 支持 `行内style`
+- 设置 `background-color` 跟 `border-radius` 这两个属性，尽量避免内部多层嵌套，否则样式可能不是预期
 - 块级标签嵌套块级标签且最外层设置 `border` 边框属性，样式不是预期（ps: 由于性能问题，不打算修复）
   ![20240423161457](https://raw.githubusercontent.com/asasugar/pic-bed/master/imgs/20240423161457.png)
 
