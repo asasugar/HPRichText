@@ -1,5 +1,13 @@
 # Changelog
 
+### [v3.0.3](https://github.com/asasugar/HPRichText/releases/tag/v3.0.3) (2024-09-26)
+
+### Bug Fixes
+
+- 🐛
+  优化正则修复px2Any方法将文本也转化的问题
+  ([68bb9ed](https://github.com/asasugar/HPRichText/commit/68bb9ed8eb732c816d0a29d9010fc3fbc15efc76))
+
 ### [v3.0.2](https://github.com/asasugar/HPRichText/releases/tag/v3.0.2) (2024-09-20)
 
 ### Bug Fixes

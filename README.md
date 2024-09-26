@@ -61,19 +61,14 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v3.0.2](https://github.com/asasugar/HPRichText/releases/tag/v3.0.2) (2024-09-20)
+#### 最近更新：[v3.0.3](https://github.com/asasugar/HPRichText/releases/tag/v3.0.3) (2024-09-26)
 
 ### Bug Fixes
 
 - 🐛
-  更多标签继承baseFontSize等基础样式属性
-  ([d9f01df](https://github.com/asasugar/HPRichText/commit/d9f01dfbec2004b2945bbfb7306706127c1bf8c4))
+  优化正则修复px2Any方法将文本也转化的问题
+  ([68bb9ed](https://github.com/asasugar/HPRichText/commit/68bb9ed8eb732c816d0a29d9010fc3fbc15efc76))
 
-### Refactor
-
-- 💡
-  优化组件&样式
-  [#63](https://github.com/asasugar/HPRichText/issues/63)([93928c8](https://github.com/asasugar/HPRichText/commit/93928c8815f3eff65082ab82351ae5beb4a2ad2b))
 
 ## 简介
 
