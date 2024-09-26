@@ -9,7 +9,7 @@ struct Index {
   aboutToAppear() {
     this.richTextModel.richTextOption = {
       content: `
-      <h1 style="text-indent: 200px">h1标签</h1>
+      <h1>h1标签</h1>
       <h2>h2标签</h2>
       <h3>h3标签</h3>
       <h4>h4标签</h4>

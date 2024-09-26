@@ -9,11 +9,14 @@ import type { PixelUnit } from '../../../components/hprichtext/index';
  */
 export function px2Any(htmlContent: string, pixelUnit: PixelUnit = 'vp', pixelRatio: number = 1) {
   // 假设屏幕宽度为750px时，以设计稿750px为例 1vp = 1px
-
-  // 正则表达式匹配px单位
-  const regex = /(\d*\.?\d+)px/g;
-  return htmlContent.replace(regex, (match, p1) => {
+  const styleRegex = /style\s*=\s*['"]([^'"]*)['"]/g; // 匹配style属性正则
+  const pxRegex = /(\d*\.?\d+)px/g; // 匹配px单位正则
+  return htmlContent.replace(styleRegex, (match, styleContent) => {
     // 将匹配到的px值乘以比例转换为rpx
-    return `${parseInt(p1, 10) * pixelRatio}${pixelUnit}`;
+    const processedStyleContent =styleContent.replace(pxRegex,(match, p1)=>{
+      return `${parseInt(p1, 10) * pixelRatio}${pixelUnit}`;
+    })
+    // 替换原始字符串中的style内容
+    return `style='${processedStyleContent}'`;
   });
 }
