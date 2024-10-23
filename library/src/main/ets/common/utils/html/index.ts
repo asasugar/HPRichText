@@ -86,11 +86,11 @@ export const empty =
 
 // Block Elements - HTML 5
 export const block =
-  makeMap('img,input,textarea,br,code,address,article,applet,aside,audio,blockquote,canvas,center,dd,dir,div,dl,dt,fieldset,figcaption,figure,footer,form,frameset,h1,h2,h3,h4,h5,h6,header,hgroup,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,ol,output,p,pre,section,script,table,tbody,td,tfoot,th,thead,tr,ul,video');
+  makeMap('input,textarea,br,code,address,article,applet,aside,audio,blockquote,canvas,center,dd,dir,div,dl,dt,fieldset,figcaption,figure,footer,form,frameset,h1,h2,h3,h4,h5,h6,header,hgroup,hr,iframe,ins,isindex,li,map,menu,noframes,noscript,ol,output,p,pre,section,script,table,tbody,td,tfoot,th,thead,tr,ul,video');
 
 // Inline Elements - HTML 5
 export const inline =
-  makeMap('a,abbr,acronym,b,basefont,bdo,big,button,cite,del,dfn,em,font,i,iframe,ins,kbd,label,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,tt,u,var');
+  makeMap('img,a,abbr,acronym,b,basefont,bdo,big,button,cite,del,dfn,em,font,i,iframe,ins,kbd,label,object,q,s,samp,script,select,small,span,strike,strong,sub,sup,tt,u,var');
 
 // Elements that you can, intentionally, leave open
 // (and which close themselves)

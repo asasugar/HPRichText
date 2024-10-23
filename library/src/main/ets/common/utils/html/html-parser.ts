@@ -457,7 +457,11 @@ class HTMLParser {
         // 当前节点是inline且上一级也是inline，则将当前节点push到上一级节点的子节点nodes下；即[{节点 1}，{节点 2}]，若节点 1 跟 2 都是inline=>[{节点 1, nodes: [节点 2]}]
         if (node.tagType === 'inline' && parentNodes[parentNodesLength-1]?.tagType === 'inline') {
           node.isInlinePushNode = true;
-          parentNodes[parentNodesLength-1]?.nodes?.push(node);
+          if (parentNodes[parentNodesLength-1]?.nodes) {
+            parentNodes[parentNodesLength-1].nodes?.push(node);
+          } else {
+            parentNodes.push(node)
+          }
         } else {
           parent.nodes.push(node);
         }
