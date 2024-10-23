@@ -61,14 +61,19 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v3.0.3](https://github.com/asasugar/HPRichText/releases/tag/v3.0.3) (2024-09-26)
+#### 最近更新：[v3.0.4](https://github.com/asasugar/HPRichText/releases/tag/v3.0.4) (2024-10-23)
 
 ### Bug Fixes
 
 - 🐛
-  优化正则修复px2Any方法将文本也转化的问题
-  ([68bb9ed](https://github.com/asasugar/HPRichText/commit/68bb9ed8eb732c816d0a29d9010fc3fbc15efc76))
+  兼容内联图片展示 [(#68)](https://github.com/asasugar/HPRichText/issues/68)
+  ([25bd470](https://github.com/asasugar/HPRichText/commit/25bd470e5e2b9f70f3eaf4bab9a1d4f094d29f0e))
 
+### Features
+
+- 🎸
+  html字符串img支持本地resource资源链接 [(#67)](https://github.com/asasugar/HPRichText/issues/67)
+  ([dfe71ff](https://github.com/asasugar/HPRichText/commit/dfe71ff838f176a621ef8feea3d615d12043e756))
 
 ## 简介
 

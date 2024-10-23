@@ -1,5 +1,19 @@
 # Changelog
 
+### [v3.0.4](https://github.com/asasugar/HPRichText/releases/tag/v3.0.4) (2024-10-23)
+
+### Bug Fixes
+
+- 🐛
+  兼容内联图片展示 [(#68)](https://github.com/asasugar/HPRichText/issues/68)
+  ([25bd470](https://github.com/asasugar/HPRichText/commit/25bd470e5e2b9f70f3eaf4bab9a1d4f094d29f0e))
+
+### Features
+
+- 🎸
+  html字符串img支持本地resource资源链接 [(#67)](https://github.com/asasugar/HPRichText/issues/67)
+  ([dfe71ff](https://github.com/asasugar/HPRichText/commit/dfe71ff838f176a621ef8feea3d615d12043e756))
+
 ### [v3.0.3](https://github.com/asasugar/HPRichText/releases/tag/v3.0.3) (2024-09-26)
 
 ### Bug Fixes
