@@ -43,6 +43,7 @@ struct Index {
       <h1 style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">单行文本显示省略号单行文本显示省略号</h1>
       <h1 style="-webkit-line-clamp: 2;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">多行文本显示省略号多行文本显示省略号多行文本显示省略号</h1>
       <img width="500px" src="${imgUrl}" />
+      <img width="500px" resource="1" src="app.media.icon" />
       <video height="500px" loop muted autoplay src="xx" />
     `,
       imageProp: {

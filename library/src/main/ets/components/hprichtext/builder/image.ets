@@ -4,7 +4,7 @@ import { _commonClick } from '../common';
 
 @Builder
 export function imageBuilder(item: NodeInfo, onLinkPress?: LinkPressMethod) {
-  Image(item.attr?.src)
+  Image(item.attr?.resource ? $r(item.attr?.src) : item.attr?.src)
     .fancyImage(item?.artUIStyleObject, item?.attr)
     .onClick((event) => {
       _commonClick(item, event, { resourceSrc: item.attr?.src }, onLinkPress)
