@@ -14,11 +14,12 @@ export function removeDOCTYPE(html: string) {
 
 export function trimHtml(html: string) {
   return html
-    .replace(/<!--.*?-->/gi, '')
-    .replace(/\/\*.*?\*\//gi, '')
-    .replace(/[ ]+</gi, '<')
-    .replace(/<script[^]*<\/script>/gi, '')
-    .replace(/<style[^]*<\/style>/gi, '');
+    .replace(/<!--.*?-->/gi, '')// 移除 HTML 注释
+    .replace(/\/\*.*?\*\//gi, '')// 移除 JavaScript 多行注释
+    .replace(/[ ]+</gi, '<')// 移除标签前的空格
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')// [^]*?非贪婪模式 移除 <script> 标签及其内容
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, ''); // [^]*?非贪婪模式 移除 <style> 标签及其内容
+    // .replace(/<style[^]*<\/style>/gi, '');// 移除 <style> 标签及其内容
 }
 
 export function replaceBr(html: string) {
