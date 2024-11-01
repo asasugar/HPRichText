@@ -162,7 +162,7 @@ class HTMLParser {
               this.imageProp.objectFit === 'ScaleDown' ? ImageFit.ScaleDown :
                 this.imageProp.objectFit === 'None' ? ImageFit.None :
                 ImageFit.Contain,
-        margin: this.imageProp.margin
+        margin: node?.artUIStyleObject?.margin || this.imageProp.margin
       });
     }
 
