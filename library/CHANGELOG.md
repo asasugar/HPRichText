@@ -1,5 +1,19 @@
 # Changelog
 
+### [v3.0.4](https://github.com/asasugar/HPRichText/releases/tag/v3.0.4) (2024-11-01)
+
+### Bug Fixes
+
+- 🐛
+  修复html非法使用style script标签渲染问题 [(#77)](https://github.com/asasugar/HPRichText/issues/77)
+  ([e0a66b7](https://github.com/asasugar/HPRichText/commit/e0a66b714d0adda9b2d4a098b9c0c5bc0ea8211c))
+
+### Features
+
+- 🎸
+  支持img设置margin [(#71)](https://github.com/asasugar/HPRichText/issues/71)
+  ([8a9348e](https://github.com/asasugar/HPRichText/commit/8a9348ec5343979e57627dcd2650cf17e2d50bf7))
+
 ### [v3.0.3](https://github.com/asasugar/HPRichText/releases/tag/v3.0.3) (2024-10-23)
 
 ### Bug Fixes
