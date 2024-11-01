@@ -11,7 +11,7 @@
     "harmony",
     "harmony-rich-text"
   ],
-  "main": "./entry/src/main/ets/pages/Index.ets",
+  "main": "./entry/src/main/ets/pages/V2/Index.ets",
   "author": "asasugar",
   "license": "Apache-2.0",
   "devDependencies": {

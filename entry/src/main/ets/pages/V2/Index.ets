@@ -44,7 +44,7 @@ struct Index {
       <h1 style="-webkit-line-clamp: 2;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">多行文本显示省略号多行文本显示省略号多行文本显示省略号</h1>
       <img width="500px" src="${imgUrl}" />
       <img width="500px" resource="1" src="app.media.icon" />
-      <video height="500px" loop muted autoplay src="xx" />
+      <video height="500px" loop muted autoplay src="https://www.w3school.com.cn/i/video/shanghai.mp4" />
     `,
       imageProp: {
         webp: true,
