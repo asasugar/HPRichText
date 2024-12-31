@@ -52,10 +52,6 @@ struct Index {
       },
     }
     this.richTextModel.needScroll = true;
-    this.richTextModel.onLinkPress = (e) => {
-      console.log("点击：", JSON.stringify(e))
-      return e;
-    };
   }
 
   build() {

@@ -5,6 +5,8 @@ export function spanBuilder($$: TextBuilderOptions, install: SpanBuilderInstall)
   Span($$.node.text)
     .fancySpan($$.node?.artUIStyleObject || $$.parentNode?.artUIStyleObject || install.defaultArtUI)
     .onClick((event) => {
+
+      let clickIndex: number = $$.parentNode?.attr?.clickIndex ?? 0;
       // 不触发点击事件的场景：
       // 判断父级是否为isInlinePushNode的结构：
       // 是：
@@ -17,7 +19,8 @@ export function spanBuilder($$: TextBuilderOptions, install: SpanBuilderInstall)
       // 检查是否为内联推送节点
       if ($$.parentNode?.isInlinePushNode) {
         // 对于内联推送节点，检查索引和父节点类型
-        if ($$.index !== 0 || ($$.parentNode?.tag !== 'a' && !$$.parentNode?.attr?.onClick)
+        if ($$.index !== clickIndex ||
+          ($$.parentNode?.tag !== 'a' && !$$.parentNode?.attr?.onClick)
         ) {
           return;
         }
@@ -28,7 +31,7 @@ export function spanBuilder($$: TextBuilderOptions, install: SpanBuilderInstall)
         }
       }
       if (($$.parentNode?.tag !== 'a' && !$$.parentNode?.attr?.onClick) ||
-        ($$.parentNode?.tag === 'a' && $$.parentNode?.isInlinePushNode && $$.index !== 0)) {
+        ($$.parentNode?.tag === 'a' && $$.parentNode?.isInlinePushNode && $$.index !== clickIndex)) {
         return;
       }
       // 增加回调事件

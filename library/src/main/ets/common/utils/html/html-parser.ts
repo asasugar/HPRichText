@@ -108,7 +108,7 @@ class HTMLParser {
     } else if (closeSelf[tag]) {
       node.tagType = 'closeSelf';
     }
-    node.attr = attrs?.reduce((pre: Record<string, string | (string | string[])[]>, attr) => {
+    node.attr = attrs?.reduce((pre: Record<string, number | string | (string | string[])[]>, attr) => {
       // const { name, value } = attr; // v4不支持对象解构
       const name = attr.name;
       let value = attr.value;
@@ -215,6 +215,10 @@ class HTMLParser {
       // 提取不带单位的fontSize用于lineHeight计算
       const numberStr = originalFs.replace(this.basePixelUnit, ""); // 提取数字部分
       Object.assign(node.artUIStyleObject, { 'lineHeight': `${+numberStr * lh}${this.basePixelUnit}` })
+    }
+    // 如果是点击事件，则增加触发事件的node节点index
+    if ('onClick' in node.attr) {
+      node.attr.clickIndex = 0;
     }
     if (unary) {
       // if this tag doesn't have end tag
@@ -425,6 +429,7 @@ class HTMLParser {
         const parentNodesLength = parentNodes.length;
         if (node.tagType === 'block' && !hasBlockNode) {
           node.addHarmonyTextTag = true;
+
         } else if (node.tagType === 'inline') {
           if (parentNodesLength === 1) {
 
@@ -440,6 +445,9 @@ class HTMLParser {
               node.nodes.unshift(parentNodes[parentNodesLength-1]);
               parentNodes.pop();
               node.addHarmonyTextTag = true;
+              if(node.attr?.onClick) {
+                node.attr.clickIndex += 1;
+              }
             }
           } else if (parentNodesLength > 1) {
             // d.判断当前父级nodes大于 1 && 前一个节点是block，则当前节点节点添加标识；
