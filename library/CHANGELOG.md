@@ -1,5 +1,18 @@
 # Changelog
 
+### [v3.0.5](https://github.com/asasugar/HPRichText/releases/tag/v3.0.5) (2025-01-06)
+
+### Bug Fixes
+
+- 🐛
+  处理html文本时移除trimHtml方法保留文本源 [(#90)](https://github.com/asasugar/HPRichText/issues/90)
+  ([f5d9264](https://github.com/asasugar/HPRichText/commit/f5d9264f0bb01265443935191c50c894d47d6499))
+
+- 🐛
+  修复点击事件失效问题 [(#88)](https://github.com/asasugar/HPRichText/issues/88)
+  ([2d423d9](https://github.com/asasugar/HPRichText/commit/2d423d989845dfe0749cf39a7d3e9eac85fb1c37))
+
+
 ### [v3.0.4](https://github.com/asasugar/HPRichText/releases/tag/v3.0.4) (2024-11-01)
 
 ### Bug Fixes

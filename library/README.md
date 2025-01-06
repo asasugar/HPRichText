@@ -61,19 +61,17 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v3.0.4](https://github.com/asasugar/HPRichText/releases/tag/v3.0.4) (2024-11-01)
+#### 最近更新：[v3.0.5](https://github.com/asasugar/HPRichText/releases/tag/v3.0.5) (2025-01-06)
 
 ### Bug Fixes
 
 - 🐛
-  修复html非法使用style script标签渲染问题 [(#77)](https://github.com/asasugar/HPRichText/issues/77)
-  ([e0a66b7](https://github.com/asasugar/HPRichText/commit/e0a66b714d0adda9b2d4a098b9c0c5bc0ea8211c))
+  处理html文本时移除trimHtml方法保留文本源 [(#90)](https://github.com/asasugar/HPRichText/issues/90)
+  ([f5d9264](https://github.com/asasugar/HPRichText/commit/f5d9264f0bb01265443935191c50c894d47d6499))
 
-### Features
-
-- 🎸
-  支持img设置margin [(#71)](https://github.com/asasugar/HPRichText/issues/71)
-  ([8a9348e](https://github.com/asasugar/HPRichText/commit/8a9348ec5343979e57627dcd2650cf17e2d50bf7))
+- 🐛
+  修复点击事件失效问题 [(#88)](https://github.com/asasugar/HPRichText/issues/88)
+  ([2d423d9](https://github.com/asasugar/HPRichText/commit/2d423d989845dfe0749cf39a7d3e9eac85fb1c37))
 
 ## 简介
 
