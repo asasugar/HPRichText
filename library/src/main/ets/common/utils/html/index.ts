@@ -19,7 +19,7 @@ export function trimHtml(html: string) {
     .replace(/[ ]+</gi, '<')// 移除标签前的空格
     .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')// [^]*?非贪婪模式 移除 <script> 标签及其内容
     .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, ''); // [^]*?非贪婪模式 移除 <style> 标签及其内容
-    // .replace(/<style[^]*<\/style>/gi, '');// 移除 <style> 标签及其内容
+  // .replace(/<style[^]*<\/style>/gi, '');// 移除 <style> 标签及其内容
 }
 
 export function replaceBr(html: string) {
@@ -40,6 +40,7 @@ export function addRootDiv(html: string) {
 }
 
 export function startWithHTMLElement(html: string) {
+  html = trimHtml(html);
   // 正则表达式匹配以 < 开头，后跟非空白字符，直至遇到 > 为止的序列
   const reg = /^<\w+(\s+\w+="[^"]*"|\s+\w+='[^']*'|\s+[^\s>]+)*\s*>/;
   return reg.test(html.replace(/\n/g, ""));

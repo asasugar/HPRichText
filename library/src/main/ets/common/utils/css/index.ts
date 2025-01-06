@@ -1,6 +1,6 @@
 import { Color, FontStyle, FontWeight, TextAlign, TextDecorationType, Visibility } from '../../types/artUIEnum';
 import type { HeadingStyle, SpecialStyles } from '../../types/consants';
-import type { ArtStyleObject, StyleObject } from '../../types/htmlParser';
+import type { ArtStyleObject, NodeInfo, StyleObject } from '../../types/htmlParser';
 import { attrEnums, attrsMap, specialAttrsMap } from './constants';
 
 /**
@@ -126,7 +126,7 @@ export function transformObject(originalValue: string, map: Record<string, strin
 
 
 // 过滤和设置一些不需要继承的父级标签样式
-export function excludeExtendsParentArtUIStyle(style?: ArtStyleObject) {
+export function excludeExtendsParentArtUIStyle(style?: ArtStyleObject, node?: NodeInfo) {
   if (!style) {
     return {};
   }
@@ -146,6 +146,10 @@ export function excludeExtendsParentArtUIStyle(style?: ArtStyleObject) {
       right: style?.padding?.right,
       left: style?.padding?.left
     }
+  }
+  // 如果是 a 标签且href有值的话，则不继承父节点的fontColor
+  if (node.tag === 'a' && node.attr?.href && style.fontColor) {
+    delete style.fontColor;
   }
   return style;
 }
@@ -232,19 +236,19 @@ export function headingStyles(baseFontSize: number, baseFontColor: string): Head
  */
 export function specialStyles(baseFontSize: number, baseFontColor: string): SpecialStyles {
   const baseStyles: SpecialStyles = {
-    b: { fontWeight: FontWeight.Bold, fontColor: baseFontColor, fontSize: baseFontSize  },
-    strong: { fontWeight: FontWeight.Bold, fontColor: baseFontColor, fontSize: baseFontSize  },
+    b: { fontWeight: FontWeight.Bold, fontColor: baseFontColor, fontSize: baseFontSize },
+    strong: { fontWeight: FontWeight.Bold, fontColor: baseFontColor, fontSize: baseFontSize },
     p: {
       fontSize: baseFontSize,
       fontColor: baseFontColor,
       margin: { top: 0.625 * baseFontSize, bottom: 0.625 * baseFontSize }
     },
     div: { fontSize: baseFontSize, fontColor: baseFontColor },
-    i: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize  },
-    cite: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize  },
-    em: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize  },
-    var: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize  },
-    address: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize  },
+    i: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize },
+    cite: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize },
+    em: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize },
+    var: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize },
+    address: { fontStyle: FontStyle.Italic, fontColor: baseFontColor, fontSize: baseFontSize },
     pre: {
       fontFamily: 'monospace',
       fontColor: baseFontColor,
@@ -253,18 +257,27 @@ export function specialStyles(baseFontSize: number, baseFontColor: string): Spec
       margin: { top: 0.625 * baseFontSize, bottom: 0.625 * baseFontSize },
       fontSize: baseFontSize
     },
-    code: { fontColor: baseFontColor, fontFamily: 'monospace', backgroundColor: '#f5f5f5', fontSize: baseFontSize  },
-    tt: { fontFamily: 'monospace', fontColor: baseFontColor, fontSize: baseFontSize  },
-    kbd: { fontFamily: 'monospace', fontColor: baseFontColor, fontSize: baseFontSize  },
-    samp: { fontFamily: 'monospace', fontColor: baseFontColor, fontSize: baseFontSize  },
+    code: {
+      fontColor: baseFontColor,
+      fontFamily: 'monospace',
+      backgroundColor: '#f5f5f5',
+      fontSize: baseFontSize
+    },
+    tt: { fontFamily: 'monospace', fontColor: baseFontColor, fontSize: baseFontSize },
+    kbd: { fontFamily: 'monospace', fontColor: baseFontColor, fontSize: baseFontSize },
+    samp: { fontFamily: 'monospace', fontColor: baseFontColor, fontSize: baseFontSize },
     big: { fontSize: 1.75 * baseFontSize, fontColor: baseFontColor },
     small: { fontSize: 0.9 * baseFontSize, fontColor: baseFontColor },
     sub: { fontSize: 0.75 * baseFontSize, fontColor: baseFontColor }, // 0.625 * baseFontSize
     sup: { fontSize: 0.75 * baseFontSize, fontColor: baseFontColor }, // -0.625 * baseFontSize
-    s: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor, fontSize: baseFontSize  },
-    strike: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor, fontSize: baseFontSize  },
-    del: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor, fontSize: baseFontSize  },
-    a: { fontColor: Color.Blue, decoration: { type: TextDecorationType.Underline, color: Color.Blue }, fontSize: baseFontSize },
+    s: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor, fontSize: baseFontSize },
+    strike: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor, fontSize: baseFontSize },
+    del: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor, fontSize: baseFontSize },
+    a: {
+      fontColor: Color.Blue,
+      decoration: { type: TextDecorationType.Underline, color: Color.Blue },
+      fontSize: baseFontSize
+    },
     video: {
       textAlign: TextAlign.Center,
       margin: { top: 0.75 * baseFontSize, bottom: 0.75 * baseFontSize },

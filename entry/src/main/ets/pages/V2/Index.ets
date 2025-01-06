@@ -40,8 +40,8 @@ struct Index {
       <p style="margin: 10px;border: 5px solid #000;">带实线边框样式的</p>
       <p style="margin: 10px;border: 5px dashed #000;">带虚线边框样式的</p>
       <p style="margin: 10px;border: 5px dotted #000;">带点状边框样式的</p>
-      <h1 style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">单行文本显示省略号单行文本显示省略号</h1>
-      <h1 style="-webkit-line-clamp: 2;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">多行文本显示省略号多行文本显示省略号多行文本显示省略号</h1>
+      <h1 style="overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">单行文本显示省略号单行文本显示省略号单行文本显示省略号单行文本显示省略号</h1>
+      <h1 style="-webkit-line-clamp: 2;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">多行文本显示省略号多行文本显示省略号多行文本显示省略号多行文本显示省略号多行文本显示省略号</h1>
       <img width="500px" src="${imgUrl}" />
       <img width="500px" resource="1" src="app.media.icon" />
       <video height="500px" loop muted autoplay src="https://www.w3school.com.cn/i/video/shanghai.mp4" />

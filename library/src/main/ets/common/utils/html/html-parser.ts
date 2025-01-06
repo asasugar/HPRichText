@@ -29,8 +29,7 @@ import {
   replaceWebpPic,
   special,
   startTag,
-  startWithHTMLElement,
-  trimHtml
+  startWithHTMLElement
 } from './index';
 import Node from './node';
 import { px2Any } from './pixelUnit';
@@ -205,7 +204,8 @@ class HTMLParser {
 
     // 整合父标签过滤之后的标签默认样式+可继承样式+自身style样式【顺序很重要】
     node.artUIStyleObject =
-      Object.assign({}, htmlStyles, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject), node.artUIStyleObject);
+      Object.assign({}, htmlStyles, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject, node),
+        node.artUIStyleObject);
     // 对纯数字的lineHeight样式特别计算
     const lh: number = +(node.artUIStyleObject?.lineHeight ?? 0);
     const reg = /^\d+(\.\d+)?$/g;
@@ -236,7 +236,7 @@ class HTMLParser {
 
   _dealHtmlJson(html: string = this.html): string {
     html = removeDOCTYPE(html);
-    html = trimHtml(html);
+    // html = trimHtml(html);
     // html = replaceBr(html);
     html = replaceEscapeSymbol(html);
     html = strDiscode(html);
@@ -445,7 +445,7 @@ class HTMLParser {
               node.nodes.unshift(parentNodes[parentNodesLength-1]);
               parentNodes.pop();
               node.addHarmonyTextTag = true;
-              if(node.attr?.onClick) {
+              if (node.attr?.onClick) {
                 node.attr.clickIndex += 1;
               }
             }
@@ -483,7 +483,8 @@ class HTMLParser {
     }
     const node: SimpleNode = {
       node: 'text',
-      text: text.includes('\t') ? text : text.trim(), // 制表符特殊判断
+      // text: text.includes('\t') ? text : text.trim(), // 制表符特殊判断
+      text
     };
     this.customHandler?.chars?.(node, this.results);
 
