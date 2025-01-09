@@ -4,9 +4,8 @@
 
 - 参数变更 `{richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}}`
   变更至 `{richTextModel: {richTextOption: {content: ''}, needScroll: true, onLinkPress: ()=>{}}}`
--
 
-用法参考，Example可参照：[V2用法示例](https://github.com/asasugar/HPRichText/blob/master/entry/src/main/ets/pages/V2/Index.ets)
+- 用法参考，Example可参照：[V2用法示例](https://github.com/asasugar/HPRichText/blob/master/entry/src/main/ets/pages/V2/Index.ets)
 
 ```ets
   import { HPRichTextV2, RichTextOptionModelV2 } from '@ohasasugar/hp-richtext';
