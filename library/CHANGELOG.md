@@ -1,5 +1,14 @@
 # Changelog
 
+### [v3.0.6](https://github.com/asasugar/HPRichText/releases/tag/v3.0.6) (2025-01-09)
+
+### Bug Fixes
+
+- 🐛
+  修复br标签的换行处理逻辑 [(#86)](https://github.com/asasugar/HPRichText/issues/86)
+  ([4d642d2](https://github.com/asasugar/HPRichText/commit/4d642d22f9c5e8b8ddb6a627401e707b3d1af179))
+
+
 ### [v3.0.5](https://github.com/asasugar/HPRichText/releases/tag/v3.0.5) (2025-01-06)
 
 ### Bug Fixes

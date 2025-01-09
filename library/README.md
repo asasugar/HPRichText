@@ -32,7 +32,7 @@
   }
 ```
 
-## 别忘了帮我点一个小星星鼓励一下🌟🌟～
+## 别忘了帮我点一个小星星🌟鼓励一下[![Star This Repository](https://img.shields.io/static/v1?label=Star&message=ThisRepository&color=blue)](https://github.com/asasugar/HPRichText)
 
 如果需要直接运行该代码示例，需要
 
@@ -61,17 +61,13 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v3.0.5](https://github.com/asasugar/HPRichText/releases/tag/v3.0.5) (2025-01-06)
+#### 最近更新：[v3.0.6](https://github.com/asasugar/HPRichText/releases/tag/v3.0.6) (2025-01-09)
 
 ### Bug Fixes
 
 - 🐛
-  处理html文本时移除trimHtml方法保留文本源 [(#90)](https://github.com/asasugar/HPRichText/issues/90)
-  ([f5d9264](https://github.com/asasugar/HPRichText/commit/f5d9264f0bb01265443935191c50c894d47d6499))
-
-- 🐛
-  修复点击事件失效问题 [(#88)](https://github.com/asasugar/HPRichText/issues/88)
-  ([2d423d9](https://github.com/asasugar/HPRichText/commit/2d423d989845dfe0749cf39a7d3e9eac85fb1c37))
+  修复br标签的换行处理逻辑 [(#86)](https://github.com/asasugar/HPRichText/issues/86)
+  ([4d642d2](https://github.com/asasugar/HPRichText/commit/4d642d22f9c5e8b8ddb6a627401e707b3d1af179))
 
 ## 简介
 
