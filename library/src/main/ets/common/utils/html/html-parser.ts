@@ -25,11 +25,13 @@ import {
   filterAttrs,
   inline,
   removeDOCTYPE,
+  replaceBr,
   replaceEscapeSymbol,
   replaceWebpPic,
   special,
   startTag,
-  startWithHTMLElement
+  startWithHTMLElement,
+  trimHtml
 } from './index';
 import Node from './node';
 import { px2Any } from './pixelUnit';
@@ -236,8 +238,8 @@ class HTMLParser {
 
   _dealHtmlJson(html: string = this.html): string {
     html = removeDOCTYPE(html);
-    // html = trimHtml(html);
-    // html = replaceBr(html);
+    html = trimHtml(html);
+    html = replaceBr(html);
     html = replaceEscapeSymbol(html);
     html = strDiscode(html);
     html = px2Any(html, this.basePixelUnit, this.basePixelRatio as number);
