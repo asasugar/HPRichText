@@ -363,6 +363,12 @@ Button('改变数据').onClick(() => {
 
 ![20240513154129](https://raw.githubusercontent.com/asasugar/pic-bed/master/imgs/20240513154129.png)
 
+## Stargazers
+[![Stargazers repo roster for @asasugar/HPRichText](https://reporoster.com/stars/asasugar/HPRichText)](https://github.com/asasugar/HPRichText/stargazers)
+
+## Forkers
+[![Forkers repo roster for @asasugar/HPRichText](https://reporoster.com/forks/asasugar/HPRichText)](https://github.com/asasugar/HPRichText/network/members)
+
 ## 贡献者
 
 <a href="https://github.com/asasugar/HPRichText/graphs/contributors">
