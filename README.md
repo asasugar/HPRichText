@@ -60,13 +60,12 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v3.0.6](https://github.com/asasugar/HPRichText/releases/tag/v3.0.6) (2025-01-09)
+#### 最近更新：[v3.0.7](https://github.com/asasugar/HPRichText/releases/tag/v3.0.7) (2025-03-04)
 
 ### Bug Fixes
 
-- 🐛
-  修复br标签的换行处理逻辑 [(#86)](https://github.com/asasugar/HPRichText/issues/86)
-  ([4d642d2](https://github.com/asasugar/HPRichText/commit/4d642d22f9c5e8b8ddb6a627401e707b3d1af179))
+- 🐛 修复px2Any中存在style属性值带引号时匹配问题 [(#93)](https://github.com/asasugar/HPRichText/issues/93)
+  ([e280b6f](https://github.com/asasugar/HPRichText/commit/e280b6faabf23e4b87cc6d67901d6c65541a4568))
 
 ## 简介
 
