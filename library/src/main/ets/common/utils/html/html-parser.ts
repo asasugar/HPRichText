@@ -219,7 +219,7 @@ class HTMLParser {
       Object.assign(node.artUIStyleObject, { 'lineHeight': `${+numberStr * lh}${this.basePixelUnit}` })
     }
     // 如果是点击事件，则增加触发事件的node节点index
-    if ('onClick' in node.attr) {
+    if ('onClick' in node.attr || node.tag === 'a') {
       node.attr.clickIndex = 0;
     }
     if (unary) {
@@ -447,7 +447,7 @@ class HTMLParser {
               node.nodes.unshift(parentNodes[parentNodesLength-1]);
               parentNodes.pop();
               node.addHarmonyTextTag = true;
-              if (node.attr?.onClick) {
+              if (node.attr?.onClick || node.tag === 'a') {
                 node.attr.clickIndex += 1;
               }
             }
