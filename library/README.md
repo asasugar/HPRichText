@@ -60,12 +60,12 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v3.0.7](https://github.com/asasugar/HPRichText/releases/tag/v3.0.7) (2025-03-04)
+#### 最近更新：[v3.0.8](https://github.com/asasugar/HPRichText/releases/tag/v3.0.8) (2025-03-28)
 
 ### Bug Fixes
 
-- 🐛 修复px2Any中存在style属性值带引号时匹配问题 [(#93)](https://github.com/asasugar/HPRichText/issues/93)
-  ([e280b6f](https://github.com/asasugar/HPRichText/commit/e280b6faabf23e4b87cc6d67901d6c65541a4568))
+- 🐛 修复"a标签内容被前后文字包裹，就无法响应onLinkPress"问题 [(#97)](https://github.com/asasugar/HPRichText/issues/97)
+  ([ad9a1e8](https://github.com/asasugar/HPRichText/commit/ad9a1e82dbb0add638d798d72c9bd30be4c64e9f))
 
 ## 简介
 
