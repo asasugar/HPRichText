@@ -105,6 +105,15 @@ export interface LinkPressMethod<T = LinkPressParame> {
   (arg: T): T | void
 }
 
+export interface CopyPressParame {
+  text: string,
+}
+
+export interface CopyPressMethod<T = CopyPressParame> {
+  (arg: T): T | void
+}
+
+
 
 export interface SpanBuilderInstall {
   defaultArtUI?: FancySpanOptions;
