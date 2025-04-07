@@ -85,6 +85,13 @@ export struct HPRichTextV2 {
                 assign({}, item?.artUIStyleObject, { backgroundColor: null, borderRadius: null }) :
                   item?.artUIStyleObject
               )
+              .copyOption(this.richTextModel.copyEnable ? CopyOptions.InApp : CopyOptions.None)
+              .onCopy((val) => {
+                //执行回调
+                if (this.richTextModel.onCopyPress) {
+                  this.richTextModel.onCopyPress({ text: val })
+                }
+              })
             } else {
               this.nodesBuilder({
                 nodes: item.nodes,
@@ -100,6 +107,13 @@ export struct HPRichTextV2 {
               spanBuilder({ node: item, index: i, parentNode: $$.parentNode }, this.spanBuilderInstall);
             }
             .fancyText(item?.artUIStyleObject || $$.parentNode?.artUIStyleObject)
+            .copyOption(this.richTextModel.copyEnable ? CopyOptions.InApp : CopyOptions.None)
+            .onCopy((val) => {
+              //执行回调
+              if (this.richTextModel.onCopyPress) {
+                this.richTextModel.onCopyPress({ text: val })
+              }
+            })
           } else {
             // isInlinePushNode的nodes则首位需要使用 ContainerSpan 单独处理背景色值跟边框radios
             if (item.artUIStyleObject?.backgroundColor || $$.parentNode?.artUIStyleObject?.backgroundColor) {
