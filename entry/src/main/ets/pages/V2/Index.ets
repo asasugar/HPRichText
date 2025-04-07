@@ -48,14 +48,15 @@ struct Index {
     `,
       imageProp: {
         webp: true,
+        copyEnable: true
       },
     }
     this.richTextModel.needScroll = true;
     this.richTextModel.onLinkPress = (e) => {
       return e;
     };
-    //增加复制功能
-    this.richTextModel.copyEnable = true
+    // 增加复制功能
+    this.richTextModel.copyEnable = true;
     this.richTextModel.onCopyPress = (e) => {
       console.log('复制的内容', e.text)
     }

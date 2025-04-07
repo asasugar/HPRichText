@@ -26,6 +26,7 @@ export interface ImageProp {
   objectFit?: 'Contain' | 'Cover' | 'Auto' | 'Fill' | 'ScaleDown' | 'None';
   margin?: number | string;
   webp?: boolean;
+  copyEnable?: boolean;
 }
 
 export interface CustomHandler {

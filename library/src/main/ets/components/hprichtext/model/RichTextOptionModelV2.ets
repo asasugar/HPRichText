@@ -11,14 +11,6 @@ export class RichTextOption {
   customHandler?: CustomHandler;
 }
 
-/// 参数
-export interface ZZRichTextOptionModelParam {
-  richTextOption?: RichTextOption
-  needScroll?: boolean
-  copyEnable?: boolean
-  onLinkPress?: LinkPressMethod;
-  onCopyPress?: CopyPressMethod;
-}
 
 @ObservedV2
 export class RichTextOptionModelV2 {
@@ -33,16 +25,6 @@ export class RichTextOptionModelV2 {
   // 是否开启Text的copy功能，默认为false
   @Trace
   copyEnable: boolean = false;
-
   onLinkPress?: LinkPressMethod;
   onCopyPress?: CopyPressMethod;
-
-  //方便外面初始化用
-  constructor(param?: ZZRichTextOptionModelParam) {
-    this.richTextOption = param?.richTextOption ?? { content: '' }
-    this.needScroll = param?.needScroll ?? true
-    this.copyEnable = param?.copyEnable ?? false
-    this.onLinkPress = param?.onLinkPress
-    this.onCopyPress = param?.onCopyPress
-  }
 }

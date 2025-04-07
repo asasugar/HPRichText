@@ -63,7 +63,7 @@ export struct HPRichTextV2 {
             videoBuilder(item, this.richTextModel.onLinkPress)
           } else if (item.tag === 'img') {
             // img
-            imageBuilder(item, this.richTextModel.onLinkPress)
+            imageBuilder(item, this.richTextModel.onLinkPress, this.richTextModel.richTextOption)
           } else if (item.tag === 'input') {
             // input
             textInputBuilder(item)
@@ -87,6 +87,7 @@ export struct HPRichTextV2 {
               )
               .copyOption(this.richTextModel.copyEnable ? CopyOptions.InApp : CopyOptions.None)
               .onCopy((val) => {
+                console.log('%c [ val ]-90', 'font-size:13px; background:pink; color:#bf2c9f;', val)
                 //执行回调
                 if (this.richTextModel.onCopyPress) {
                   this.richTextModel.onCopyPress({ text: val })

@@ -1,11 +1,13 @@
 import type { Attr, NodeInfo } from '../../../common/types';
-import type { FancyImageOptions, LinkPressMethod } from '../index';
+import type { FancyImageOptions, LinkPressMethod, RichTextOption } from '../index';
 import { _commonClick } from '../common';
 
 @Builder
-export function imageBuilder(item: NodeInfo, onLinkPress?: LinkPressMethod) {
+export function imageBuilder(item: NodeInfo, onLinkPress?: LinkPressMethod, richTextOption?: RichTextOption) {
   Image(item.attr?.resource ? $r(item.attr?.src) : item.attr?.src)
-    .fancyImage(item?.artUIStyleObject, item?.attr)
+    .fancyImage(item?.artUIStyleObject,
+      item?.attr)
+    .copyOption(richTextOption?.imageProp?.copyEnable ? CopyOptions.InApp : CopyOptions.None)
     .onClick((event) => {
       _commonClick(item, event, { resourceSrc: item.attr?.src }, onLinkPress)
     });
