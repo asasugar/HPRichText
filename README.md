@@ -60,12 +60,12 @@
 
 #### 完整日志：[changelog](https://github.com/asasugar/HPRichText/blob/master/library/CHANGELOG.md)
 
-#### 最近更新：[v3.0.8](https://github.com/asasugar/HPRichText/releases/tag/v3.0.8) (2025-03-28)
+#### 最近更新：[v3.0.9](https://github.com/asasugar/HPRichText/releases/tag/v3.0.9) (2025-04-07)
 
-### Bug Fixes
+### Features
 
-- 🐛 修复"a标签内容被前后文字包裹，就无法响应onLinkPress"问题 [(#97)](https://github.com/asasugar/HPRichText/issues/97)
-  ([ad9a1e8](https://github.com/asasugar/HPRichText/commit/ad9a1e82dbb0add638d798d72c9bd30be4c64e9f))
+- 🎸
+  新增文本和图片的复制 ([9460778](https://github.com/asasugar/HPRichText/commit/9460778cb29edbc44ca5518135362c3dcf91f69a))
 
 ## 简介
 

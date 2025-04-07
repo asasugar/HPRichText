@@ -1,5 +1,12 @@
 # Changelog
 
+## [v3.0.9](https://github.com/asasugar/HPRichText/releases/tag/v3.0.9) (2025-04-07)
+
+### Features
+
+- 🎸
+  新增文本和图片的复制 ([9460778](https://github.com/asasugar/HPRichText/commit/9460778cb29edbc44ca5518135362c3dcf91f69a))
+
 ## [v3.0.8](https://github.com/asasugar/HPRichText/releases/tag/v3.0.8) (2025-03-28)
 
 ### Bug Fixes
