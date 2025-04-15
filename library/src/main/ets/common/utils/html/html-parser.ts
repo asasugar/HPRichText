@@ -5,6 +5,7 @@ import type { PixelUnit, RichTextOption } from '../../../components/hprichtext/i
 import type { Resource } from '../../types/artUIBase';
 import { Color, ImageFit } from '../../types/artUIEnum';
 import type {
+  ALinkProp,
   Attribute,
   CustomHandler,
   HtmlParserResult,
@@ -56,6 +57,17 @@ const defaultImageProp: ImageProp = {
   webp: false
 };
 
+/*默认自定义的alink配置*/
+const defaultAlinkProp: ALinkProp = {
+  /*a标签链接的默认颜色*/
+  linkColor: Color.Blue,
+  /*a标签下划线的格式*/
+  decoration: {
+    type: 'Underline',
+    color: Color.Blue
+  }
+}
+
 class HTMLParser {
   public results: HtmlParserResult = {
     nodes: [],
@@ -64,6 +76,7 @@ class HTMLParser {
   private bufArray: NodeInfo[] = [];
   private customHandler: CustomHandler = defaultCustomHandler;
   private imageProp: ImageProp = defaultImageProp;
+  private alinkProp: ALinkProp = defaultAlinkProp;
   private html: string = '';
   private baseFontSize: number | Resource = 16;
   private basePixelUnit: PixelUnit = 'vp';
@@ -75,6 +88,7 @@ class HTMLParser {
     {
       customHandler,
       imageProp,
+      alinkProp,
       baseFontSize,
       basePixelUnit,
       basePixelRatio,
@@ -83,6 +97,7 @@ class HTMLParser {
     }: RichTextOption) {
     customHandler && (this.customHandler = customHandler);
     imageProp && Object.assign(this.imageProp, imageProp);
+    alinkProp && Object.assign(this.alinkProp, alinkProp);
     baseFontSize && (this.baseFontSize = baseFontSize);
     basePixelUnit && (this.basePixelUnit = basePixelUnit);
     basePixelRatio && (this.basePixelRatio = basePixelRatio);
@@ -202,7 +217,7 @@ class HTMLParser {
 
     // 子节点继承父节点样式(需要排除不需要继承的样式)
     let htmlStyles = {};
-    htmlStyles = setHtmlAttributes(this.baseFontSize as number, this.baseFontColor as string, node.tag);
+    htmlStyles = setHtmlAttributes(this.baseFontSize as number, this.baseFontColor as string, this.alinkProp ,node.tag);
 
     // 整合父标签过滤之后的标签默认样式+可继承样式+自身style样式【顺序很重要】
     node.artUIStyleObject =

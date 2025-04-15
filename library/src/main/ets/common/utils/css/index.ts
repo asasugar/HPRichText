@@ -1,6 +1,6 @@
 import { Color, FontStyle, FontWeight, TextAlign, TextDecorationType, Visibility } from '../../types/artUIEnum';
 import type { HeadingStyle, SpecialStyles } from '../../types/consants';
-import type { ArtStyleObject, NodeInfo, StyleObject } from '../../types/htmlParser';
+import type { ALinkProp, ArtStyleObject, NodeInfo, StyleObject } from '../../types/htmlParser';
 import { attrEnums, attrsMap, specialAttrsMap } from './constants';
 
 /**
@@ -157,17 +157,18 @@ export function excludeExtendsParentArtUIStyle(style?: ArtStyleObject, node?: No
 /**
  * @description: 设置HTML标签的初始样式
  * @param {string} tagName 标签
+ * @param {ALinkProp} alinkProp a标签的属性设置
  * @returns {*}
  */
-export function setHtmlAttributes(baseFontSize: number, baseFontColor: string, tagName?: string,) {
+export function setHtmlAttributes(baseFontSize: number, baseFontColor: string, alinkProp: ALinkProp, tagName?: string) {
   if (!tagName) {
     return {};
   }
   // 使用对象映射查找并返回对应标签的样式
   const predefinedStyle =
     (headingStyles(baseFontSize as number, baseFontColor as string)[tagName] ||
-    specialStyles(baseFontSize as number, baseFontColor as string)[tagName]) ||
-      { fontSize: baseFontSize, fontColor: baseFontColor };
+    specialStyles(baseFontSize as number, baseFontColor as string, alinkProp)[tagName]) ||
+      { fontSize: baseFontSize, fontColor: baseFontColor};
   return predefinedStyle;
 }
 
@@ -234,7 +235,7 @@ export function headingStyles(baseFontSize: number, baseFontColor: string): Head
  * @param {number} baseFontSize 基准字体大小
  * @returns {*} SpecialStyles
  */
-export function specialStyles(baseFontSize: number, baseFontColor: string): SpecialStyles {
+export function specialStyles(baseFontSize: number, baseFontColor: string, alinkProp: ALinkProp): SpecialStyles {
   const baseStyles: SpecialStyles = {
     b: { fontWeight: FontWeight.Bold, fontColor: baseFontColor, fontSize: baseFontSize },
     strong: { fontWeight: FontWeight.Bold, fontColor: baseFontColor, fontSize: baseFontSize },
@@ -274,8 +275,12 @@ export function specialStyles(baseFontSize: number, baseFontColor: string): Spec
     strike: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor, fontSize: baseFontSize },
     del: { decoration: { type: TextDecorationType.LineThrough }, fontColor: baseFontColor, fontSize: baseFontSize },
     a: {
-      fontColor: Color.Blue,
-      decoration: { type: TextDecorationType.Underline, color: Color.Blue },
+      fontColor: alinkProp.linkColor ?? Color.Blue,
+      decoration: { type: alinkProp.decoration?.type === 'None' ? TextDecorationType.None :
+        alinkProp.decoration?.type === 'Underline' ? TextDecorationType.Underline :
+        alinkProp.decoration?.type === 'Overline' ? TextDecorationType.Overline :
+        alinkProp.decoration?.type === 'LineThrough' ? TextDecorationType.LineThrough :
+          TextDecorationType.Underline, color: alinkProp.decoration?.color ?? alinkProp.linkColor ?? Color.Blue },
       fontSize: baseFontSize
     },
     video: {

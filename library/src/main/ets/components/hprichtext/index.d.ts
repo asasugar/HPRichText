@@ -1,7 +1,7 @@
 import type { FontAttr, PositionAttr, Resource, ResourceColor, ShapeAttr, } from '../../common/types/artUIBase';
 import { Color } from '../../common/types/artUIEnum';
 
-import type { CustomHandler, ImageProp, NodeInfo } from '../../common/types/htmlParser';
+import type { ALinkProp, CustomHandler, ImageProp, NodeInfo } from '../../common/types/htmlParser';
 
 
 export interface TextBuilderOptions {
@@ -90,6 +90,7 @@ export interface RichTextOption {
   basePixelUnit?: PixelUnit;
   basePixelRatio?: number | Resource;
   imageProp?: ImageProp;
+  alinkProp?: ALinkProp;
   customHandler?: CustomHandler;
 }
 
