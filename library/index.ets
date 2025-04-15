@@ -12,6 +12,8 @@ export type {
   HeadingStyle,
   HtmlParserResult,
   ImageProp,
+  ALinkProp,
+  ALinkDecorationProp,
   NodeInfo,
   Nullable,
   SimpleNode,
