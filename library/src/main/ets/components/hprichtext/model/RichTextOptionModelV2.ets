@@ -1,4 +1,4 @@
-import type { CustomHandler, ImageProp } from '../../../common/types';
+import type { ALinkProp, CustomHandler, ImageProp } from '../../../common/types';
 import type { CopyPressMethod, LinkPressMethod, PixelUnit } from '../index';
 
 export class RichTextOption {
@@ -8,6 +8,7 @@ export class RichTextOption {
   basePixelUnit?: PixelUnit;
   basePixelRatio?: number | Resource;
   imageProp?: ImageProp;
+  alinkProp?: ALinkProp;
   customHandler?: CustomHandler;
 }
 

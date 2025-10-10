@@ -29,6 +29,22 @@ export interface ImageProp {
   copyEnable?: boolean;
 }
 
+
+export interface ALinkDecorationProp {
+  /*a标签下划线的格式*/
+  type?: 'None' | 'Underline' | 'Overline' | 'LineThrough';
+  /*a标签下划线的颜色*/
+  color?: string;
+}
+
+
+export interface ALinkProp {
+  /*a标签链接的默认颜色*/
+  linkColor?: string;
+  /*a标签下划线的格式*/
+  decoration?: ALinkDecorationProp
+}
+
 export interface CustomHandler {
   start: Function;
   end: Nullable<Function>;

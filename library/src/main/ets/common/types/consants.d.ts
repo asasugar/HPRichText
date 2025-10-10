@@ -103,7 +103,7 @@ export interface SpecialStyles {
   a: {
     decoration: {
       type: TextDecorationType;
-      color: Color;
+      color: Color | string;
     };
   } & BaseFontAttrs;
   video: {

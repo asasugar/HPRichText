@@ -28,7 +28,8 @@ struct Index {
         <del>del标签</del>
         <big>big标签</big>
         <small>small标签</small>
-        <a href="http://www.baidu.com">a标签</a>
+        <div><a href="http://www.baidu.com">我是超链接:默认的a标签</a></div>
+        <div><a href="http://www.baidu.com" style="color:orange">我是超链接:内部设置文字颜色的a标签</a></div>
         <span>带换行符号或者空格符号的文本：
         【0乳糖，特添优质冷榨生椰浆】使用IIAC大赛金奖咖啡豆，现萃香醇Espresso，遇见鲜椰冷榨生椰浆，椰香浓郁，香甜清爽，带给你不一样的拿铁体验！\r\n\r\n主要原料：浓缩咖啡、冷冻椰浆/椰浆饮品、原味调味糖浆\r\n\r\n图片及包装仅供参考，请以实物为准。\r\n尽快享用风味更佳哦~
         </span>
@@ -46,9 +47,17 @@ struct Index {
       <img width="500px" resource="1" src="app.media.icon" />
       <video height="500px" loop muted autoplay src="https://www.w3school.com.cn/i/video/shanghai.mp4" />
     `,
+
       imageProp: {
         webp: true,
         copyEnable: true
+      },
+      alinkProp: {
+        linkColor: "#e62828",
+        decoration: {
+          color: "#447dbd",
+          type: 'None'
+        }
       },
     }
     this.richTextModel.needScroll = true;
