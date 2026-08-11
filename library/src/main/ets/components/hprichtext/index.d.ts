@@ -63,6 +63,7 @@ export interface FancyImageOptions extends ShapeAttr {
 export interface FancyVideoOptions {
   width?: string | number;
   height?: string | number;
+  previewUri?: string;
 }
 
 export interface FancyTextInputOptions {
