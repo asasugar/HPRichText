@@ -33,6 +33,7 @@ import {
   startWithHTMLElement,
   trimHtml
 } from './index';
+import { inheritClickableAttrs, isClickableNode } from './click';
 import Node from './node';
 import { px2Any } from './pixelUnit';
 import Stack from './stack';
@@ -204,6 +205,9 @@ class HTMLParser {
 
     this.customHandler?.start?.(node, this.results);
 
+    // Nested inline tags inherit ancestor <a> href / onClick so inner spans stay clickable
+    inheritClickableAttrs(node, parent);
+
     // 子节点继承父节点样式(需要排除不需要继承的样式)
     let htmlStyles = {};
     htmlStyles = setHtmlAttributes(this.baseFontSize as number, this.baseFontColor as string, node.tag);
@@ -223,7 +227,10 @@ class HTMLParser {
       Object.assign(node.artUIStyleObject, { 'lineHeight': `${+numberStr * lh}${this.basePixelUnit}` })
     }
     // 如果是点击事件，则增加触发事件的node节点index
-    if ('onClick' in node.attr || node.tag === 'a') {
+    if (isClickableNode(node)) {
+      if (!node.attr) {
+        node.attr = {};
+      }
       node.attr.clickIndex = 0;
     }
     if (unary) {
@@ -451,7 +458,7 @@ class HTMLParser {
               node.nodes.unshift(parentNodes[parentNodesLength-1]);
               parentNodes.pop();
               node.addHarmonyTextTag = true;
-              if (node.attr && (node.attr?.onClick || node.tag === 'a')) {
+              if (node.attr && isClickableNode(node)) {
                 node.attr.clickIndex += 1;
               }
             }
