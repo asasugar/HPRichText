@@ -1,4 +1,5 @@
 import { assign } from '../../../common/utils/helperful';
+import { resolveLinkPress, shouldFireNodeClick } from '../../../common/utils/html/click';
 import type { FancySpanOptions, SpanBuilderInstall, TextBuilderOptions } from '../index';
 import type { StyleObject } from '../../../common/types';
 
@@ -21,43 +22,15 @@ export function spanBuilder($$: TextBuilderOptions, install: SpanBuilderInstall)
   Span($$.node.text)
     .fancySpan(mergeFancySpan($$, install))
     .onClick((event) => {
-
-      let clickIndex: number = $$.parentNode?.attr?.clickIndex ?? 0;
-      // 不触发点击事件的场景：
-      // 判断父级是否为isInlinePushNode的结构：
-      // 是：
-      // a. index!==0
-      // b. 非<a>标签判断不存在onClick属性
-      //
-      // 否：
-      // 非<a>标签判断不存在onClick属性
-
-      // 检查是否为内联推送节点
-      if ($$.parentNode?.isInlinePushNode) {
-        // 对于内联推送节点，检查索引和父节点类型
-        if ($$.index !== clickIndex ||
-          ($$.parentNode?.tag !== 'a' && !$$.parentNode?.attr?.onClick)
-        ) {
-          return;
-        }
-      } else {
-        // 对于非内联推送节点，检查父节点类型
-        if ($$.parentNode?.tag !== 'a' && !$$.parentNode?.attr?.onClick) {
-          return
-        }
-      }
-      if (($$.parentNode?.tag !== 'a' && !$$.parentNode?.attr?.onClick) ||
-        ($$.parentNode?.tag === 'a' && $$.parentNode?.isInlinePushNode && $$.index !== clickIndex)) {
+      // Nested inline tags inherit parent <a> href / onClick (see inheritClickableAttrs)
+      if (!shouldFireNodeClick($$.parentNode, $$.index)) {
         return;
       }
       // 增加回调事件
       try {
-        install.onLinkPress?.({
-          text: $$.node.text,
-          link: $$.parentNode?.attr?.href,
-          eventFnName: $$.parentNode?.attr?.onClick,
+        install.onLinkPress?.(assign(resolveLinkPress($$.parentNode, $$.node.text), {
           clickEvent: event
-        });
+        }));
       } catch (error) {
         console.error(`ErrorCode: ${error.code},  Message: ${error.message}`);
       }
