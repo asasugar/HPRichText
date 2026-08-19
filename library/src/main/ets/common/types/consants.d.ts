@@ -1,4 +1,13 @@
-import { BorderStyle, Color, FontStyle, TextAlign, TextDecorationType, TextOverflow, Visibility } from './artUIEnum';
+import {
+  BorderStyle,
+  Color,
+  FontStyle,
+  TextAlign,
+  TextDecorationType,
+  TextOverflow,
+  Visibility,
+  WordBreak
+} from './artUIEnum';
 
 export type AttrsMap = Record<string, string | Record<string, string[]>>;
 
@@ -46,6 +55,11 @@ export interface AttrEnums {
       clip: TextOverflow;
       none: TextOverflow;
     };
+  };
+  'wordBreak': {
+    normal: WordBreak;
+    'break-all': WordBreak;
+    'break-word': WordBreak;
   };
 }
 

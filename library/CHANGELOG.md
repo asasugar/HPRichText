@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Bug Fixes
+
+- 🐛 修复 Text 节点 wordBreak 不生效：将 CSS `word-break` / RichTextOption.wordBreak 映射到 ArkUI `Text.wordBreak` [(#115)](https://github.com/asasugar/HPRichText/issues/115)
+
 ## [v3.1.0](https://github.com/asasugar/HPRichText/releases/tag/v3.1.0) (2025-10-10)
 
 ### Features

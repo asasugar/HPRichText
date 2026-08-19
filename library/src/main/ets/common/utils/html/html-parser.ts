@@ -69,6 +69,7 @@ class HTMLParser {
   private basePixelUnit: PixelUnit = 'vp';
   private basePixelRatio: number | Resource = 1;
   private baseFontColor: string | Resource = '#000000';
+  private wordBreak?: 0 | 1 | 2;
   private last: string = '';
 
   constructor(
@@ -79,7 +80,8 @@ class HTMLParser {
       basePixelUnit,
       basePixelRatio,
       baseFontColor,
-      content
+      content,
+      wordBreak
     }: RichTextOption) {
     customHandler && (this.customHandler = customHandler);
     imageProp && Object.assign(this.imageProp, imageProp);
@@ -88,6 +90,7 @@ class HTMLParser {
     basePixelRatio && (this.basePixelRatio = basePixelRatio);
     baseFontColor && (this.baseFontColor = baseFontColor);
     content && (this.html = content);
+    wordBreak !== undefined && (this.wordBreak = wordBreak);
   }
 
   start(tag: string, attrs: Attribute[], unary: boolean) {
@@ -208,9 +211,11 @@ class HTMLParser {
     let htmlStyles = {};
     htmlStyles = setHtmlAttributes(this.baseFontSize as number, this.baseFontColor as string, node.tag);
 
-    // 整合父标签过滤之后的标签默认样式+可继承样式+自身style样式【顺序很重要】
+    // 整合 RichTextOption.wordBreak 默认值+标签默认样式+父标签可继承样式+自身style样式【顺序很重要】
+    // wordBreak 是 CSS 可继承属性，需随 artUIStyleObject 下传到 Text.fancyText
+    const defaultWordBreak = this.wordBreak !== undefined ? { wordBreak: this.wordBreak } : {};
     node.artUIStyleObject =
-      Object.assign({}, htmlStyles, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject, node),
+      Object.assign({}, defaultWordBreak, htmlStyles, excludeExtendsParentArtUIStyle(parent?.artUIStyleObject, node),
         node.artUIStyleObject);
     // 对纯数字的lineHeight样式特别计算
     const lh: number = +(node.artUIStyleObject?.lineHeight ?? 0);
@@ -552,11 +557,15 @@ class HTMLParser {
   }
 
   private defaultArtUI() {
-    return {
+    const style: Record<string, string | number | Color> = {
       fontSize: `${parseInt(String(this?.baseFontSize), 10) *
         (this.basePixelRatio as number)}${this.basePixelUnit}`,
       fontColor: this.baseFontColor as Color
+    };
+    if (this.wordBreak !== undefined) {
+      style.wordBreak = this.wordBreak;
     }
+    return style;
   }
 }
 
