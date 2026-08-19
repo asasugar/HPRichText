@@ -1,4 +1,4 @@
-import { BorderStyle, TextAlign, TextDecorationType, TextOverflow } from '../../types/artUIEnum';
+import { BorderStyle, TextAlign, TextDecorationType, TextOverflow, WordBreak } from '../../types/artUIEnum';
 import type { AttrEnums, AttrsMap } from '../../types/consants';
 
 // 支持的html样式key转化为鸿蒙样式key
@@ -33,6 +33,7 @@ export const attrsMap: AttrsMap = {
   'font-weight': 'fontWeight',
   'font-family': 'fontFamily',
   'text-align': 'textAlign',
+  'word-break': 'wordBreak',
 };
 
 
@@ -60,6 +61,11 @@ export const attrEnums: AttrEnums = {
       'clip': TextOverflow.Clip,
       'none': TextOverflow.None
     }
+  },
+  'wordBreak': {
+    'normal': WordBreak.NORMAL,
+    'break-all': WordBreak.BREAK_ALL,
+    'break-word': WordBreak.BREAK_WORD
   }
 }
 

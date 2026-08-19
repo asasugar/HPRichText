@@ -173,6 +173,7 @@ function fancyText($$: FancyTextOptions = {}) {
   .fontWeight($$.fontWeight)
   .fontFamily($$.fontFamily)
   .textAlign($$.textAlign)
+  .wordBreak($$.wordBreak)
   .textOverflow($$.textOverflow)
   .maxLines($$.maxLines ? Number($$.maxLines) : $$.textOverflow ? 1 : null)
   .border($$.border)

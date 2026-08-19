@@ -43,6 +43,7 @@ export interface FancyTextOptions extends FontAttr, ShapeAttr, PositionAttr {
   lineHeight?: string | number;
   letterSpacing?: string;
   textAlign?: 0 | 1 | 2 | 3;
+  wordBreak?: 0 | 1 | 2;
   textOverflow?: {
     overflow: 0 | 1 | 2 | 3;
   };
@@ -91,6 +92,7 @@ export interface RichTextOption {
   basePixelRatio?: number | Resource;
   imageProp?: ImageProp;
   customHandler?: CustomHandler;
+  wordBreak?: 0 | 1 | 2;
 }
 
 export interface LinkPressParame {

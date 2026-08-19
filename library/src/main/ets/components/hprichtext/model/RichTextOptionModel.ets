@@ -10,4 +10,5 @@ export class RichTextOptionModel {
   basePixelRatio?: number | Resource;
   imageProp?: ImageProp;
   customHandler?: CustomHandler;
+  wordBreak?: 0 | 1 | 2;
 }

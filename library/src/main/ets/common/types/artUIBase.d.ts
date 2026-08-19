@@ -69,6 +69,7 @@ export interface OtherAttr {
   lineHeight?: string;
   letterSpacing?: string;
   textAlign?: 0 | 1 | 2 | 3;
+  wordBreak?: 0 | 1 | 2;
 }
 
 export interface Resource {

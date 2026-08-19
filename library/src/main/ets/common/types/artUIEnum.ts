@@ -25,6 +25,13 @@ export const enum TextOverflow {
   MARQUEE
 }
 
+// 与 ArkUI Text.wordBreak / WordBreak 枚举值对齐：NORMAL=0, BREAK_ALL=1, BREAK_WORD=2
+export const enum WordBreak {
+  NORMAL,
+  BREAK_ALL,
+  BREAK_WORD
+}
+
 export const enum FontStyle {
   Normal,
   Italic

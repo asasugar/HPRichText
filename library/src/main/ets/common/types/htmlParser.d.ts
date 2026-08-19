@@ -90,6 +90,7 @@ export interface StyleObject {
   'text-overflow'?: string;
   '-webkit-line-clamp'?: number;
   'text-align'?: 'start' | 'end' | 'center' | 'justify';
+  'word-break'?: 'normal' | 'break-all' | 'break-word';
   'display'?: 'inline' | 'block';
 }
 
