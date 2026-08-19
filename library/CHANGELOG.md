@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Bug Fixes
+
+- 🐛
+  修复 Image constraintSize 默认 maxHeight: 100% 导致 objectFit=Contain 失效
+  [(#113)](https://github.com/asasugar/HPRichText/issues/113)
+
 ## [v3.1.0](https://github.com/asasugar/HPRichText/releases/tag/v3.1.0) (2025-10-10)
 
 ### Features

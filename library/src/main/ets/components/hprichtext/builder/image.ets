@@ -1,4 +1,5 @@
 import type { Attr, NodeInfo } from '../../../common/types';
+import { resolveImageConstraintSize } from '../../../common/utils/imageConstraintSize';
 import type { FancyImageOptions, LinkPressMethod, RichTextOption } from '../index';
 import { _commonClick } from '../common';
 
@@ -7,7 +8,9 @@ export function imageBuilder(item: NodeInfo, onLinkPress?: LinkPressMethod, rich
   Image(item.attr?.resource ? $r(item.attr?.src) : item.attr?.src)
     .fancyImage(item?.artUIStyleObject,
       item?.attr)
-    .constraintSize({ maxWidth: "100%", maxHeight: '100%' })
+    // maxWidth-only by default so objectFit=Contain can honor intrinsic height (#113).
+    // Caller-provided imageProp.constraintSize is applied only for keys they set.
+    .constraintSize(resolveImageConstraintSize(richTextOption?.imageProp?.constraintSize))
     .copyOption(richTextOption?.imageProp?.copyEnable ? CopyOptions.InApp : CopyOptions.None)
     .onClick((event) => {
       _commonClick(item, event, { resourceSrc: item.attr?.src }, onLinkPress)

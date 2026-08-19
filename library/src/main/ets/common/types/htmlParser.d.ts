@@ -22,11 +22,19 @@ export interface NodeInfo extends SimpleNode {
   addHarmonyTextTag?: boolean;
 }
 
+export interface ImageConstraintSize {
+  minWidth?: string | number;
+  maxWidth?: string | number;
+  minHeight?: string | number;
+  maxHeight?: string | number;
+}
+
 export interface ImageProp {
   objectFit?: 'Contain' | 'Cover' | 'Auto' | 'Fill' | 'ScaleDown' | 'None';
   margin?: number | string;
   webp?: boolean;
   copyEnable?: boolean;
+  constraintSize?: ImageConstraintSize;
 }
 
 export interface CustomHandler {

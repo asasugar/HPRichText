@@ -9,6 +9,7 @@ export type {
   CustomHandler,
   HeadingStyle,
   HtmlParserResult,
+  ImageConstraintSize,
   ImageProp,
   NodeInfo,
   Nullable,
