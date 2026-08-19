@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Bug Fixes
+
+- 🐛 修复 video 标签 poster 未应用到鸿蒙 Video.previewUri [(#117)](https://github.com/asasugar/HPRichText/issues/117)
+
 ## [v3.1.0](https://github.com/asasugar/HPRichText/releases/tag/v3.1.0) (2025-10-10)
 
 ### Features
