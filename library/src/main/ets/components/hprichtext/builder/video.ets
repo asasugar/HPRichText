@@ -5,7 +5,8 @@ import { _commonClick } from '../common';
 @Builder
 export function videoBuilder(item: NodeInfo, onLinkPress?: LinkPressMethod) {
   Video({
-    src: item.attr?.src
+    src: item.attr?.src,
+    previewUri: item.attr?.poster
   })
     .fancyVideo(item?.artUIStyleObject, item?.attr)
     .onClick((event) => {
