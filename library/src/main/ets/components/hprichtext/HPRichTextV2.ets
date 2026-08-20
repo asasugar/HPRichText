@@ -152,6 +152,7 @@ export struct HPRichTextV2 {
         scrollForward: NestedScrollMode.PARENT_FIRST,
         scrollBackward: NestedScrollMode.SELF_FIRST
       })
+      .scrollBar(this.richTextModel.scrollBar ?? BarState.Auto)
     } else {
       Column() {
         this.nodesBuilder({ nodes: this.htmlJson.nodes });

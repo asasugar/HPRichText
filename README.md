@@ -305,6 +305,29 @@ Button('改变数据').onClick(() => {
 |------------|---------|----|-------|--------------------------|
 | needScroll | Boolean | 否  | false | 富文本内容超过一屏幕是否使用Scroll组件包裹 |
 
+## scrollBar属性
+
+| 名称        | 类型       | 必填 | 默认值           | 描述                                                                                         |
+|-----------|----------|----|----------------|--------------------------------------------------------------------------------------------|
+| scrollBar | BarState | 否  | BarState.Auto | `needScroll` 为 true 时，控制内部 Scroll 滚动条显示状态。`BarState.Auto` 滚动时显示，`BarState.On` 常驻显示，`BarState.Off` 隐藏 |
+
+V1 / Observed 用法：
+
+```ets
+HPRichText({
+  richTextOption: $richTextOption,
+  needScroll: true,
+  scrollBar: BarState.Off,
+})
+```
+
+V2 用法：
+
+```ets
+this.richTextModel.needScroll = true;
+this.richTextModel.scrollBar = BarState.Off;
+```
+
 ## onLinkPress属性
 
 | 名称          | 类型            | 必填 | 默认值  | 描述                                                                                                                            |
