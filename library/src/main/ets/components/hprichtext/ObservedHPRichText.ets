@@ -21,6 +21,8 @@ import { _isNeedRenderText, _setDefaultArtUI, getRandomKey } from './common';
 export struct ObservedHPRichText {
   @ObjectLink @Watch('onUpdateRichTextOption') observedRichTextOption: RichTextOptionModel;
   @Prop needScroll: boolean;
+  // 默认 Auto，与 Scroll 组件默认行为一致（滚动时显示滚动条）
+  @Prop scrollBar: BarState = BarState.Auto;
   onLinkPress?: LinkPressMethod;
   @State htmlJson: HtmlParserResult = {
     nodes: []
@@ -143,6 +145,7 @@ export struct ObservedHPRichText {
         }
         .alignItems(HorizontalAlign?.Start)
       }
+      .scrollBar(this.scrollBar ?? BarState.Auto)
     } else {
       Column() {
         this.nodesBuilder({ nodes: this.htmlJson.nodes });

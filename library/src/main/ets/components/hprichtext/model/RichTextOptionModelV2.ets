@@ -22,6 +22,9 @@ export class RichTextOptionModelV2 {
   // needScroll变化时自动刷新组件
   @Trace
   needScroll?: boolean = true;
+  // scrollBar变化时自动刷新组件，默认 Auto（滚动时显示滚动条）
+  @Trace
+  scrollBar?: BarState = BarState.Auto;
   // 是否开启Text的copy功能，默认为false
   @Trace
   copyEnable: boolean = false;
