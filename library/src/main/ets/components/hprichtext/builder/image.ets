@@ -7,7 +7,7 @@ export function imageBuilder(item: NodeInfo, onLinkPress?: LinkPressMethod, rich
   Image(item.attr?.resource ? $r(item.attr?.src) : item.attr?.src)
     .fancyImage(item?.artUIStyleObject,
       item?.attr)
-    .constraintSize({ maxWidth: "100%", maxHeight: '100%' })
+    .constraintSize({ maxWidth: "100%"})
     .copyOption(richTextOption?.imageProp?.copyEnable ? CopyOptions.InApp : CopyOptions.None)
     .onClick((event) => {
       _commonClick(item, event, { resourceSrc: item.attr?.src }, onLinkPress)
